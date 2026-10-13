@@ -100,7 +100,7 @@ export default function Wizard({ species, backgrounds, classes, specializations,
         const selected = [...current, ...other];
         if (current.length >= limit || !featureQualifies(name, selected, speciesGranted, featureCatalog)) return;
         form.setData(key, retainQualified([...current, name], other, speciesGranted, featureCatalog));
-        if (choiceSpec(name)) setSpecialOpen(true);
+        if (opensSpecial(name, featureCatalog)) setSpecialOpen(true);
     }
 
     function continueStep() {
@@ -119,7 +119,7 @@ export default function Wizard({ species, backgrounds, classes, specializations,
         });
         const levelOne = (row.progression_json || []).find((level) => Number(level.level) === 1);
         const levelFeature = featureCatalog.get(normalizeFeature(levelOne?.feature));
-        if (row.role?.name === 'Rogue' || choiceSpec(levelOne?.feature) || spellGrantFromRules(levelFeature?.rules_text) || grantsWeaponTechnique(levelOne?.feature, levelFeature)) setSpecialOpen(true);
+        if (row.role?.name === 'Rogue' || opensSpecial(levelOne?.feature, featureCatalog)) setSpecialOpen(true);
     }
 
     function chooseSpecies(row) {
@@ -133,7 +133,7 @@ export default function Wizard({ species, backgrounds, classes, specializations,
             variance_secondary: secondary,
         });
         const traits = [...(row.traits_json?.primary || []), ...(row.traits_json?.secondary || [])];
-        if (traits.some((name) => choiceSpec(name))) setSpecialOpen(true);
+        if (traits.some((name) => opensSpecial(name, featureCatalog))) setSpecialOpen(true);
     }
 
     function setChoice(feature, patch) {
@@ -216,7 +216,7 @@ export default function Wizard({ species, backgrounds, classes, specializations,
                 <div className="grid gap-3">
                     {backgrounds.map((row) => (
                         <div key={row.id} className={`border p-4 ${form.data.background_id === row.id ? 'border-maroon' : 'border-line bg-panel'}`}>
-                            <button type="button" onClick={() => { form.setData('background_id', row.id); const feature = row.grants_json?.feature; const record = featureCatalog.get(normalizeFeature(feature)); if (choiceSpec(feature) || spellGrantFromRules(record?.rules_text) || grantsWeaponTechnique(feature, record)) setSpecialOpen(true); }} className="w-full text-left">
+                            <button type="button" onClick={() => { form.setData('background_id', row.id); if (opensSpecial(row.grants_json?.feature, featureCatalog)) setSpecialOpen(true); }} className="w-full text-left">
                                 <span className="font-display text-2xl">{row.name}</span>
                                 <span className="mt-1 block text-sm text-parchment-dim">{row.description}</span>
                             </button>
@@ -294,7 +294,7 @@ export default function Wizard({ species, backgrounds, classes, specializations,
                     <button type="button" onClick={() => form.setData('specialization_id', '')} className={`border p-4 text-left ${form.data.specialization_id === '' ? 'border-maroon' : 'border-line'}`}>No specialization</button>
                     {specializations.map((row) => (
                         <div key={row.id} className={`border p-4 ${form.data.specialization_id === row.id ? 'border-maroon' : 'border-line bg-panel'}`}>
-                            <button type="button" onClick={() => { form.setData('specialization_id', row.id); const feature = (row.progression_json || []).find((level) => Number(level.level) === 1)?.feature; const record = featureCatalog.get(normalizeFeature(feature)); if (choiceSpec(feature) || spellGrantFromRules(record?.rules_text) || grantsWeaponTechnique(feature, record)) setSpecialOpen(true); }} className="w-full text-left">
+                            <button type="button" onClick={() => { form.setData('specialization_id', row.id); const feature = (row.progression_json || []).find((level) => Number(level.level) === 1)?.feature; if (opensSpecial(feature, featureCatalog)) setSpecialOpen(true); }} className="w-full text-left">
                                 <span className="font-display text-2xl">{row.name}</span>
                                 <span className="mt-2 block text-sm text-parchment-dim">{row.description}</span>
                             </button>
@@ -461,21 +461,25 @@ function specialOptionsForStep(step, { speciesFeatures, owned, backgroundFeature
     names.filter(Boolean).forEach((name) => {
         push(choiceSpec(name));
         push(spellOption(name, featureCatalog));
+        push(orderOption(name, featureCatalog));
         push(techniqueOption(name, featureCatalog));
         if (normalizeFeature(name) === 'accursed') {
             const extra = choices.Accursed?.primary;
             push(choiceSpec(extra));
             push(spellOption(extra, featureCatalog));
+            push(orderOption(extra, featureCatalog));
             push(techniqueOption(extra, featureCatalog));
             if (extra && normalizeFeature(extra) === 'talented') {
                 push(choiceSpec(choices.Talented?.talent));
                 push(spellOption(choices.Talented?.talent, featureCatalog));
+                push(orderOption(choices.Talented?.talent, featureCatalog));
                 push(techniqueOption(choices.Talented?.talent, featureCatalog));
             }
         }
         if (normalizeFeature(name) === 'talented') {
             push(choiceSpec(choices.Talented?.talent));
             push(spellOption(choices.Talented?.talent, featureCatalog));
+            push(orderOption(choices.Talented?.talent, featureCatalog));
             push(techniqueOption(choices.Talented?.talent, featureCatalog));
         }
     });
@@ -491,12 +495,33 @@ function spellGrantFromRules(text) {
     if (!countMatch) return null;
     const words = { one: 1, two: 2, three: 3, four: 4, five: 5 };
     const count = words[countMatch[1].toLowerCase()] ?? Number(countMatch[1]);
+    const tierMatch = text.match(/(?:level|tier)[ -]?(\d+)\s+spells/i);
+    const maxTier = tierMatch ? Number(tierMatch[1]) : null;
     const orderMatch = text.match(/learn up to (?:one|two|three|four|five|\d+) ([A-Za-z]+) spells/i);
     const order = orderMatch ? SPELL_ORDERS.find((name) => name.toLowerCase() === orderMatch[1].toLowerCase()) : null;
-    if (order) return { count, orders: [order], chooseOrder: false, allOrders: false };
-    if (/spells from (?:any|every)/i.test(text) || /access to every order/i.test(text)) return { count, orders: null, chooseOrder: false, allOrders: true };
-    if (/choose one order/i.test(text) || /one order of magic and learn up to/i.test(text) || /spells from (?:that order|it)\b/i.test(text)) return { count, orders: null, chooseOrder: true, allOrders: false };
+    if (order) return { count, orders: [order], chooseOrder: false, allOrders: false, maxTier };
+    if (/spells from (?:any|every)/i.test(text) || /access to every order/i.test(text)) return { count, orders: null, chooseOrder: false, allOrders: true, maxTier };
+    if (/choose one order/i.test(text) || /one order of magic and learn up to/i.test(text) || /spells from (?:that order|it)\b/i.test(text)) return { count, orders: null, chooseOrder: true, allOrders: false, maxTier };
     return null;
+}
+
+function grantsOrderChoice(text) {
+    if (!text) return false;
+    if (/gain access to one order of magic|choose one order/i.test(text)) return true;
+    return Boolean(spellGrantFromRules(text)?.chooseOrder);
+}
+
+function opensSpecial(name, catalog) {
+    const feature = catalog?.get(normalizeFeature(name));
+    return Boolean(choiceSpec(name) || spellGrantFromRules(feature?.rules_text) || grantsWeaponTechnique(name, feature) || grantsOrderChoice(feature?.rules_text));
+}
+
+function orderOption(name, catalog) {
+    if (!name || choiceSpec(name)?.kind === 'two_spells') return null;
+    const feature = catalog?.get(normalizeFeature(name));
+    if (!feature || spellGrantFromRules(feature.rules_text)?.chooseOrder) return null;
+    if (!/gain access to one order of magic|choose one order/i.test(feature.rules_text || '')) return null;
+    return { kind: 'order', title: feature.name, key: feature.name, detail: 'Choose one order of magic.' };
 }
 
 function spellOption(name, catalog) {
@@ -596,7 +621,27 @@ function SpecialChoice({ option, choices, setChoice, skills, talents, spells, te
         );
     }
     if (option.kind === 'two_spells') {
-        return <SpellPick spells={spells.filter((spell) => Number(spell.tier) === 0)} value={choices.Magus?.spells || []} onChange={(ids) => setChoice('Magus', { spells: ids })} />;
+        const order = choices.Magus?.order || '';
+        return (
+            <div className="space-y-3">
+                <div className="flex flex-wrap gap-2">
+                    {SPELL_ORDERS.map((name) => (
+                        <button key={name} type="button" className={order === name ? buttonClass : quietClass} onClick={() => setChoice('Magus', { order: name, spells: [] })}>{name}</button>
+                    ))}
+                </div>
+                <SpellPick spells={spells.filter((spell) => Number(spell.tier) === 0)} order={order} value={choices.Magus?.spells || []} onChange={(ids) => setChoice('Magus', { order, spells: ids })} />
+            </div>
+        );
+    }
+    if (option.kind === 'order') {
+        const current = choices[option.key]?.order || '';
+        return (
+            <div className="flex flex-wrap gap-2">
+                {SPELL_ORDERS.map((name) => (
+                    <button key={name} type="button" className={current === name ? buttonClass : quietClass} onClick={() => setChoice(option.key, { order: name })}>{name}</button>
+                ))}
+            </div>
+        );
     }
     if (option.kind === 'learn_spells') {
         const current = choices[option.key] || {};
@@ -862,14 +907,16 @@ function TechniquePick({ techniques, selected, onPick }) {
 function SpellGrantPick({ grant, spells, potential, value, onChange }) {
     const picked = value.spells || [];
     const order = value.order || (grant.orders?.length === 1 ? grant.orders[0] : '');
-    const list = spells.filter((spell) => {
-        if (Number(spell.tier) > potential) return false;
+    const cap = grant.maxTier == null ? potential : Math.min(potential, grant.maxTier);
+    const list = spells.filter((spell) => Number(spell.tier) <= cap);
+    function allowed(spell) {
         if (grant.allOrders) return true;
-        if (grant.chooseOrder) return order && spell.order?.name === order;
+        if (grant.chooseOrder) return Boolean(order) && spell.order?.name === order;
         return grant.orders?.includes(spell.order?.name);
-    });
-    function toggle(id) {
-        const next = picked.includes(id) ? picked.filter((item) => item !== id) : picked.length >= grant.count ? picked : [...picked, id];
+    }
+    function toggle(spell) {
+        if (!allowed(spell)) return;
+        const next = picked.includes(spell.id) ? picked.filter((item) => item !== spell.id) : picked.length >= grant.count ? picked : [...picked, spell.id];
         onChange({ ...value, order, spells: next });
     }
     return (
@@ -882,29 +929,37 @@ function SpellGrantPick({ grant, spells, potential, value, onChange }) {
                 </div>
             )}
             <div className="flex flex-wrap gap-2">
-                {list.map((spell) => (
-                    <RuleTooltip key={spell.id} text={spellChoiceDetail(spell)} wide above>
-                        <button type="button" onClick={() => toggle(spell.id)} className={picked.includes(spell.id) ? buttonClass : quietClass}>{spell.name}</button>
-                    </RuleTooltip>
-                ))}
+                {list.map((spell) => {
+                    const open = allowed(spell);
+                    return (
+                        <RuleTooltip key={spell.id} text={spellChoiceDetail(spell)} wide above>
+                            <button type="button" aria-disabled={!open} onClick={() => toggle(spell)} className={!open ? `${quietClass} cursor-not-allowed opacity-40` : picked.includes(spell.id) ? buttonClass : quietClass}>{spell.name}</button>
+                        </RuleTooltip>
+                    );
+                })}
             </div>
-            <p className="mt-1 text-xs text-silver">{picked.length}/{grant.count}. Level {potential} or lower.</p>
+            <p className="mt-1 text-xs text-silver">{picked.length}/{grant.count}. Level {cap} or lower.</p>
         </div>
     );
 }
 
-function SpellPick({ spells, value, onChange }) {
-    function toggle(id) {
-        if (value.includes(id)) onChange(value.filter((item) => item !== id));
-        else if (value.length < 2) onChange([...value, id]);
+function SpellPick({ spells, value, onChange, order = '' }) {
+    function toggle(spell) {
+        const open = order && spell.order?.name === order;
+        if (!open) return;
+        if (value.includes(spell.id)) onChange(value.filter((item) => item !== spell.id));
+        else if (value.length < 2) onChange([...value, spell.id]);
     }
     return (
         <div className="flex flex-wrap gap-2">
-            {spells.map((spell) => (
-                <RuleTooltip key={spell.id} text={spellChoiceDetail(spell)} wide above>
-                    <button type="button" onClick={() => toggle(spell.id)} className={value.includes(spell.id) ? buttonClass : quietClass}>{spell.name}</button>
-                </RuleTooltip>
-            ))}
+            {spells.map((spell) => {
+                const open = order && spell.order?.name === order;
+                return (
+                    <RuleTooltip key={spell.id} text={spellChoiceDetail(spell)} wide above>
+                        <button type="button" aria-disabled={!open} onClick={() => toggle(spell)} className={!open ? `${quietClass} cursor-not-allowed opacity-40` : value.includes(spell.id) ? buttonClass : quietClass}>{spell.name}</button>
+                    </RuleTooltip>
+                );
+            })}
         </div>
     );
 }

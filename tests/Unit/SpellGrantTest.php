@@ -28,5 +28,8 @@ class SpellGrantTest extends TestCase
         $this->assertSame(3, $lore['count']);
 
         $this->assertNull(SpellGrant::fromText('Increase Sorcerous Soul by 2 and learn two tier-0 spells.'));
+        $this->assertTrue(SpellGrant::choosesOrder('Gain access to one order of magic. This does not grant spells, Soul capacity, or additional Potential.'));
+        $this->assertTrue(SpellGrant::choosesOrder('Choose one order containing either spell; gain access to that order.'));
+        $this->assertFalse(SpellGrant::choosesOrder('Gain access to Nature magic, learn up to two Nature spells, and learn one Weapon Technique.'));
     }
 }

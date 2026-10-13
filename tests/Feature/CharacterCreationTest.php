@@ -12,6 +12,7 @@ use App\Models\Item;
 use App\Models\CharacterSkill;
 use App\Models\CharacterOrderAccess;
 use App\Models\Skill;
+use App\Models\MagicOrder;
 use App\Models\Spell;
 use App\Models\Background;
 use App\Models\Campaign;
@@ -282,14 +283,15 @@ class CharacterCreationTest extends TestCase
     public function test_a_magus_background_records_spell_order_access_without_timestamps(): void
     {
         $user = User::factory()->create();
-        $spells = Spell::query()->where('tier', 0)->limit(2)->pluck('id')->all();
+        $circle = MagicOrder::query()->where('name', 'Circle')->first();
+        $spells = Spell::query()->where('tier', 0)->where('order_id', $circle->id)->limit(2)->pluck('id')->all();
 
         $character = app(CharacterCreator::class)->create($user, [
             'name' => 'Iliya',
             'species_id' => Species::query()->where('name', 'Orc')->value('id'),
             'variance_primary' => ['Very Strong', 'Likable'],
             'variance_secondary' => ['Lucky'],
-            'choices' => ['Magus' => ['spells' => $spells]],
+            'choices' => ['Magus' => ['order' => 'Circle', 'spells' => $spells]],
             'background_id' => Background::query()->where('name', 'Acolyte')->value('id'),
             'class_id' => HeroClass::query()->where('name', 'Warrior')->value('id'),
             'primary_skills' => ['melee', 'athletics'],
@@ -297,7 +299,7 @@ class CharacterCreationTest extends TestCase
         ]);
 
         $this->assertSame(2, $character->spells()->count());
-        $this->assertGreaterThan(0, CharacterOrderAccess::query()->where('character_id', $character->id)->count());
+        $this->assertTrue(CharacterOrderAccess::query()->where('character_id', $character->id)->where('order_id', $circle->id)->exists());
     }
 
     public function test_a_character_sheet_saves_gold_and_silver(): void

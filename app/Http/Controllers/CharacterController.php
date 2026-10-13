@@ -12,6 +12,7 @@ use App\Models\Background;
 use App\Models\Campaign;
 use App\Models\Character;
 use App\Models\CharacterInventory;
+use App\Models\CharacterOrderAccess;
 use App\Models\CharacterSpell;
 use App\Models\CharacterTechnique;
 use App\Models\CharacterResource;
@@ -24,6 +25,7 @@ use App\Models\ConditionDefinition;
 use App\Models\Feature;
 use App\Models\HeroClass;
 use App\Models\Item;
+use App\Models\MagicOrder;
 use App\Models\Skill;
 use App\Models\Specialization;
 use App\Models\Species;
@@ -141,7 +143,7 @@ class CharacterController extends Controller
             'conditions' => ConditionDefinition::query()->where('key', '!=', 'suffering')->orderBy('name')->get(['id', 'name', 'key', 'description']),
             'techniques' => $this->weaponTechniques(request()->user()),
             'attackSkills' => Skill::query()->where('is_attack_skill', true)->orderBy('name')->get(['id', 'key', 'name']),
-            'talents' => Feature::query()->whereIn('category', ['talent', 'tactic'])->orderBy('name')->get(['id', 'name', 'category']),
+            'talents' => Feature::query()->whereIn('category', ['talent', 'tactic'])->orderBy('name')->get(['id', 'name', 'category', 'rules_text']),
             'targets' => $character->campaign_id ? $this->campaignTargets($character) : [],
             'encounter' => $encounter ? [
                 'id' => $encounter->id,
@@ -442,6 +444,31 @@ class CharacterController extends Controller
         $derivation = $character->derivation_json ?? [];
         $derivation['companion'] = ['name' => $name, 'aptitude' => $aptitude];
         $character->update(['derivation_json' => $derivation]);
+
+        return back();
+    }
+
+    public function addOrder(Request $request, Character $character)
+    {
+        $this->authorizeView($character);
+        $name = $request->validate(['name' => ['required', 'string']])['name'];
+        $order = MagicOrder::query()->whereRaw('lower(name) = ?', [strtolower($name)])->first();
+        if (! $order || ! in_array($order->name, \App\Domain\Rules\SpellGrant::ORDERS, true)) {
+            throw ValidationException::withMessages(['name' => 'Choose a spell order.']);
+        }
+        CharacterOrderAccess::query()->firstOrCreate([
+            'character_id' => $character->id,
+            'order_id' => $order->id,
+        ], ['source_type' => 'sheet']);
+
+        return back();
+    }
+
+    public function removeOrder(Character $character, CharacterOrderAccess $access)
+    {
+        $this->authorizeView($character);
+        abort_unless((int) $access->character_id === (int) $character->id, 404);
+        $access->delete();
 
         return back();
     }

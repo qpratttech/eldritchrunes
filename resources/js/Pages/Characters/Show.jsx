@@ -9,6 +9,7 @@ export default function Show({ sheet, classes, items = [], spells = [], techniqu
     const [circumstance, setCircumstance] = useState(0);
     const [spellQuery, setSpellQuery] = useState('');
     const [techniqueQuery, setTechniqueQuery] = useState('');
+    const [orderName, setOrderName] = useState('');
     const [advance, setAdvance] = useState(null);
     const details = useForm({
         name: sheet.name || '',
@@ -305,6 +306,27 @@ export default function Show({ sheet, classes, items = [], spells = [], techniqu
                         </div>
                     )}
                     <div className="border border-line bg-panel p-4">
+                        <h2 className="font-display text-2xl">Orders</h2>
+                        {(sheet.orders || []).length === 0 && <p className="mt-2 text-sm text-silver">No spell orders known.</p>}
+                        {(sheet.orders || []).map((order) => (
+                            <p key={order.id} className="mt-2 flex items-center justify-between gap-2 text-sm">
+                                <span className="text-parchment">{order.name}</span>
+                                <button type="button" className="text-xs text-silver underline" onClick={() => router.delete(`/characters/${sheet.id}/orders/${order.id}`, { preserveScroll: true })}>Remove</button>
+                            </p>
+                        ))}
+                        <form className="mt-4 flex gap-2" onSubmit={(event) => {
+                            event.preventDefault();
+                            if (!orderName) return;
+                            router.post(`/characters/${sheet.id}/orders`, { name: orderName }, { preserveScroll: true, onSuccess: () => setOrderName('') });
+                        }}>
+                            <select className={inputClass} value={orderName} onChange={(event) => setOrderName(event.target.value)}>
+                                <option value="">Add an order</option>
+                                {SPELL_ORDERS.filter((name) => !(sheet.orders || []).some((order) => order.name === name)).map((name) => <option key={name} value={name}>{name}</option>)}
+                            </select>
+                            <button className={buttonClass} disabled={!orderName}>Add</button>
+                        </form>
+                    </div>
+                    <div className="border border-line bg-panel p-4">
                         <h2 className="font-display text-2xl">Spells</h2>
                         {(sheet.spells || []).length === 0 && <p className="mt-2 text-sm text-silver">No spells known.</p>}
                         {(sheet.spells || []).map((spell) => (
@@ -478,6 +500,8 @@ export default function Show({ sheet, classes, items = [], spells = [], techniqu
     );
 }
 
+const SPELL_ORDERS = ['Circle', 'Elemental', 'Forbidden', 'Mythic', 'Nature', 'Necromancy', 'Psionic', 'Runic', 'Shadow', 'Shamanism', 'Spirit'];
+
 function spellTechniqueDetail(name) {
     return {
         Potent: 'An Empowered spell deals 1 extra wound to one target before defenses.',
@@ -490,7 +514,7 @@ function spellTechniqueDetail(name) {
 function AdvanceDialog({ advance, setAdvance, sheet, spells, techniques, attackSkills, talents, onSave }) {
     const [choices, setChoices] = useState({});
     const potential = Number(sheet.resources?.sorcerous_potential?.max ?? 0);
-    const orders = sheet.orders || [];
+    const orders = (sheet.orders || []).map((row) => row.name ?? row);
     function setChoice(key, patch) {
         setChoices((current) => ({ ...current, [key]: { ...(current[key] || {}), ...patch } }));
     }
@@ -544,11 +568,33 @@ function ChoiceField({ kind, spell = null, value, onChange, spells, techniques, 
             </div>
         );
     }
+    if (kind === 'order') {
+        return (
+            <div className="mt-3 flex flex-wrap gap-2">
+                {SPELL_ORDERS.map((name) => (
+                    <button key={name} type="button" className={value.order === name ? buttonClass : quietClass} onClick={() => onChange({ order: name })}>{name}</button>
+                ))}
+            </div>
+        );
+    }
     if (kind === 'talent') {
-        return <select className={`${inputClass} mt-3`} value={value.talent || ''} onChange={(event) => onChange({ talent: event.target.value })}>
-            <option value="">Talent or tactic</option>
-            {talents.map((row) => <option key={row.id} value={row.name}>{row.name}</option>)}
-        </select>;
+        const talent = talents.find((row) => row.name === value.talent);
+        const grantsOrder = /gain access to one order of magic|choose one order/i.test(talent?.rules_text || '');
+        return (
+            <div className="mt-3 space-y-3">
+                <select className={inputClass} value={value.talent || ''} onChange={(event) => onChange({ talent: event.target.value, order: '' })}>
+                    <option value="">Talent or tactic</option>
+                    {talents.map((row) => <option key={row.id} value={row.name}>{row.name}</option>)}
+                </select>
+                {grantsOrder && (
+                    <div className="flex flex-wrap gap-2">
+                        {SPELL_ORDERS.map((name) => (
+                            <button key={name} type="button" className={value.order === name ? buttonClass : quietClass} onClick={() => onChange({ order: name })}>{name}</button>
+                        ))}
+                    </div>
+                )}
+            </div>
+        );
     }
     if (kind === 'greater_companion' || kind === 'small_companion') {
         const names = kind === 'greater_companion' ? ['Direwolf', 'Panther', 'Bear'] : ['Raven', 'Owl', 'Eagle', 'Monkey', 'Snake', 'Bat'];
@@ -574,7 +620,7 @@ function ChoiceField({ kind, spell = null, value, onChange, spells, techniques, 
     const cap = meta.max_tier == null ? potential : Math.min(potential, meta.max_tier);
     const limit = meta.count || (kind === 'two_spells' ? 2 : kind === 'one_spell' ? 1 : 5);
     const selectedOrder = value.order || (meta.orders?.length === 1 ? meta.orders[0] : '');
-    const orderChoices = meta.choose_order ? ['Circle', 'Elemental', 'Forbidden', 'Mythic', 'Nature', 'Necromancy', 'Psionic', 'Runic', 'Shadow', 'Shamanism', 'Spirit'] : [];
+    const orderChoices = meta.choose_order ? SPELL_ORDERS : [];
     const visible = spells.filter((row) => Number(row.tier) <= cap);
     const picked = value.spells || [];
     return (

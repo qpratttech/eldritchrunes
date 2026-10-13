@@ -596,11 +596,15 @@ class CharacterCreator
                     $errors['choices'] = 'Magus learns two tier-0 spells.';
                 } else {
                     foreach ($ids as $id) {
-                        $spell = Spell::find($id);
-                        if (! $spell || $spell->tier !== 0) {
-                            $errors['choices'] = 'Magus spells must be tier 0.';
+                        $spell = Spell::query()->with('order')->find($id);
+                        $order = SpellGrant::order((string) ($choice['order'] ?? ''));
+                        if (! $order) {
+                            $errors['choices'] = 'Magus needs an order.';
+                        } elseif (! $spell || $spell->tier !== 0 || $spell->order?->name !== $order) {
+                            $errors['choices'] = 'Magus spells must be level 0 spells from '.$order.'.';
                         } else {
                             $spellIds[] = $spell->id;
+                            $this->grantedOrderNames[] = $order;
                         }
                     }
                 }
@@ -610,6 +614,17 @@ class CharacterCreator
                 if (empty($choice['damage_type'])) {
                     $errors['choices'] = $label.' needs a damage type: Fire, Storm, or Cold.';
                 }
+            }
+        }
+        $rules = (string) $feature->rules_text;
+        $grant = SpellGrant::fromText($rules);
+        if (SpellGrant::choosesOrder($rules) && ! ($grant['choose_order'] ?? false)) {
+            $order = SpellGrant::order((string) ($choice['order'] ?? ''));
+            if (! $order) {
+                $errors['choices'] = $label.' needs an order.';
+            } else {
+                $this->grantedOrderNames[] = $order;
+                $ledger[] = $label.' grants the '.$order.' order.';
             }
         }
     }

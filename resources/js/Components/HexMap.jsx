@@ -501,20 +501,10 @@ export default function HexMap({ scene, tokens = [], isGm, tool, blockIcon = 'ro
             }
         }
 
-        const drawTurnMark = (left, base) => {
-            const icon = turnIcon.current;
-            if (!icon?.naturalWidth) return;
-            const height = 28 * gridScale;
-            const width = height * (icon.naturalWidth / icon.naturalHeight);
-            ctx.drawImage(icon, left, base - height, width, height);
-        };
+        const turnMarkHeight = 28 * gridScale;
 
-        tokens.forEach((token) => {
-            if (npcHidden(token) || npcInFog(token)) return;
-            const dragging = ghost?.id === token.id;
-            const at = dragging ? ghost : token;
+        const markAnchor = (token, at) => {
             const { x, y } = center(at.x, at.y, square);
-            const active = token.combatant_id != null && Number(token.combatant_id) === Number(activeCombatantId);
             const image = token.portrait_url ? portraits.current.get(token.portrait_url) : null;
             if (image?.naturalWidth) {
                 const boxWidth = square ? cellSize() : hexSize() * Math.sqrt(3);
@@ -524,8 +514,42 @@ export default function HexMap({ scene, tokens = [], isGm, tool, blockIcon = 'ro
                     ? (boxWidth * 2) / image.naturalWidth
                     : (boxHeight * 1.5 * (Number(token.portrait_scale) || 1)) / image.naturalHeight;
                 const width = image.naturalWidth * scale;
-                const height = image.naturalHeight * scale;
                 const footY = square ? y + cellSize() / 2 : y + hexSize();
+                return { left: x + width / 2 + 4 * gridScale, base: footY, image, width, height: image.naturalHeight * scale, footY };
+            }
+            const radius = hexSize() * 0.93;
+            return { left: x + radius + 4 * gridScale, base: y + radius, image: null, width: 0, height: 0, footY: 0, x, y, radius };
+        };
+
+        const drawTurnMark = (anchor) => {
+            const icon = turnIcon.current;
+            if (!icon?.naturalWidth) return;
+            const width = turnMarkHeight * (icon.naturalWidth / icon.naturalHeight);
+            ctx.drawImage(icon, anchor.left, anchor.base - turnMarkHeight, width, turnMarkHeight);
+        };
+
+        const drawFlame = (left, bottom) => {
+            const icon = lightIcon.current;
+            const height = (square ? cellSize() : hexSize() * 2) * 0.45;
+            const width = icon?.naturalWidth ? height * (icon.naturalWidth / icon.naturalHeight) : height;
+            if (icon?.naturalWidth) {
+                ctx.drawImage(icon, left, bottom - height, width, height);
+            } else {
+                ctx.fillStyle = '#e7d7b8';
+                ctx.fillRect(left, bottom - height, width, height);
+            }
+        };
+
+        tokens.forEach((token) => {
+            if (npcHidden(token) || npcInFog(token)) return;
+            const dragging = ghost?.id === token.id;
+            const at = dragging ? ghost : token;
+            const anchor = markAnchor(token, at);
+            const { x, y } = center(at.x, at.y, square);
+            const active = token.combatant_id != null && Number(token.combatant_id) === Number(activeCombatantId);
+            const image = anchor.image;
+            if (image?.naturalWidth) {
+                const { width, height, footY } = anchor;
                 ctx.save();
                 ctx.shadowColor = 'rgba(0, 0, 0, 0.85)';
                 ctx.shadowBlur = 18 * gridScale;
@@ -533,7 +557,7 @@ export default function HexMap({ scene, tokens = [], isGm, tool, blockIcon = 'ro
                 ctx.shadowOffsetY = 14 * gridScale;
                 ctx.drawImage(image, x - width / 2, footY - height, width, height);
                 ctx.restore();
-                if (active) drawTurnMark(x + width / 2 + 4 * gridScale, footY);
+                if (active) drawTurnMark(anchor);
             } else {
                 const radius = hexSize() * 0.93;
                 ctx.save();
@@ -556,7 +580,7 @@ export default function HexMap({ scene, tokens = [], isGm, tool, blockIcon = 'ro
                 ctx.lineWidth = 1;
                 ctx.strokeStyle = '#e7d7b8';
                 ctx.stroke();
-                if (active) drawTurnMark(x + radius + 4 * gridScale, y + radius);
+                if (active) drawTurnMark(anchor);
             }
         });
         stroke.forEach((cell) => {
@@ -567,19 +591,28 @@ export default function HexMap({ scene, tokens = [], isGm, tool, blockIcon = 'ro
             ctx.fillStyle = tool === 'fog' || (tool === 'both' && blockIcon === 'black') ? 'rgba(7,7,8,0.85)' : (tool === 'los' ? 'rgba(143,49,64,0.45)' : 'rgba(58,36,28,0.55)');
             ctx.fill();
         });
-        lights.forEach((source) => {
-            const at = lightCell(source);
-            const { x, y } = center(at.x, at.y, square);
-            const image = lightIcon.current;
-            const height = (square ? cellSize() : hexSize() * 2) * 0.6;
-            if (image?.naturalWidth) {
-                const width = height * (image.naturalWidth / image.naturalHeight);
-                ctx.drawImage(image, x - width / 2, y - height / 2, width, height);
-            } else {
-                ctx.fillStyle = '#e7d7b8';
-                ctx.fillRect(x - height / 2, y - height / 2, height, height);
-            }
-        });
+        if (isGm) {
+            lights.forEach((source) => {
+                const bound = source.token_id ? tokens.find((token) => token.id === source.token_id) : null;
+                if (bound) {
+                    const at = ghost?.id === bound.id ? ghost : bound;
+                    const anchor = markAnchor(bound, at);
+                    drawFlame(anchor.left, anchor.base - turnMarkHeight - 2 * gridScale);
+                    return;
+                }
+                const at = lightCell(source);
+                const { x, y } = center(at.x, at.y, square);
+                const image = lightIcon.current;
+                const height = (square ? cellSize() : hexSize() * 2) * 0.6;
+                if (image?.naturalWidth) {
+                    const width = height * (image.naturalWidth / image.naturalHeight);
+                    ctx.drawImage(image, x - width / 2, y - height / 2, width, height);
+                } else {
+                    ctx.fillStyle = '#e7d7b8';
+                    ctx.fillRect(x - height / 2, y - height / 2, height, height);
+                }
+            });
+        }
         if (measure?.from && measure?.to) {
             const cells = lineCells(measure.from, measure.to, square);
             const feet = distance(measure.from, measure.to, square) * (Number(scene?.feet_per_cell) || 5);
@@ -604,7 +637,7 @@ export default function HexMap({ scene, tokens = [], isGm, tool, blockIcon = 'ro
             ctx.fillText(label, at.x, top);
         }
         ctx.restore();
-    }, [scene, tokens, ghost, activeCombatantId, iconReady, turnReady, blocksReady, backgroundTick, portraitTick, view, stroke, tool, blockIcon, gmVision, scale, measure]);
+    }, [scene, tokens, ghost, activeCombatantId, iconReady, turnReady, blocksReady, backgroundTick, portraitTick, view, stroke, tool, blockIcon, gmVision, isGm, scale, measure]);
 
     useEffect(() => {
         if (tool !== 'measure') setMeasure(null);

@@ -51,6 +51,16 @@ class SpellGrant
         return null;
     }
 
+    public static function choosesOrder(?string $text): bool
+    {
+        $text = (string) $text;
+        if (preg_match('/gain access to one order of magic|choose one order/i', $text)) {
+            return true;
+        }
+
+        return (bool) (self::fromText($text)['choose_order'] ?? false);
+    }
+
     /**
      * @param  list<string>|null  $orders
      * @return array{count: int, orders: list<string>|null, choose_order: bool, all_orders: bool, max_tier: int|null}

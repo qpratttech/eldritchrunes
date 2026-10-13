@@ -44,6 +44,8 @@ Route::middleware('auth')->group(function () {
         Route::delete('/characters/{character}/techniques/{characterTechnique}', [CharacterController::class, 'removeTechnique'])->name('characters.techniques.destroy');
         Route::post('/characters/{character}/spell-techniques', [CharacterController::class, 'addSpellTechnique'])->name('characters.spell-techniques.store');
         Route::delete('/characters/{character}/spell-techniques/{technique}', [CharacterController::class, 'removeSpellTechnique'])->name('characters.spell-techniques.destroy');
+        Route::post('/characters/{character}/orders', [CharacterController::class, 'addOrder'])->name('characters.orders.store');
+        Route::delete('/characters/{character}/orders/{access}', [CharacterController::class, 'removeOrder'])->name('characters.orders.destroy');
         Route::post('/characters/{character}/companion', [CharacterController::class, 'setCompanion'])->name('characters.companion');
     Route::post('/characters/{character}/inventory', [CharacterController::class, 'addItem'])->name('characters.inventory.store');
     Route::delete('/characters/{character}/inventory/{inventory}', [CharacterController::class, 'removeItem'])->name('characters.inventory.destroy');

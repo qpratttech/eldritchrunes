@@ -164,10 +164,15 @@ class CharacterPresenter
                 'choice' => \App\Domain\Characters\CharacterAdvancement::choiceKinds((string) ($level['feature'] ?? '')),
                 'spell' => \App\Domain\Characters\CharacterAdvancement::spellChoice((string) ($level['feature'] ?? '')),
             ])->values(),
-            'orders' => \App\Models\MagicOrder::query()
-                ->whereIn('id', \App\Models\CharacterOrderAccess::query()->where('character_id', $character->id)->pluck('order_id'))
-                ->orderBy('name')
-                ->pluck('name')
+            'orders' => \App\Models\CharacterOrderAccess::query()
+                ->where('character_id', $character->id)
+                ->get()
+                ->map(function ($row) {
+                    $name = \App\Models\MagicOrder::query()->whereKey($row->order_id)->value('name');
+
+                    return $name ? ['id' => $row->id, 'name' => $name] : null;
+                })
+                ->filter()
                 ->values(),
             'armor' => $character->armorSavePercent(),
             'suffering' => $suffering,

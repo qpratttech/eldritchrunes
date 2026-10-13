@@ -142,6 +142,52 @@ class ClassAdvancementTest extends TestCase
         $this->assertFalse(CharacterOrderAccess::query()->where('character_id', $character->id)->where('order_id', $nature->id)->exists());
     }
 
+    public function test_an_order_only_advancement_asks_for_the_order_and_the_sheet_can_add_or_remove_one(): void
+    {
+        $gm = User::factory()->create();
+        $class = HeroClass::create([
+            'name' => 'Scholar',
+            'progression_json' => [
+                ['level' => 1, 'feature' => 'Ready'],
+                ['level' => 2, 'feature' => 'Elder Knowledge'],
+            ],
+        ]);
+        Feature::create([
+            'key' => 'elder-knowledge',
+            'name' => 'Elder Knowledge',
+            'category' => 'talent',
+            'rules_text' => 'Gain access to one order of magic. This does not grant spells, Soul capacity, or additional Potential.',
+        ]);
+        $circle = MagicOrder::create(['name' => 'Circle']);
+        $shadow = MagicOrder::create(['name' => 'Shadow']);
+        $character = Character::create(['user_id' => $gm->id, 'name' => 'Vash']);
+        CharacterClassLevel::create(['character_id' => $character->id, 'class_id' => $class->id, 'class_level' => 1]);
+
+        $this->assertContains('order', \App\Domain\Characters\CharacterAdvancement::choiceKinds('Elder Knowledge'));
+
+        $this->actingAs($gm)->post("/characters/{$character->id}/classes", [
+            'class_id' => $class->id,
+            'choices' => ['Elder Knowledge' => []],
+        ])->assertSessionHasErrors('choices');
+
+        $this->actingAs($gm)->post("/characters/{$character->id}/classes", [
+            'class_id' => $class->id,
+            'choices' => ['Elder Knowledge' => ['order' => 'Circle']],
+        ])->assertRedirect();
+
+        $access = CharacterOrderAccess::query()->where('character_id', $character->id)->where('order_id', $circle->id)->first();
+        $this->assertNotNull($access);
+        $this->assertSame(0, CharacterSpell::query()->where('character_id', $character->id)->count());
+
+        $this->actingAs($gm)->post("/characters/{$character->id}/orders", ['name' => 'Shadow'])->assertRedirect();
+        $added = CharacterOrderAccess::query()->where('character_id', $character->id)->where('order_id', $shadow->id)->first();
+        $this->assertNotNull($added);
+
+        $this->actingAs($gm)->delete("/characters/{$character->id}/orders/{$added->id}")->assertRedirect();
+        $this->assertFalse(CharacterOrderAccess::query()->where('character_id', $character->id)->where('order_id', $shadow->id)->exists());
+        $this->assertTrue(CharacterOrderAccess::query()->whereKey($access->id)->exists());
+    }
+
     private function resource(Character $character, string $key): int
     {
         return (int) CharacterResource::query()->where('character_id', $character->id)->where('resource_key', $key)->value('base_maximum');

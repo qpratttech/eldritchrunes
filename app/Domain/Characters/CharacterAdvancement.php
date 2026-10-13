@@ -119,6 +119,8 @@ class CharacterAdvancement
         if ($feature) {
             if (SpellGrant::fromText($feature->rules_text)) {
                 $kinds[] = 'spells';
+            } elseif (SpellGrant::choosesOrder($feature->rules_text)) {
+                $kinds[] = 'order';
             }
             if (preg_match('/direwolf, panther, or bear/i', (string) $feature->rules_text)) {
                 $kinds[] = 'greater_companion';
@@ -222,7 +224,7 @@ class CharacterAdvancement
     {
         if ($role === 'Martial') {
             $this->bump($character, 'wounds', 1);
-            $this->grantTalent($character, (string) ($choice['talent'] ?? ''), 'Martial');
+            $this->grantTalent($character, (string) ($choice['talent'] ?? ''), 'Martial', $choice);
             $this->note($character, 'Martial increases maximum Wounds by 1.');
         } elseif ($role === 'Rogue') {
             $this->bump($character, 'initiative_bonus', 1);
@@ -284,6 +286,9 @@ class CharacterAdvancement
         if (preg_match('/weapon technique/i', $rules)) {
             $this->grantWeaponTechnique($character, (int) ($choice['weapon_type_id'] ?? 0), $feature->name);
         }
+        if (SpellGrant::choosesOrder($rules) && ! (SpellGrant::fromText($rules)['choose_order'] ?? false)) {
+            $this->grantChosenOrder($character, (string) ($choice['order'] ?? ''), $feature->name, $source, $sourceId);
+        }
         if (preg_match('/learn one spell|1 spell learned/i', $rules) && ! SpellGrant::fromText($rules)) {
             $this->learnSpells($character, $choice['spells'] ?? [], 1, $this->accessibleOrders($character), $this->resource($character, 'sorcerous_potential'), $feature->name, false);
             $this->bump($character, 'sorcerous_soul', 1);
@@ -304,7 +309,7 @@ class CharacterAdvancement
         if ($weapon > 0) {
             $this->grantWeaponTechnique($character, $weapon, $label);
         } else {
-            $this->grantTalent($character, $talent, $label);
+            $this->grantTalent($character, $talent, $label, $choice);
         }
     }
 
@@ -355,7 +360,10 @@ class CharacterAdvancement
         $this->note($character, 'Learned '.$type->item?->name.' '.$technique->name.'.');
     }
 
-    private function grantTalent(Character $character, string $name, string $label): void
+    /**
+     * @param  array<string, mixed>  $choice
+     */
+    private function grantTalent(Character $character, string $name, string $label, array $choice = []): void
     {
         $talent = Feature::query()->whereIn('category', ['talent', 'tactic'])->where('name', $name)->first();
         if (! $talent) {
@@ -365,6 +373,9 @@ class CharacterAdvancement
             'character_id' => $character->id,
             'feature_id' => $talent->id,
         ], ['source_type' => 'advancement', 'source_id' => null]);
+        if (SpellGrant::choosesOrder($talent->rules_text)) {
+            $this->grantChosenOrder($character, (string) ($choice['order'] ?? ''), $talent->name, 'advancement', null);
+        }
         $this->note($character, $label.' grants '.$talent->name.'.');
     }
 
@@ -420,6 +431,16 @@ class CharacterAdvancement
         }
         $this->putDerivation($character, 'companion', ['name' => $match, 'aptitude' => $aptitude]);
         $this->note($character, $match.' becomes your companion.'.($aptitude ? ' '.$aptitude.' is Enhanced.' : ''));
+    }
+
+    private function grantChosenOrder(Character $character, string $name, string $label, string $source, ?int $sourceId): void
+    {
+        $order = SpellGrant::order($name);
+        if (! $order) {
+            throw ValidationException::withMessages(['choices' => $label.' needs an order.']);
+        }
+        $this->grantOrder($character, $order, $source, $sourceId);
+        $this->note($character, $label.' grants the '.$order.' order.');
     }
 
     /**
