@@ -386,6 +386,8 @@ function Combat({ campaign, encounter, active, fight, roster, split = false }) {
 
 function Company({ campaign, roster, encounter, active, fight, conditions = [] }) {
     const lastRoll = usePage().props.flash?.roll;
+    const actionError = usePage().props.errors?.action;
+    const [failedAttack, setFailedAttack] = useState(null);
     const art = usePage().props.art || {};
     const targets = [
         ...(roster.characters || []).map((row) => ({ ...row, type: 'character' })),
@@ -415,6 +417,7 @@ function Company({ campaign, roster, encounter, active, fight, conditions = [] }
     function roll(creature, attack) {
         const [targetType, targetId] = (target || '').split(':');
         if (!targetType || !targetId) return;
+        setFailedAttack(`n-${creature.id}-${attack}`);
         router.post(`/campaigns/${campaign.id}/attacks`, {
             creature_instance_id: creature.id,
             attack,
@@ -438,6 +441,7 @@ function Company({ campaign, roster, encounter, active, fight, conditions = [] }
 
     function rollAttack(row, attack, heavy = false) {
         const [targetType, targetId] = (target || '').split(':');
+        setFailedAttack(`c-${row.id}-${attack.kind}-${attack.item_id || attack.spell_id || attack.name}-${heavy ? 'heavy' : 'roll'}`);
         router.post(`/characters/${row.id}/attacks`, {
             kind: attack.kind,
             item_id: attack.item_id,
@@ -576,12 +580,24 @@ function Company({ campaign, roster, encounter, active, fight, conditions = [] }
                                     )}
                                     <DiceButtons onRoll={(die) => rollDie({ character_id: row.id }, die)} />
                                     <div className="mt-3 flex flex-wrap gap-2">
-                                        {(row.attacks || []).map((attack) => (
-                                            <button key={`${attack.kind}-${attack.item_id || attack.spell_id || attack.name}`} type="button" className={attackLinkClass} onClick={() => rollAttack(row, attack)}>{attackLine(attack.name, attack.tier == null ? null : attack.tier + (circumstance[`c-${row.id}`] ?? 0), attack.save)}</button>
-                                        ))}
-                                        {(row.attacks || []).filter((attack) => attack.heavy).map((attack) => (
-                                            <button key={`heavy-${attack.item_id}`} type="button" className={attackLinkClass} onClick={() => rollAttack(row, attack, true)}>{attackLine(`${attack.name}, heavy`, attack.tier == null ? null : attack.tier + (circumstance[`c-${row.id}`] ?? 0), attack.save)}</button>
-                                        ))}
+                                        {(row.attacks || []).map((attack) => {
+                                            const key = `c-${row.id}-${attack.kind}-${attack.item_id || attack.spell_id || attack.name}-roll`;
+                                            return (
+                                                <span key={key} className="inline-flex flex-col">
+                                                    <button type="button" className={attackLinkClass} onClick={() => rollAttack(row, attack)}>{attackLine(attack.name, attack.tier == null ? null : attack.tier + (circumstance[`c-${row.id}`] ?? 0), attack.save)}</button>
+                                                    {actionError && failedAttack === key && <span className="mt-1 text-xs text-maroon">{actionError}</span>}
+                                                </span>
+                                            );
+                                        })}
+                                        {(row.attacks || []).filter((attack) => attack.heavy).map((attack) => {
+                                            const key = `c-${row.id}-${attack.kind}-${attack.item_id || attack.spell_id || attack.name}-heavy`;
+                                            return (
+                                                <span key={key} className="inline-flex flex-col">
+                                                    <button type="button" className={attackLinkClass} onClick={() => rollAttack(row, attack, true)}>{attackLine(`${attack.name}, heavy`, attack.tier == null ? null : attack.tier + (circumstance[`c-${row.id}`] ?? 0), attack.save)}</button>
+                                                    {actionError && failedAttack === key && <span className="mt-1 text-xs text-maroon">{actionError}</span>}
+                                                </span>
+                                            );
+                                        })}
                                     </div>
                                     {lastRoll?.character_id === row.id && lastRoll.summary && (
                                         <p className="mt-3 text-sm"><LogText text={lastRoll.summary} /></p>
@@ -698,9 +714,15 @@ function Company({ campaign, roster, encounter, active, fight, conditions = [] }
                         )}
                         <DiceButtons onRoll={(die) => rollDie({ creature_instance_id: creature.id }, die)} />
                         <div className="mt-3 flex flex-wrap gap-2">
-                            {(creature.attacks || []).filter((attack) => attack.resolution !== 'save').map((attack) => (
-                                <button key={attack.name} type="button" className={attackLinkClass} onClick={() => roll(creature, attack.name)}>{attackLine(attack.name, attack.tier == null ? null : adjustedAttackTier(attack.tier, creature.suffering, circumstance[`n-${creature.id}`] ?? 0), null)}</button>
-                            ))}
+                            {(creature.attacks || []).filter((attack) => attack.resolution !== 'save').map((attack) => {
+                                const key = `n-${creature.id}-${attack.name}`;
+                                return (
+                                    <span key={key} className="inline-flex flex-col">
+                                        <button type="button" className={attackLinkClass} onClick={() => roll(creature, attack.name)}>{attackLine(attack.name, attack.tier == null ? null : adjustedAttackTier(attack.tier, creature.suffering, circumstance[`n-${creature.id}`] ?? 0), null)}</button>
+                                        {actionError && failedAttack === key && <span className="mt-1 text-xs text-maroon">{actionError}</span>}
+                                    </span>
+                                );
+                            })}
                         </div>
                         {lastRoll?.npc_id === creature.id && (lastRoll.attack || lastRoll.die) && (
                             <p className="mt-3 text-sm"><LogText text={lastRoll.summary} /></p>

@@ -26,7 +26,7 @@ class ActionPool
         $minor = max(0, min(self::MINOR_MAX, $minor));
         if ($heavy) {
             if ($major < 1 || $minor < 1) {
-                throw ValidationException::withMessages(['action' => 'A heavy attack needs a major action and a minor action.']);
+                throw ValidationException::withMessages(['action' => 'Not enough actions to do that.']);
             }
 
             return ['actions' => ['major', 'minor'], 'major' => $major - 1, 'minor' => $minor - 1, 'extra_used' => $extraUsed];
@@ -38,7 +38,43 @@ class ActionPool
             return ['actions' => ['minor'], 'major' => $major, 'minor' => $minor - 1, 'extra_used' => $extraUsed + 1];
         }
 
-        throw ValidationException::withMessages(['action' => 'No action remains for that attack.']);
+        throw ValidationException::withMessages(['action' => 'Not enough actions to do that.']);
+    }
+
+    public static function attackShift(int $already): int
+    {
+        return $already <= 0 ? 0 : ($already === 1 ? -1 : -2);
+    }
+
+    public static function noteCharacterAttack(Character $character): int
+    {
+        $already = (int) CharacterResource::query()
+            ->where('character_id', $character->id)
+            ->where('resource_key', 'attacks_made')
+            ->value('current_value');
+        self::putCharacter($character, 'attacks_made', 9, $already + 1);
+
+        return self::attackShift($already);
+    }
+
+    public static function noteCreatureAttack(CreatureInstance $instance): int
+    {
+        $overrides = $instance->overrides_json ?? [];
+        $already = (int) ($overrides['attacks_made'] ?? 0);
+        $overrides['attacks_made'] = $already + 1;
+        $instance->update(['overrides_json' => $overrides]);
+
+        return self::attackShift($already);
+    }
+
+    public static function noteTemplateAttack(CreatureTemplate $template): int
+    {
+        $stats = $template->stats_json ?? [];
+        $already = (int) ($stats['attacks_made'] ?? 0);
+        $stats['attacks_made'] = $already + 1;
+        $template->update(['stats_json' => $stats]);
+
+        return self::attackShift($already);
     }
 
     public static function extraAttacksIn(?string $text): int
@@ -148,15 +184,18 @@ class ActionPool
     {
         if (self::isDefeated($character)) {
             self::writeCharacter($character, 0, 0, 0);
+            self::putCharacter($character, 'attacks_made', 9, 0);
 
             return;
         }
         self::writeCharacter($character, self::MAJOR_MAX, self::MINOR_MAX, 0);
+        self::putCharacter($character, 'attacks_made', 9, 0);
     }
 
     public static function defeat(Character $character): void
     {
         self::writeCharacter($character, 0, 0, 0);
+        self::putCharacter($character, 'attacks_made', 9, 0);
     }
 
     public static function defeatCreature(CreatureInstance $instance): void
@@ -165,6 +204,7 @@ class ActionPool
         $overrides['major_action'] = 0;
         $overrides['minor_action'] = 0;
         $overrides['extra_attacks_used'] = 0;
+        $overrides['attacks_made'] = 0;
         $instance->update(['overrides_json' => $overrides]);
         self::syncCombatant(null, $instance->id, 0, 0);
     }
@@ -192,6 +232,7 @@ class ActionPool
         $overrides['major_action'] = self::MAJOR_MAX;
         $overrides['minor_action'] = self::MINOR_MAX;
         $overrides['extra_attacks_used'] = 0;
+        $overrides['attacks_made'] = 0;
         $instance->update(['overrides_json' => $overrides]);
     }
 
@@ -207,13 +248,17 @@ class ActionPool
 
     public static function characterExtras(Character $character): int
     {
-        $character->loadMissing('features.feature');
+        $character->loadMissing(['features.feature', 'inventory.item']);
         $total = 0;
         foreach ($character->features as $row) {
             $total += self::extraAttacksIn($row->feature?->rules_text);
         }
         $flags = $character->derivation_json['flags'] ?? [];
         $total += (int) (is_array($flags) ? ($flags['extra_attacks'] ?? 0) : 0);
+        $wielded = $character->inventory->filter(fn ($row) => $row->equipped_slot === 'wielded' && $row->item?->category === 'weapon')->count();
+        if ($wielded >= 2) {
+            $total += 1;
+        }
 
         return $total;
     }

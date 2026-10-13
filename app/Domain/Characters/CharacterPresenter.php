@@ -75,6 +75,8 @@ class CharacterPresenter
             'name' => $character->name,
             'letter' => strtoupper(substr($character->name, 0, 1)),
             'portrait_url' => $character->portraitUrl(),
+            'portrait_path' => $character->portrait_path,
+            'species_portrait_url' => $character->species?->portrait_url,
             'gender' => $character->gender,
             'pronouns' => $character->pronouns,
             'height' => $character->height,

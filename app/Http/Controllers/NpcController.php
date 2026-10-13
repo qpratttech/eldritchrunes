@@ -126,6 +126,10 @@ class NpcController extends Controller
         if ($data['type'] === 'attack' && ($entry['resolution'] ?? 'attack') === 'attack') {
             ActionPool::spendTemplate($template, (bool) ($entry['heavy'] ?? false));
         }
+        if ($data['type'] === 'attack') {
+            $shift = ActionPool::noteTemplateAttack($template);
+            $circumstance = max(-2, min(2, $circumstance + (($entry['resolution'] ?? 'attack') === 'save' ? -$shift : $shift)));
+        }
 
         if ($data['type'] === 'attack' && ($entry['resolution'] ?? 'attack') === 'save') {
             return back()->with('roll', [
@@ -183,21 +187,117 @@ class NpcController extends Controller
     {
         $data = $request->validate([
             'name' => ['required', 'string', 'max:120'],
-            'category' => ['nullable', 'string'],
+            'category' => ['required', 'in:npc,companion,summon'],
             'description' => ['nullable', 'string'],
-            'base_wounds' => ['required', 'integer', 'min:1'],
-            'armor_save_percent' => ['nullable', 'integer', 'min:0', 'max:95'],
-            'attack_tier' => ['nullable', 'integer'],
+            'behavior' => ['nullable', 'string'],
+            'base_wounds' => ['required', 'integer', 'min:1', 'max:99'],
+            'armor_save_percent' => ['required', 'integer', 'min:0', 'max:95'],
+            'armor_note' => ['nullable', 'string', 'max:120'],
+            'major_move_ft' => ['required', 'integer', 'min:0', 'max:200'],
+            'minor_move_ft' => ['required', 'integer', 'min:0', 'max:100'],
+            'stamina' => ['required', 'integer', 'min:0', 'max:20'],
+            'power' => ['required', 'integer', 'min:0', 'max:20'],
+            'focus' => ['required', 'integer', 'min:0', 'max:10'],
+            'initiative' => ['required', 'integer', 'min:-10', 'max:10'],
+            'melee' => ['nullable', 'integer', 'min:0', 'max:18'],
+            'ranged' => ['nullable', 'integer', 'min:0', 'max:18'],
+            'attack_tier' => ['required', 'integer', 'min:0', 'max:18'],
+            'endurance' => ['required', 'integer', 'min:0', 'max:18'],
+            'reflexes' => ['required', 'integer', 'min:0', 'max:18'],
+            'willpower' => ['required', 'integer', 'min:0', 'max:18'],
+            'other' => ['required', 'integer', 'min:0', 'max:18'],
+            'skills' => ['nullable', 'array'],
+            'skills.*.name' => ['nullable', 'string', 'max:80'],
+            'skills.*.tip' => ['nullable', 'string', 'max:500'],
+            'features' => ['nullable', 'array'],
+            'features.*.name' => ['nullable', 'string', 'max:80'],
+            'features.*.tip' => ['nullable', 'string', 'max:500'],
+            'attacks' => ['nullable', 'array'],
+            'attacks.*.name' => ['nullable', 'string', 'max:80'],
+            'attacks.*.tier' => ['nullable', 'integer', 'min:0', 'max:18'],
+            'attacks.*.range_ft' => ['nullable', 'integer', 'min:0', 'max:500'],
+            'attacks.*.damage' => ['nullable', 'string', 'max:80'],
+            'attacks.*.resolution' => ['nullable', 'in:attack,save'],
+            'attacks.*.cost' => ['nullable', 'string', 'max:40'],
+            'attacks.*.tip' => ['nullable', 'string', 'max:500'],
+            'attacks.*.heavy' => ['nullable', 'boolean'],
+            'attacks.*.two_handed' => ['nullable', 'boolean'],
         ]);
-        CreatureTemplate::create([
+
+        $stats = [
+            'attack_tier' => (int) $data['attack_tier'],
+            'endurance' => (int) $data['endurance'],
+            'reflexes' => (int) $data['reflexes'],
+            'willpower' => (int) $data['willpower'],
+            'other' => (int) $data['other'],
+            'stamina' => (int) $data['stamina'],
+            'power' => (int) $data['power'],
+            'focus' => (int) $data['focus'],
+            'initiative' => (int) $data['initiative'],
+        ];
+        if (is_numeric($data['melee'] ?? null)) {
+            $stats['melee'] = (int) $data['melee'];
+        }
+        if (is_numeric($data['ranged'] ?? null)) {
+            $stats['ranged'] = (int) $data['ranged'];
+        }
+        if (filled($data['armor_note'] ?? null)) {
+            $stats['armor_note'] = $data['armor_note'];
+        }
+        if (filled($data['behavior'] ?? null)) {
+            $stats['behavior'] = $data['behavior'];
+        }
+
+        $named = fn (?array $rows) => collect($rows ?? [])
+            ->filter(fn ($row) => filled($row['name'] ?? null))
+            ->map(fn ($row) => ['name' => $row['name'], 'tip' => $row['tip'] ?? ''])
+            ->values()
+            ->all();
+
+        $template = CreatureTemplate::create([
             'name' => $data['name'],
-            'category' => $data['category'] ?: 'npc',
+            'category' => $data['category'],
             'description' => $data['description'] ?? null,
             'base_wounds' => $data['base_wounds'],
-            'armor_save_percent' => $data['armor_save_percent'] ?? 0,
-            'stats_json' => ['attack_tier' => (int) ($data['attack_tier'] ?? 6)],
+            'armor_save_percent' => $data['armor_save_percent'],
+            'major_move_ft' => $data['major_move_ft'],
+            'minor_move_ft' => $data['minor_move_ft'],
+            'stats_json' => $stats,
+            'traits_json' => [
+                'skills' => $named($data['skills'] ?? []),
+                'features' => $named($data['features'] ?? []),
+            ],
             'created_by' => $request->user()->id,
         ]);
+
+        $attacks = collect($data['attacks'] ?? [])->filter(fn ($row) => filled($row['name'] ?? null))->values();
+        if ($attacks->isEmpty()) {
+            $attacks = collect([[
+                'name' => 'Natural attack',
+                'tier' => null,
+                'range_ft' => 5,
+                'damage' => '1 Physical',
+                'resolution' => 'attack',
+                'cost' => 'major',
+                'tip' => 'This is a natural attack. It deals normal damage rather than Lesser Attack damage.',
+            ]]);
+        }
+        foreach ($attacks as $attack) {
+            $resolution = $attack['resolution'] ?? 'attack';
+            $template->actions()->create([
+                'name' => $attack['name'],
+                'action_cost' => $attack['cost'] ?? 'major',
+                'attack_tier' => $resolution === 'attack' ? (is_numeric($attack['tier'] ?? null) ? (int) $attack['tier'] : (int) $data['attack_tier']) : null,
+                'range_ft' => is_numeric($attack['range_ft'] ?? null) ? (int) $attack['range_ft'] : 5,
+                'resolution_type' => $resolution,
+                'effects_json' => array_filter([
+                    'damage' => $attack['damage'] ?? '1 Physical',
+                    'tip' => $attack['tip'] ?? null,
+                    'heavy' => ! empty($attack['heavy']) ? true : null,
+                    'two_handed' => ! empty($attack['two_handed']) ? true : null,
+                ], fn ($value) => $value !== null && $value !== ''),
+            ]);
+        }
 
         return back()->with('success', 'Creature added to the tome.');
     }
@@ -218,6 +318,7 @@ class NpcController extends Controller
             }
             if (array_key_exists('major_action', $data) && (int) $data['major_action'] === 1) {
                 $stats['extra_attacks_used'] = 0;
+                $stats['attacks_made'] = 0;
             }
             $template->update(['stats_json' => $stats]);
 
@@ -281,6 +382,7 @@ class NpcController extends Controller
         }
         if (array_key_exists('major_action', $data) && (int) $data['major_action'] === 1) {
             $overrides['extra_attacks_used'] = 0;
+            $overrides['attacks_made'] = 0;
         }
         $instance->update([
             'name' => $data['name'],
