@@ -32,6 +32,7 @@ use App\Models\Species;
 use App\Models\Spell;
 use App\Models\WeaponType;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 use Illuminate\Validation\ValidationException;
 use Inertia\Inertia;
 
@@ -144,6 +145,7 @@ class CharacterController extends Controller
             'techniques' => $this->weaponTechniques(request()->user()),
             'attackSkills' => Skill::query()->where('is_attack_skill', true)->orderBy('name')->get(['id', 'key', 'name']),
             'talents' => Feature::query()->whereIn('category', ['talent', 'tactic'])->orderBy('name')->get(['id', 'name', 'category', 'rules_text']),
+            'portraits' => $this->portraitCatalog(),
             'targets' => $character->campaign_id ? $this->campaignTargets($character) : [],
             'encounter' => $encounter ? [
                 'id' => $encounter->id,
@@ -155,6 +157,55 @@ class CharacterController extends Controller
                 ]),
             ] : null,
         ]);
+    }
+
+    public function setPortrait(Request $request, Character $character)
+    {
+        $this->authorizeView($character);
+        $data = $request->validate([
+            'portrait_path' => ['nullable', 'string', Rule::in(config('portraits.paths'))],
+        ]);
+        $character->update(['portrait_path' => $data['portrait_path'] ?? null]);
+        if ($character->campaign_id) {
+            event(new \App\Events\TableUpdated($character->campaign_id));
+        }
+
+        return back();
+    }
+
+    /**
+     * @return list<array{path: string, name: string, url: string|null}>
+     */
+    private function portraitCatalog(): array
+    {
+        $base = rtrim((string) config('filesystems.disks.s3.url'), '/');
+
+        return collect(config('portraits.catalog'))->map(function (array $row) use ($base) {
+            [$species, $class] = $this->portraitParts($row['name']);
+
+            return [
+                'path' => $row['path'],
+                'name' => $row['name'],
+                'species' => $species,
+                'class' => $class,
+                'url' => $base !== '' ? $base.'/'.$row['path'].'?v=9' : null,
+            ];
+        })->all();
+    }
+
+    /**
+     * @return array{0: string, 1: string}
+     */
+    private function portraitParts(string $name): array
+    {
+        $species = ['Halfogre', 'Halfling', 'Lizardman', 'Minotaur', 'Dwarf', 'Elf', 'Gnome', 'Human', 'Orc'];
+        foreach ($species as $label) {
+            if (str_starts_with($name, $label.' ')) {
+                return [$label, preg_replace('/\s+\d+$/', '', substr($name, strlen($label) + 1))];
+            }
+        }
+
+        return ['', ''];
     }
 
     public function update(Request $request, Character $character)
@@ -205,6 +256,10 @@ class CharacterController extends Controller
             CharacterResource::query()->updateOrCreate(
                 ['character_id' => $character->id, 'resource_key' => 'extra_attacks_used'],
                 ['base_maximum' => 2, 'current_value' => 0],
+            );
+            CharacterResource::query()->updateOrCreate(
+                ['character_id' => $character->id, 'resource_key' => 'attacks_made'],
+                ['base_maximum' => 9, 'current_value' => 0],
             );
         }
         ActionPool::syncCharacter($character);

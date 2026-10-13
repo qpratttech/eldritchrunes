@@ -4,13 +4,14 @@ import Shell, { CircumstanceSelect, Portrait, buttonClass, chanceLabel, inputCla
 import ConditionPicker, { addCharacterCondition, removeCharacterCondition } from '../../Components/ConditionPicker';
 import LogText from '../../Components/LogText';
 
-export default function Show({ sheet, classes, items = [], spells = [], techniques = [], attackSkills = [], talents = [], conditions = [], encounter, targets = [] }) {
+export default function Show({ sheet, classes, items = [], spells = [], techniques = [], attackSkills = [], talents = [], conditions = [], portraits = [], encounter, targets = [] }) {
     const [target, setTarget] = useState('');
     const [circumstance, setCircumstance] = useState(0);
     const [spellQuery, setSpellQuery] = useState('');
     const [techniqueQuery, setTechniqueQuery] = useState('');
     const [orderName, setOrderName] = useState('');
     const [advance, setAdvance] = useState(null);
+    const [portraitOpen, setPortraitOpen] = useState(false);
     const details = useForm({
         name: sheet.name || '',
         xp: sheet.xp || 0,
@@ -44,6 +45,7 @@ export default function Show({ sheet, classes, items = [], spells = [], techniqu
     const mine = encounter?.combatants?.find((row) => row.character_id === sheet.id);
     const lastRoll = usePage().props.flash?.roll;
     const errors = usePage().props.errors || {};
+    const [failedAttack, setFailedAttack] = useState(null);
     const art = usePage().props.art || {};
     const attackResult = lastRoll?.summary && lastRoll.attack ? lastRoll : null;
 
@@ -54,6 +56,7 @@ export default function Show({ sheet, classes, items = [], spells = [], techniqu
 
     function rollAttack(row, heavy = false) {
         const [targetType, targetId] = (target || '').split(':');
+        setFailedAttack(`${row.kind}-${row.item_id || row.spell_id || row.name}-${heavy ? 'heavy' : 'roll'}`);
         router.post(`/characters/${sheet.id}/attacks`, {
             kind: row.kind,
             item_id: row.item_id,
@@ -98,6 +101,15 @@ export default function Show({ sheet, classes, items = [], spells = [], techniqu
             <div className="grid gap-6 xl:grid-cols-[24rem_1fr_300px]">
                 <section className="border border-line bg-panel p-4">
                     <Portrait src={sheet.portrait_url} name={sheet.name} size="xl" />
+                    <button type="button" className={`${quietClass} mt-3`} onClick={() => setPortraitOpen(true)}>Change portrait</button>
+                    {portraitOpen && (
+                        <PortraitPicker
+                            sheet={sheet}
+                            portraits={portraits}
+                            onClose={() => setPortraitOpen(false)}
+                            onPick={(path) => router.patch(`/characters/${sheet.id}/portrait`, { portrait_path: path }, { preserveScroll: true, onSuccess: () => setPortraitOpen(false) })}
+                        />
+                    )}
                     <input className={`${inputClass} mt-4`} value={details.data.name} onChange={(e) => details.setData('name', e.target.value)} />
                     <p className="mt-2 text-sm text-silver">{sheet.species} · {sheet.background}</p>
                     <p className="font-display text-2xl">
@@ -205,10 +217,12 @@ export default function Show({ sheet, classes, items = [], spells = [], techniqu
                             ))}
                         </select>
                     )}
-                    {(errors.action || errors.attack) && <p className="mt-3 text-sm text-maroon">{errors.action || errors.attack}</p>}
+                    {errors.attack && <p className="mt-3 text-sm text-maroon">{errors.attack}</p>}
                     <div className="mt-3 divide-y divide-line border border-line">
                         {sheet.attacks.map((attack) => {
                             const rolled = attackResult && (attack.name === attackResult.attack || attack.name.startsWith(`${attackResult.attack} `) || attack.name.startsWith(attackResult.attack));
+                            const rollKey = `${attack.kind}-${attack.item_id || attack.spell_id || attack.name}-roll`;
+                            const heavyKey = `${attack.kind}-${attack.item_id || attack.spell_id || attack.name}-heavy`;
                             return (
                                 <div key={`${attack.kind}-${attack.name}`} className="px-3 py-2">
                                     <div className="flex items-center justify-between gap-3">
@@ -217,8 +231,16 @@ export default function Show({ sheet, classes, items = [], spells = [], techniqu
                                             <div className="text-xs text-parchment-dim">{attack.detail}{attack.tier != null ? ` · ${chanceLabel(attack.tier + circumstance)}` : ''}</div>
                                         </div>
                                         <div className="flex gap-2">
-                                            <button className={quietClass} onClick={() => rollAttack(attack)}>Roll</button>
-                                            {attack.heavy && <button className={quietClass} onClick={() => rollAttack(attack, true)}>Heavy</button>}
+                                            <span className="inline-flex flex-col items-end">
+                                                <button className={quietClass} onClick={() => rollAttack(attack)}>Roll</button>
+                                                {errors.action && failedAttack === rollKey && <span className="mt-1 text-xs text-maroon">{errors.action}</span>}
+                                            </span>
+                                            {attack.heavy && (
+                                                <span className="inline-flex flex-col items-end">
+                                                    <button className={quietClass} onClick={() => rollAttack(attack, true)}>Heavy</button>
+                                                    {errors.action && failedAttack === heavyKey && <span className="mt-1 text-xs text-maroon">{errors.action}</span>}
+                                                </span>
+                                            )}
                                         </div>
                                     </div>
                                     {rolled && (
@@ -509,6 +531,56 @@ function spellTechniqueDetail(name) {
         Lasting: 'Doubles a Focus spell’s listed duration.',
         Subtle: 'Removes ordinary casting gestures and speech.',
     }[name] || '';
+}
+
+function PortraitPicker({ sheet, portraits, onClose, onPick }) {
+    const [species, setSpecies] = useState('');
+    const [klass, setClass] = useState('');
+    const speciesOptions = [...new Set(portraits.map((row) => row.species).filter(Boolean))].sort();
+    const classOptions = [...new Set(portraits.map((row) => row.class).filter(Boolean))].sort();
+    const visible = portraits.filter((row) => (!species || row.species === species) && (!klass || row.class === klass));
+    return (
+        <div className="fixed inset-0 z-[70] flex items-center justify-center bg-black/70 p-4" onClick={onClose}>
+            <div role="dialog" aria-modal="true" aria-labelledby="portrait-title" className="flex max-h-[85vh] w-full max-w-4xl flex-col overflow-hidden border border-line bg-panel p-6 shadow-xl" onClick={(event) => event.stopPropagation()}>
+                <div className="flex items-start justify-between gap-4">
+                    <div>
+                        <h2 id="portrait-title" className="font-display text-3xl">Portrait</h2>
+                        <p className="mt-1 text-sm text-silver">This image is also the token on the map.</p>
+                    </div>
+                    <button type="button" className={quietClass} onClick={onClose}>Close</button>
+                </div>
+                <div className="mt-4 flex flex-wrap gap-2">
+                    <select className={inputClass} value={species} onChange={(event) => setSpecies(event.target.value)} aria-label="Species">
+                        <option value="">All species</option>
+                        {speciesOptions.map((name) => <option key={name} value={name}>{name}</option>)}
+                    </select>
+                    <select className={inputClass} value={klass} onChange={(event) => setClass(event.target.value)} aria-label="Class">
+                        <option value="">All classes</option>
+                        {classOptions.map((name) => <option key={name} value={name}>{name}</option>)}
+                    </select>
+                </div>
+                <div className="mt-5 grid min-h-0 flex-1 grid-cols-3 gap-3 overflow-y-auto sm:grid-cols-4 md:grid-cols-5">
+                    <button type="button" onClick={() => onPick(null)} className={`border p-2 ${sheet.portrait_path ? 'border-line' : 'border-maroon'}`}>
+                        {sheet.species_portrait_url ? (
+                            <img src={sheet.species_portrait_url} alt="" className="h-36 w-full bg-ink object-contain object-bottom" />
+                        ) : (
+                            <span className="flex h-36 items-end justify-center bg-ink">
+                                <Portrait name={sheet.species || sheet.name} />
+                            </span>
+                        )}
+                        <span className="mt-2 block text-xs text-silver">Species</span>
+                    </button>
+                    {visible.map((row) => (
+                        <button type="button" key={row.path} onClick={() => onPick(row.path)} className={`border p-2 ${sheet.portrait_path === row.path ? 'border-maroon' : 'border-line'}`}>
+                            <img src={row.url} alt="" className="h-36 w-full bg-ink object-contain object-bottom" />
+                            <span className="mt-2 block text-center text-xs text-silver">{row.name}</span>
+                        </button>
+                    ))}
+                </div>
+                {visible.length === 0 && <p className="mt-4 text-sm text-silver">No portraits match.</p>}
+            </div>
+        </div>
+    );
 }
 
 function AdvanceDialog({ advance, setAdvance, sheet, spells, techniques, attackSkills, talents, onSave }) {

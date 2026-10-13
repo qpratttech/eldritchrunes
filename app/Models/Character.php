@@ -19,7 +19,12 @@ class Character extends Model
             return null;
         }
 
-        return rtrim((string) $base, '/').'/'.ltrim($path, '/');
+        $url = rtrim((string) $base, '/').'/'.ltrim($path, '/');
+        if (str_starts_with($path, 'portraits/')) {
+            $url .= '?v=9';
+        }
+
+        return $url;
     }
 
     public function user(): \Illuminate\Database\Eloquent\Relations\BelongsTo { return $this->belongsTo(User::class); }
