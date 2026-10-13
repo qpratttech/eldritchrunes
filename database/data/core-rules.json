@@ -1,0 +1,4051 @@
+{
+  "attributes": [
+    {
+      "key": "agility",
+      "name": "Agility",
+      "description": "Coordination and speed."
+    },
+    {
+      "key": "intellect",
+      "name": "Intellect",
+      "description": "Learning and perception."
+    },
+    {
+      "key": "resolve",
+      "name": "Resolve",
+      "description": "Inner conviction."
+    },
+    {
+      "key": "social",
+      "name": "Social",
+      "description": "Presence and influence."
+    },
+    {
+      "key": "strength",
+      "name": "Strength",
+      "description": "Physical force."
+    },
+    {
+      "key": "vitality",
+      "name": "Vitality",
+      "description": "Health and endurance."
+    }
+  ],
+  "skills": [
+    {
+      "key": "reflexes",
+      "name": "Reflexes",
+      "attribute": "agility",
+      "is_attack_skill": false
+    },
+    {
+      "key": "riding",
+      "name": "Riding",
+      "attribute": "agility",
+      "is_attack_skill": false
+    },
+    {
+      "key": "stealth",
+      "name": "Stealth",
+      "attribute": "agility",
+      "is_attack_skill": false
+    },
+    {
+      "key": "ranged",
+      "name": "Ranged",
+      "attribute": "agility",
+      "is_attack_skill": true
+    },
+    {
+      "key": "awareness",
+      "name": "Awareness",
+      "attribute": "intellect",
+      "is_attack_skill": false
+    },
+    {
+      "key": "comprehension",
+      "name": "Comprehension",
+      "attribute": "intellect",
+      "is_attack_skill": false
+    },
+    {
+      "key": "craft",
+      "name": "Craft",
+      "attribute": "intellect",
+      "is_attack_skill": false
+    },
+    {
+      "key": "eldritch_lore",
+      "name": "Eldritch Lore",
+      "attribute": "intellect",
+      "is_attack_skill": false
+    },
+    {
+      "key": "history",
+      "name": "History",
+      "attribute": "intellect",
+      "is_attack_skill": false
+    },
+    {
+      "key": "medicine",
+      "name": "Medicine",
+      "attribute": "intellect",
+      "is_attack_skill": false
+    },
+    {
+      "key": "mythos",
+      "name": "Mythos",
+      "attribute": "intellect",
+      "is_attack_skill": false
+    },
+    {
+      "key": "nature_lore",
+      "name": "Nature Lore",
+      "attribute": "intellect",
+      "is_attack_skill": false
+    },
+    {
+      "key": "research",
+      "name": "Research",
+      "attribute": "intellect",
+      "is_attack_skill": false
+    },
+    {
+      "key": "sailing",
+      "name": "Sailing",
+      "attribute": "intellect",
+      "is_attack_skill": false
+    },
+    {
+      "key": "survival",
+      "name": "Survival",
+      "attribute": "intellect",
+      "is_attack_skill": false
+    },
+    {
+      "key": "sorcery",
+      "name": "Sorcery",
+      "attribute": "intellect",
+      "is_attack_skill": true
+    },
+    {
+      "key": "willpower",
+      "name": "Willpower",
+      "attribute": "resolve",
+      "is_attack_skill": false
+    },
+    {
+      "key": "faith",
+      "name": "Faith",
+      "attribute": "resolve",
+      "is_attack_skill": true
+    },
+    {
+      "key": "coercion",
+      "name": "Coercion",
+      "attribute": "social",
+      "is_attack_skill": false
+    },
+    {
+      "key": "deception",
+      "name": "Deception",
+      "attribute": "social",
+      "is_attack_skill": false
+    },
+    {
+      "key": "diplomacy",
+      "name": "Diplomacy",
+      "attribute": "social",
+      "is_attack_skill": false
+    },
+    {
+      "key": "performance",
+      "name": "Performance",
+      "attribute": "social",
+      "is_attack_skill": false
+    },
+    {
+      "key": "athletics",
+      "name": "Athletics",
+      "attribute": "strength",
+      "is_attack_skill": false
+    },
+    {
+      "key": "melee",
+      "name": "Melee",
+      "attribute": "strength",
+      "is_attack_skill": true
+    },
+    {
+      "key": "unarmed",
+      "name": "Unarmed",
+      "attribute": "strength",
+      "is_attack_skill": true
+    },
+    {
+      "key": "endurance",
+      "name": "Endurance",
+      "attribute": "vitality",
+      "is_attack_skill": false
+    },
+    {
+      "key": "shamanism",
+      "name": "Shamanism",
+      "attribute": "vitality",
+      "is_attack_skill": true
+    }
+  ],
+  "tiers": [
+    {
+      "tier": 0,
+      "success_percent": 1,
+      "outcome_type": "roll"
+    },
+    {
+      "tier": 1,
+      "success_percent": 5,
+      "outcome_type": "roll"
+    },
+    {
+      "tier": 2,
+      "success_percent": 11,
+      "outcome_type": "roll"
+    },
+    {
+      "tier": 3,
+      "success_percent": 17,
+      "outcome_type": "roll"
+    },
+    {
+      "tier": 4,
+      "success_percent": 23,
+      "outcome_type": "roll"
+    },
+    {
+      "tier": 5,
+      "success_percent": 29,
+      "outcome_type": "roll"
+    },
+    {
+      "tier": 6,
+      "success_percent": 35,
+      "outcome_type": "roll"
+    },
+    {
+      "tier": 7,
+      "success_percent": 41,
+      "outcome_type": "roll"
+    },
+    {
+      "tier": 8,
+      "success_percent": 47,
+      "outcome_type": "roll"
+    },
+    {
+      "tier": 9,
+      "success_percent": 53,
+      "outcome_type": "roll"
+    },
+    {
+      "tier": 10,
+      "success_percent": 59,
+      "outcome_type": "roll"
+    },
+    {
+      "tier": 11,
+      "success_percent": 65,
+      "outcome_type": "roll"
+    },
+    {
+      "tier": 12,
+      "success_percent": 71,
+      "outcome_type": "roll"
+    },
+    {
+      "tier": 13,
+      "success_percent": 77,
+      "outcome_type": "roll"
+    },
+    {
+      "tier": 14,
+      "success_percent": 83,
+      "outcome_type": "roll"
+    },
+    {
+      "tier": 15,
+      "success_percent": 89,
+      "outcome_type": "roll"
+    },
+    {
+      "tier": 16,
+      "success_percent": 95,
+      "outcome_type": "roll"
+    },
+    {
+      "tier": 17,
+      "success_percent": 99,
+      "outcome_type": "roll"
+    },
+    {
+      "tier": 18,
+      "success_percent": null,
+      "outcome_type": "automatic"
+    }
+  ],
+  "species": [
+    {
+      "name": "Drakith",
+      "description": "Scaled and formidable, drakith carry an elemental inheritance in their blood. Their natural weapons make even an apparently unarmed drakith a dangerous opponent.",
+      "primary": [
+        "Strong",
+        "Tough."
+      ],
+      "secondary": [
+        "Bite/Claws",
+        "Elemental Resistance."
+      ]
+    },
+    {
+      "name": "Dwarf",
+      "description": "Dwarves endure through stubborn conviction and practiced craft. Generations spent in stone halls and deep workings have sharpened their sight and steadied their will.",
+      "primary": [
+        "Tough",
+        "Strong Willed."
+      ],
+      "secondary": [
+        "Nightvision",
+        "Skilled."
+      ]
+    },
+    {
+      "name": "Eldretchin",
+      "description": "Eldretchin bear the touch of powers beyond the familiar world. Their unusual gifts often arrive alongside a vulnerability that betrays their otherworldly ancestry.",
+      "primary": [
+        "Attribute Focus",
+        "Talented."
+      ],
+      "secondary": [
+        "Nightvision",
+        "Accursed."
+      ]
+    },
+    {
+      "name": "Elf",
+      "description": "Elves combine graceful movement with memories and traditions reaching deep into the past. Their affinity for hidden lore can guide them toward scholarship, sorcery, or exploration.",
+      "primary": [
+        "Agile",
+        "Wise."
+      ],
+      "secondary": [
+        "Nightvision",
+        "Ancient Knowledge."
+      ]
+    },
+    {
+      "name": "Gnome",
+      "description": "Gnomes possess resilient bodies and inquisitive minds. They carry fragments of ancient knowledge into workshops, secluded communities, and far-ranging adventures.",
+      "primary": [
+        "Tough",
+        "Wise."
+      ],
+      "secondary": [
+        "Nightvision",
+        "Ancient Knowledge."
+      ]
+    },
+    {
+      "name": "Halfling",
+      "description": "Halflings often survive through quick feet, an easy manner, and remarkable good fortune. Their unassuming presence can conceal a daring traveler or a patient infiltrator.",
+      "primary": [
+        "Agile",
+        "Likable."
+      ],
+      "secondary": [
+        "Lucky",
+        "Stealthy."
+      ]
+    },
+    {
+      "name": "Halfogre",
+      "description": "Halfogres possess imposing frames and the strength to make full use of them. Whether gentle or fierce, they are difficult to overlook and harder to stop.",
+      "primary": [
+        "Strong",
+        "Tough."
+      ],
+      "secondary": [
+        "Hulking",
+        "Brute."
+      ]
+    },
+    {
+      "name": "Halforc",
+      "description": "Halforcs unite considerable strength with adaptable talents. Their inherited ferocity becomes a powerful tool when guided by training and purpose.",
+      "primary": [
+        "Strong",
+        "Talented."
+      ],
+      "secondary": [
+        "Nightvision",
+        "Fury."
+      ]
+    },
+    {
+      "name": "Human",
+      "description": "Humans find many paths to distinction. Adaptable skills and individual ambition carry them into unfamiliar lands, rival traditions, and unlikely alliances.",
+      "primary": [
+        "Attribute Focus",
+        "Talented."
+      ],
+      "secondary": [
+        "Skilled",
+        "Versatile."
+      ]
+    },
+    {
+      "name": "Lizardman",
+      "description": "Lizardmen move with a hunter\u2019s economy and withstand harsh conditions. Scales, keen night sight, and natural weapons suit a life close to the wilderness.",
+      "primary": [
+        "Agile",
+        "Tough."
+      ],
+      "secondary": [
+        "Nightvision",
+        "Bite/Claws."
+      ]
+    },
+    {
+      "name": "Minotaur",
+      "description": "Minotaurs bring formidable strength and a towering presence to any company. Their horns are both a sign of their heritage and a weapon that cannot easily be taken away.",
+      "primary": [
+        "Strong",
+        "Tough."
+      ],
+      "secondary": [
+        "Hulking",
+        "Horns."
+      ]
+    },
+    {
+      "name": "Orc",
+      "description": "Orcs are physically powerful and resilient. Their ability to summon fierce bursts of aggression serves hunters, guardians, soldiers, and wanderers alike.",
+      "primary": [
+        "Strong",
+        "Tough."
+      ],
+      "secondary": [
+        "Nightvision",
+        "Fury."
+      ]
+    }
+  ],
+  "features": [
+    {
+      "key": "agile",
+      "name": "Agile",
+      "category": "creation_primary",
+      "flavor_text": "Your movement is precise and assured.",
+      "rules_text": "Increase Agility by 1 step.",
+      "activation_type": "passive",
+      "prerequisites": []
+    },
+    {
+      "key": "greater-agility",
+      "name": "Greater Agility",
+      "category": "creation_primary",
+      "flavor_text": "Practice turns quickness into instinct.",
+      "rules_text": "Increase Agility by 1 step. Requires Agile.",
+      "activation_type": "passive",
+      "prerequisites": [
+        "Agile"
+      ]
+    },
+    {
+      "key": "uncanny-agility",
+      "name": "Uncanny Agility",
+      "category": "creation_primary",
+      "flavor_text": "You move with extraordinary fluidity.",
+      "rules_text": "Increase Agility by 2 steps. Requires Greater Agility.",
+      "activation_type": "passive",
+      "prerequisites": [
+        "Greater Agility"
+      ]
+    },
+    {
+      "key": "wise",
+      "name": "Wise",
+      "category": "creation_primary",
+      "flavor_text": "You notice connections others overlook.",
+      "rules_text": "Increase Intellect by 1 step.",
+      "activation_type": "passive",
+      "prerequisites": []
+    },
+    {
+      "key": "great-wisdom",
+      "name": "Great Wisdom",
+      "category": "creation_primary",
+      "flavor_text": "Experience lends depth to your judgment.",
+      "rules_text": "Increase Intellect by 1 step. Requires Wise.",
+      "activation_type": "passive",
+      "prerequisites": [
+        "Wise"
+      ]
+    },
+    {
+      "key": "brilliant",
+      "name": "Brilliant",
+      "category": "creation_primary",
+      "flavor_text": "Your intellect grasps difficult ideas with exceptional clarity.",
+      "rules_text": "Increase Intellect by 2 steps. Requires Great Wisdom.",
+      "activation_type": "passive",
+      "prerequisites": [
+        "Great Wisdom"
+      ]
+    },
+    {
+      "key": "strong-willed",
+      "name": "Strong Willed",
+      "category": "creation_primary",
+      "flavor_text": "Your convictions resist outside pressure.",
+      "rules_text": "Increase Resolve by 1 step.",
+      "activation_type": "passive",
+      "prerequisites": []
+    },
+    {
+      "key": "resolute",
+      "name": "Resolute",
+      "category": "creation_primary",
+      "flavor_text": "You hold your course when others falter.",
+      "rules_text": "Increase Resolve by 1 step. Requires Strong Willed.",
+      "activation_type": "passive",
+      "prerequisites": [
+        "Strong Willed"
+      ]
+    },
+    {
+      "key": "iron-willed",
+      "name": "Iron Willed",
+      "category": "creation_primary",
+      "flavor_text": "Your will is difficult to bend.",
+      "rules_text": "Increase Resolve by 2 steps. Requires Resolute.",
+      "activation_type": "passive",
+      "prerequisites": [
+        "Resolute"
+      ]
+    },
+    {
+      "key": "likable",
+      "name": "Likable",
+      "category": "creation_primary",
+      "flavor_text": "Others find it easy to hear you out.",
+      "rules_text": "Increase Social by 1 step.",
+      "activation_type": "passive",
+      "prerequisites": []
+    },
+    {
+      "key": "charming",
+      "name": "Charming",
+      "category": "creation_primary",
+      "flavor_text": "Your manner opens doors and disarms suspicion.",
+      "rules_text": "Increase Social by 1 step. Requires Likable.",
+      "activation_type": "passive",
+      "prerequisites": [
+        "Likable"
+      ]
+    },
+    {
+      "key": "captivating",
+      "name": "Captivating",
+      "category": "creation_primary",
+      "flavor_text": "Your presence can command a room.",
+      "rules_text": "Increase Social by 2 steps. Requires Charming.",
+      "activation_type": "passive",
+      "prerequisites": [
+        "Charming"
+      ]
+    },
+    {
+      "key": "strong",
+      "name": "Strong",
+      "category": "creation_primary",
+      "flavor_text": "You bring solid muscle to difficult work.",
+      "rules_text": "Increase Strength by 1 step.",
+      "activation_type": "passive",
+      "prerequisites": []
+    },
+    {
+      "key": "very-strong",
+      "name": "Very Strong",
+      "category": "creation_primary",
+      "flavor_text": "Your strength is exceptional even among adventurers.",
+      "rules_text": "Increase Strength by 1 step. Requires Strong.",
+      "activation_type": "passive",
+      "prerequisites": [
+        "Strong"
+      ]
+    },
+    {
+      "key": "monstrous-strength",
+      "name": "Monstrous Strength",
+      "category": "creation_primary",
+      "flavor_text": "Your physical power borders on the uncanny.",
+      "rules_text": "Increase Strength by 2 steps. Requires Very Strong.",
+      "activation_type": "passive",
+      "prerequisites": [
+        "Very Strong"
+      ]
+    },
+    {
+      "key": "tough",
+      "name": "Tough",
+      "category": "creation_primary",
+      "flavor_text": "Your body withstands hardship.",
+      "rules_text": "Increase Vitality by 1 step.",
+      "activation_type": "passive",
+      "prerequisites": []
+    },
+    {
+      "key": "resilient",
+      "name": "Resilient",
+      "category": "creation_primary",
+      "flavor_text": "You recover your footing after punishing strain.",
+      "rules_text": "Increase Vitality by 1 step. Requires Tough.",
+      "activation_type": "passive",
+      "prerequisites": [
+        "Tough"
+      ]
+    },
+    {
+      "key": "iron-hide",
+      "name": "Iron Hide",
+      "category": "creation_primary",
+      "flavor_text": "Your constitution is extraordinarily robust.",
+      "rules_text": "Increase Vitality by 2 steps. Requires Resilient.",
+      "activation_type": "passive",
+      "prerequisites": [
+        "Resilient"
+      ]
+    },
+    {
+      "key": "attribute-focus",
+      "name": "Attribute Focus",
+      "category": "creation_primary",
+      "flavor_text": "One aptitude sets you apart.",
+      "rules_text": "Increase one attribute by 1 step, to a maximum of 10\\.",
+      "activation_type": "passive",
+      "prerequisites": []
+    },
+    {
+      "key": "talented",
+      "name": "Talented",
+      "category": "creation_primary",
+      "flavor_text": "You have cultivated an unusual gift.",
+      "rules_text": "Choose one talent or tactic whose prerequisites you meet.",
+      "activation_type": "passive",
+      "prerequisites": []
+    },
+    {
+      "key": "accursed",
+      "name": "Accursed",
+      "category": "creation_secondary",
+      "flavor_text": "An old power has left both a gift and a wound in your blood.",
+      "rules_text": "Choose Fire, Storm, or Cold. Gain Uncanny Weakness to that damage type and one additional Primary Feature whose prerequisites you meet.",
+      "activation_type": "passive",
+      "prerequisites": []
+    },
+    {
+      "key": "ancient-knowledge",
+      "name": "Ancient Knowledge",
+      "category": "creation_secondary",
+      "flavor_text": "Forgotten mysteries linger at the edge of your thoughts.",
+      "rules_text": "Increase Sorcerous Soul by 2\\. This adds capacity, not spells.",
+      "activation_type": "passive",
+      "prerequisites": []
+    },
+    {
+      "key": "ancient-lineage",
+      "name": "Ancient Lineage",
+      "category": "creation_secondary",
+      "flavor_text": "Your ancestry carries a spark of supernatural strength.",
+      "rules_text": "Increase maximum Sorcerous Power by 1\\.",
+      "activation_type": "passive",
+      "prerequisites": []
+    },
+    {
+      "key": "bite-claws",
+      "name": "Bite/Claws",
+      "category": "creation_secondary",
+      "flavor_text": "Your body bears a hunter\u2019s weapons.",
+      "rules_text": "Your bites and claws use Unarmed and deal normal damage instead of Lesser Attack damage. They still suffer Diminishment against an armed target.",
+      "activation_type": "passive",
+      "prerequisites": []
+    },
+    {
+      "key": "brute",
+      "name": "Brute",
+      "category": "creation_secondary",
+      "flavor_text": "Your blows leave opponents reeling.",
+      "rules_text": "When a melee hit causes Suffering, it inflicts one additional level, to the normal maximum of two.",
+      "activation_type": "passive",
+      "prerequisites": []
+    },
+    {
+      "key": "elemental-resistance",
+      "name": "Elemental Resistance",
+      "category": "creation_secondary",
+      "flavor_text": "One force of nature finds little purchase in your flesh.",
+      "rules_text": "Choose Fire, Storm, or Cold. Gain Uncanny Resistance to that type. This creation choice is permanent.",
+      "activation_type": "passive",
+      "prerequisites": []
+    },
+    {
+      "key": "grim-lineage",
+      "name": "Grim Lineage",
+      "category": "creation_secondary",
+      "flavor_text": "Battle and hard resolve run through your heritage.",
+      "rules_text": "Gain +1 rank in Willpower and Melee.",
+      "activation_type": "passive",
+      "prerequisites": []
+    },
+    {
+      "key": "horns",
+      "name": "Horns",
+      "category": "creation_secondary",
+      "flavor_text": "A lowered head is warning enough.",
+      "rules_text": "Your horns use Unarmed and deal normal damage instead of Lesser Attack damage. They still suffer Diminishment against an armed target.",
+      "activation_type": "passive",
+      "prerequisites": []
+    },
+    {
+      "key": "hulking",
+      "name": "Hulking",
+      "category": "creation_secondary",
+      "flavor_text": "Your broad frame can absorb a punishing blow.",
+      "rules_text": "Increase maximum Wounds by 1\\.",
+      "activation_type": "passive",
+      "prerequisites": []
+    },
+    {
+      "key": "hunter-s-lineage",
+      "name": "Hunter's Lineage",
+      "category": "creation_secondary",
+      "flavor_text": "You read the land through the instincts of generations.",
+      "rules_text": "Gain +1 rank in Survival, Nature Lore, and Ranged.",
+      "activation_type": "passive",
+      "prerequisites": []
+    },
+    {
+      "key": "lucky",
+      "name": "Lucky",
+      "category": "creation_secondary",
+      "flavor_text": "Fortune has a habit of leaving you a narrow way out.",
+      "rules_text": "Increase maximum Luck by 2\\.",
+      "activation_type": "passive",
+      "prerequisites": []
+    },
+    {
+      "key": "mountain-bones",
+      "name": "Mountain Bones",
+      "category": "creation_secondary",
+      "flavor_text": "You bear weight with the steadiness of stone.",
+      "rules_text": "Heavy armor does not make you Slowed. It still makes you Loud. Increase maximum Stamina by 1\\.",
+      "activation_type": "passive",
+      "prerequisites": []
+    },
+    {
+      "key": "natural-armor",
+      "name": "Natural Armor",
+      "category": "creation_secondary",
+      "flavor_text": "Scales, hide, or hardened flesh turn aside glancing blows.",
+      "rules_text": "While wearing no armor, you have a 10% Armor Save. It does not combine with worn armor.",
+      "activation_type": "passive",
+      "prerequisites": []
+    },
+    {
+      "key": "nightvision",
+      "name": "Nightvision",
+      "category": "creation_secondary",
+      "flavor_text": "Faint light reveals more to you than it does to most.",
+      "rules_text": "Ignore Diminishment from dim light. This does not let you see in complete darkness.",
+      "activation_type": "passive",
+      "prerequisites": []
+    },
+    {
+      "key": "ruthless-lineage",
+      "name": "Ruthless Lineage",
+      "category": "creation_secondary",
+      "flavor_text": "A merciless ancestral force answers your call.",
+      "rules_text": "Spend a minor action and 1 Stamina. For 3 rounds, saving throws against your spells and Endurance checks against your melee hits are Diminished.",
+      "activation_type": "passive",
+      "prerequisites": []
+    },
+    {
+      "key": "fury",
+      "name": "Fury",
+      "category": "creation_secondary",
+      "flavor_text": "Your blood rises and every opening becomes an invitation.",
+      "rules_text": "Spend a minor action and 1 Stamina. For 3 rounds, increase your melee critical range by 10 percentage points.",
+      "activation_type": "passive",
+      "prerequisites": []
+    },
+    {
+      "key": "skilled",
+      "name": "Skilled",
+      "category": "creation_secondary",
+      "flavor_text": "Dedicated practice has made one craft second nature.",
+      "rules_text": "Gain +2 ranks in one nonattack skill.",
+      "activation_type": "passive",
+      "prerequisites": []
+    },
+    {
+      "key": "stealthy",
+      "name": "Stealthy",
+      "category": "creation_secondary",
+      "flavor_text": "You instinctively find the quiet path and the concealing shadow.",
+      "rules_text": "Your Stealth checks gain Greater Enhancement.",
+      "activation_type": "passive",
+      "prerequisites": []
+    },
+    {
+      "key": "swift-lineage",
+      "name": "Swift Lineage",
+      "category": "creation_secondary",
+      "flavor_text": "Speed is your inheritance.",
+      "rules_text": "Increase major-action movement by 10 feet and minor-action movement by 5 feet.",
+      "activation_type": "passive",
+      "prerequisites": []
+    },
+    {
+      "key": "versatile",
+      "name": "Versatile",
+      "category": "creation_secondary",
+      "flavor_text": "You have learned to be useful in more than one way.",
+      "rules_text": "Gain +1 rank in each of two different nonattack skills.",
+      "activation_type": "passive",
+      "prerequisites": []
+    },
+    {
+      "key": "alert",
+      "name": "Alert",
+      "category": "background",
+      "flavor_text": "You rarely let danger catch you unprepared.",
+      "rules_text": "Increase your Initiative Bonus by 1\\.",
+      "activation_type": "passive",
+      "prerequisites": []
+    },
+    {
+      "key": "blood-rage",
+      "name": "Blood Rage",
+      "category": "background",
+      "flavor_text": "Pain sharpens your urge to strike back.",
+      "rules_text": "While Bleeding or suffering at least one level of Suffering, you may make one additional melee attack on your turn, paying its normal minor action and multiple-attack penalty.",
+      "activation_type": "passive",
+      "prerequisites": []
+    },
+    {
+      "key": "danger-sense",
+      "name": "Danger Sense",
+      "category": "background",
+      "flavor_text": "A timely instinct steers you away from disaster.",
+      "rules_text": "Increase maximum Luck by 1\\.",
+      "activation_type": "passive",
+      "prerequisites": []
+    },
+    {
+      "key": "dark-soul",
+      "name": "Dark Soul",
+      "category": "background",
+      "flavor_text": "Ordinary terrors have lost their hold on you.",
+      "rules_text": "You are immune to Fear, but not Horror. If Horror is reduced to Fear, the Fear ends immediately.",
+      "activation_type": "passive",
+      "prerequisites": []
+    },
+    {
+      "key": "hardy",
+      "name": "Hardy",
+      "category": "background",
+      "flavor_text": "Hard work has made your body resilient.",
+      "rules_text": "Increase maximum Wounds by 1\\.",
+      "activation_type": "passive",
+      "prerequisites": []
+    },
+    {
+      "key": "magus",
+      "name": "Magus",
+      "category": "background",
+      "flavor_text": "You have learned the first secrets of spellcraft.",
+      "rules_text": "Increase Sorcerous Soul by 2 and learn two tier-0 spells. Choose one order containing either spell; gain access to that order and choose both spells from orders you can access. These two spells use the two new Soul slots.",
+      "activation_type": "passive",
+      "prerequisites": []
+    },
+    {
+      "key": "man-at-arms",
+      "name": "Man-at-Arms",
+      "category": "background",
+      "flavor_text": "Formal training has taught you a weapon\u2019s finer uses.",
+      "rules_text": "Learn one Weapon Technique.",
+      "activation_type": "passive",
+      "prerequisites": []
+    },
+    {
+      "key": "peaceful",
+      "name": "Peaceful",
+      "category": "background",
+      "flavor_text": "You know how to make a brief respite restorative.",
+      "rules_text": "You can benefit from five Minor Rests per rolling 24 hours instead of three.",
+      "activation_type": "passive",
+      "prerequisites": []
+    },
+    {
+      "key": "regal",
+      "name": "Regal",
+      "category": "background",
+      "flavor_text": "You carry yourself with practiced authority.",
+      "rules_text": "Your Social skill checks are Enhanced.",
+      "activation_type": "passive",
+      "prerequisites": []
+    },
+    {
+      "key": "rigor",
+      "name": "Rigor",
+      "category": "background",
+      "flavor_text": "Discipline keeps you going when effort begins to tell.",
+      "rules_text": "Increase maximum Stamina by 1\\.",
+      "activation_type": "passive",
+      "prerequisites": []
+    },
+    {
+      "key": "rowdy",
+      "name": "Rowdy",
+      "category": "background",
+      "flavor_text": "You can make a weapon out of whatever a brawl provides.",
+      "rules_text": "Improvised weapons use your normal attack skill ranks and deal normal damage instead of Lesser Attack damage.",
+      "activation_type": "passive",
+      "prerequisites": []
+    },
+    {
+      "key": "toil",
+      "name": "Toil",
+      "category": "background",
+      "flavor_text": "Long effort has trained you to endure discomfort.",
+      "rules_text": "Your Endurance checks are Enhanced.",
+      "activation_type": "passive",
+      "prerequisites": []
+    },
+    {
+      "key": "wisened",
+      "name": "Wisened",
+      "category": "background",
+      "flavor_text": "Patient observation lends weight to your judgment.",
+      "rules_text": "Your Intellect skill checks are Enhanced.",
+      "activation_type": "passive",
+      "prerequisites": []
+    },
+    {
+      "key": "alchemical-venom",
+      "name": "Alchemical Venom",
+      "category": "class",
+      "flavor_text": "You coax a dangerous tincture from the materials the land provides.",
+      "rules_text": "With suitable plants or other ingredients, spend 3 hours to make one dose of alchemical venom. Coating one weapon or up to five missiles takes a minor action. The coating lasts 8 hours; each hit that inflicts at least 1 wound has a 25% chance to inflict Poisoned. Roll once per hit. Applying more venom does not increase this chance. The dose loses potency 24 hours after preparation.",
+      "activation_type": "passive"
+    },
+    {
+      "key": "ancient-secrets",
+      "name": "Ancient Secrets",
+      "category": "class",
+      "flavor_text": "Fragments of old teachings open the first gates of magic.",
+      "rules_text": "Gain access to Circle magic and learn up to three Circle spells.",
+      "activation_type": "passive"
+    },
+    {
+      "key": "armor-master",
+      "name": "Armor Master",
+      "category": "class",
+      "flavor_text": "You know how to let good armor receive a blow.",
+      "rules_text": "While armored, add 10 percentage points to your Armor Save.",
+      "activation_type": "passive"
+    },
+    {
+      "key": "battle-armor",
+      "name": "Battle Armor",
+      "category": "class",
+      "flavor_text": "You adjust and use your protection with a veteran\u2019s care.",
+      "rules_text": "While armored, add 10 percentage points to your Armor Save. This stacks with Armor Master.",
+      "activation_type": "passive"
+    },
+    {
+      "key": "celestial-soul",
+      "name": "Celestial Soul",
+      "category": "class",
+      "flavor_text": "A little of your own strength passes through every healing touch.",
+      "rules_text": "When your spell or feature restores Wounds to another creature, you may spend 1 Stamina to restore one additional Wound to one target. Use this once per casting or activation, with no extra action.",
+      "activation_type": "passive"
+    },
+    {
+      "key": "denizen-of-the-wild",
+      "name": "Denizen of the Wild",
+      "category": "class",
+      "flavor_text": "The wilderness teaches you both its dangers and its hidden language.",
+      "rules_text": "Gain access to Nature magic, learn up to two Nature spells, and learn one Weapon Technique.",
+      "activation_type": "passive"
+    },
+    {
+      "key": "druidic",
+      "name": "Druidic",
+      "category": "class",
+      "flavor_text": "Living creatures recognize something familiar in your presence.",
+      "rules_text": "Gain access to Nature magic and learn up to three Nature spells. Gain one small companion: raven, owl, eagle, monkey, snake, or bat. Use the companion rules.",
+      "activation_type": "passive"
+    },
+    {
+      "key": "elder-oak",
+      "name": "Elder Oak",
+      "category": "class",
+      "flavor_text": "Your body takes on the endurance of an ancient tree.",
+      "rules_text": "Your unarmed attacks deal normal damage rather than Lesser Attack damage. Gain Uncanny Resistance to Physical damage.",
+      "activation_type": "passive"
+    },
+    {
+      "key": "eldritch-corruption",
+      "name": "Eldritch Corruption",
+      "category": "class",
+      "flavor_text": "Something beyond the ordinary world has rewritten a part of you.",
+      "rules_text": "Gain one of these Secondary Features: Nightvision, Horns, Natural Armor, or Accursed. You must choose a feature you do not already have. Accursed grants its usual Primary Feature and Weakness.",
+      "activation_type": "passive"
+    },
+    {
+      "key": "eldritch-psi",
+      "name": "Eldritch Psi",
+      "category": "class",
+      "flavor_text": "A surge of mental power opens a brief passage to forbidden insight.",
+      "rules_text": "Learn up to three Forbidden spells within your Potential, adding the usual Soul slots. This grants access for learning these selections, but you can cast them only on the turn after you spend Sorcerous Power to empower a Psionic spell. Independent Forbidden access removes this casting restriction for spells it covers.",
+      "activation_type": "passive"
+    },
+    {
+      "key": "elemental-resistance",
+      "name": "Elemental Resistance",
+      "category": "class",
+      "flavor_text": "You turn your affinity toward the force you most expect to face.",
+      "rules_text": "Gain Uncanny Resistance to Fire, Cold, or Storm. Choose when you gain this feature; once per 24 hours, you may use a major action to change the type. This is separate from the fixed creation feature of the same name.",
+      "activation_type": "passive"
+    },
+    {
+      "key": "elementalist",
+      "name": "Elementalist",
+      "category": "class",
+      "flavor_text": "Flame, frost, and tempest become instruments of your will.",
+      "rules_text": "Gain access to Elemental magic and learn up to three Elemental spells.",
+      "activation_type": "passive"
+    },
+    {
+      "key": "enhanced-lethality",
+      "name": "Enhanced Lethality",
+      "category": "class",
+      "flavor_text": "An opening is enough for you to find a vital point.",
+      "rules_text": "When the final circumstance modifier to your direct attack is Enhancement or Greater Enhancement, increase its critical range by 10 percentage points.",
+      "activation_type": "passive"
+    },
+    {
+      "key": "esoteric-way",
+      "name": "Esoteric Way",
+      "category": "class",
+      "flavor_text": "Your discipline turns the unarmed body into a channel for elemental force.",
+      "rules_text": "While unarmored, gain the effects of Brawler, Martial Arts, and Elemental Fist without needing their prerequisites. These temporary grants do not qualify you for other talents. They do remove the unarmed wound penalty. This feature does not grant Elemental Conversion for spells.",
+      "activation_type": "passive"
+    },
+    {
+      "key": "ethereal",
+      "name": "Ethereal",
+      "category": "class",
+      "flavor_text": "For an instant, a blow seems to pass through more than flesh.",
+      "rules_text": "Against a nonmagical hit, make a separate 10% Ethereal Save after Armor and Brace. Success reduces damage by 2 wounds. Spells and attacks dealing Eldritch, Enchanted, Light, or Runic damage ignore this save; other attacks explicitly described as magical also ignore it.",
+      "activation_type": "passive"
+    },
+    {
+      "key": "fang-and-claw",
+      "name": "Fang and Claw",
+      "category": "class",
+      "flavor_text": "You follow a successful strike with a predator\u2019s persistence.",
+      "rules_text": "After you hit a creature, your next direct attack against that same creature gains +10 percentage points to its critical range. The bonus expires at the end of your next turn and is consumed by the attempt, hit or miss. A new hit can renew it; it never stacks with itself.",
+      "activation_type": "passive"
+    },
+    {
+      "key": "feral",
+      "name": "Feral",
+      "category": "class",
+      "flavor_text": "Unburdened by heavy protection, you strike with dangerous speed.",
+      "rules_text": "While wearing light armor or no armor, add 10 percentage points to your melee critical range.",
+      "activation_type": "passive"
+    },
+    {
+      "key": "forbidden-knowledge",
+      "name": "Forbidden Knowledge",
+      "category": "class",
+      "flavor_text": "You have read words that wiser teachers would have burned.",
+      "rules_text": "Gain access to Forbidden magic and learn up to three Forbidden spells.",
+      "activation_type": "passive"
+    },
+    {
+      "key": "greater-companion",
+      "name": "Greater Companion",
+      "category": "class",
+      "flavor_text": "A formidable beast accepts you as a trusted companion.",
+      "rules_text": "Gain one direwolf, panther, or bear companion. Use its profile and the companion rules.",
+      "activation_type": "passive"
+    },
+    {
+      "key": "greater-undead",
+      "name": "Greater Undead",
+      "category": "class",
+      "flavor_text": "The dead you call are held together by a stronger purpose.",
+      "rules_text": "Undead you summon or raise gain +1 maximum and starting Wound. This does not stack from repeated commands or castings.",
+      "activation_type": "passive"
+    },
+    {
+      "key": "grim-trophy",
+      "name": "Grim Trophy",
+      "category": "class",
+      "flavor_text": "A token of victory holds a measure of the strength you earned.",
+      "rules_text": "Bind one trophy taken from a meaningful victory during a Full Rest. While carrying it, increase maximum Sorcerous Power and maximum Wounds by 1\\. Binding fills those increases once; removing and replacing it does not heal or restore Power. If removed, reduce maxima and clamp current values to the new maxima. Only one trophy can be bound at a time.",
+      "activation_type": "passive"
+    },
+    {
+      "key": "hardened",
+      "name": "Hardened",
+      "category": "class",
+      "flavor_text": "You brace your body and refuse to yield to pain.",
+      "rules_text": "Spend a minor action and 1 Stamina to gain Uncanny Resistance to Physical damage for 3 rounds.",
+      "activation_type": "passive"
+    },
+    {
+      "key": "heart-of-the-wild",
+      "name": "Heart of the Wild",
+      "category": "class",
+      "flavor_text": "Life surges through you with the stubborn force of spring growth.",
+      "rules_text": "Spend a minor action and 1 Stamina. Restore 1 Wound at the end of your current turn and at the end of each of your next two turns. The effect does not stack with itself. It continues through Unconsciousness but cannot revive the dead.",
+      "activation_type": "passive"
+    },
+    {
+      "key": "lorekeeper",
+      "name": "Lorekeeper",
+      "category": "class",
+      "flavor_text": "Your studies reveal the common threads beneath rival traditions.",
+      "rules_text": "Gain access to every order of magic and learn up to three spells from any of them.",
+      "activation_type": "passive"
+    },
+    {
+      "key": "mobile-dodge",
+      "name": "Mobile Dodge",
+      "category": "class",
+      "flavor_text": "You make a moving target of yourself without breaking your rhythm.",
+      "rules_text": "After moving at least 10 feet voluntarily on your turn, direct melee and ranged attacks against you are Diminished until the start of your next turn.",
+      "activation_type": "passive"
+    },
+    {
+      "key": "mythic-lore",
+      "name": "Mythic Lore",
+      "category": "class",
+      "flavor_text": "You learn to give old sacred stories a living voice.",
+      "rules_text": "Gain access to Mythic magic and learn up to three Mythic spells.",
+      "activation_type": "passive"
+    },
+    {
+      "key": "necromancer",
+      "name": "Necromancer",
+      "category": "class",
+      "flavor_text": "You draw upon the stillness that lingers where life has ended.",
+      "rules_text": "Gain access to Necromancy and learn up to three Necromancy spells. You can cast spells learned through this feature only at night or in a place marked by death, such as a graveyard, battlefield, or crypt. Independent access can remove this restriction for spells it covers.",
+      "activation_type": "passive"
+    },
+    {
+      "key": "outlaw-s-cunning",
+      "name": "Outlaw's Cunning",
+      "category": "class",
+      "flavor_text": "You act while slower opponents are still finding their footing.",
+      "rules_text": "Your direct attacks against a creature with a lower initiative total are Enhanced. Tied totals do not qualify, even if you won the initiative tie-break.",
+      "activation_type": "passive"
+    },
+    {
+      "key": "priesthood",
+      "name": "Priesthood",
+      "category": "class",
+      "flavor_text": "You are initiated into a tradition with powers of its own.",
+      "rules_text": "Choose one order, gain access to it, and learn up to three spells from that order.",
+      "activation_type": "passive"
+    },
+    {
+      "key": "psionic",
+      "name": "Psionic",
+      "category": "class",
+      "flavor_text": "Thought becomes a force that can touch the world.",
+      "rules_text": "Gain access to Psionic magic and learn up to three Psionic spells.",
+      "activation_type": "passive"
+    },
+    {
+      "key": "ravager",
+      "name": "Ravager",
+      "category": "class",
+      "flavor_text": "You press an assault with little concern for caution.",
+      "rules_text": "While wearing light armor or no armor, you may make one additional melee attack on your turn, paying the normal minor action and multiple-attack penalty.",
+      "activation_type": "passive"
+    },
+    {
+      "key": "rebuke",
+      "name": "Rebuke",
+      "category": "class",
+      "flavor_text": "Your strike tears at the power shielding your enemy.",
+      "rules_text": "When you inflict at least 1 wound with a melee attack, you may spend 1 Stamina to end one beneficial ongoing magical effect on the target. This takes no extra action and can be used once per hit. It does not destroy magic items or remove permanent innate traits.",
+      "activation_type": "passive"
+    },
+    {
+      "key": "red-rage",
+      "name": "Red Rage",
+      "category": "class",
+      "flavor_text": "Pain feeds a fierce refusal to give ground.",
+      "rules_text": "While you have at least one level of Suffering, add 1 wound to damaging attacks. Apply this before defenses, but only if the attack has positive wound damage before this bonus; it cannot turn a nonwounding Lesser Attack into wound damage.",
+      "activation_type": "passive"
+    },
+    {
+      "key": "rune-armor",
+      "name": "Rune Armor",
+      "category": "class",
+      "flavor_text": "Protective signs guide force away from the seams in your armor.",
+      "rules_text": "While armored, Armor Piercing cannot reduce your Armor Save. Sunder, damage, and other effects are not automatically prevented.",
+      "activation_type": "passive"
+    },
+    {
+      "key": "rune-weapons",
+      "name": "Rune Weapons",
+      "category": "class",
+      "flavor_text": "Ancient signs wake along the weapons you wield.",
+      "rules_text": "Your weapon attacks deal Runic damage instead of Physical. Another damage-type conversion can replace this as normal.",
+      "activation_type": "passive"
+    },
+    {
+      "key": "shadowmage",
+      "name": "Shadowmage",
+      "category": "class",
+      "flavor_text": "Darkness gives shape to your workings.",
+      "rules_text": "Gain access to Shadow magic and learn up to three Shadow spells. You may cast those spells only while in dim light or darkness. They count as Empowered without spending Power. Becoming brightly lit after casting does not end an existing effect. Independent access removes the casting restriction for spells it covers, but free empowerment still requires dim light or darkness.",
+      "activation_type": "passive"
+    },
+    {
+      "key": "shadowstalker",
+      "name": "Shadowstalker",
+      "category": "class",
+      "flavor_text": "You move confidently along the uncertain edge of sight.",
+      "rules_text": "Gain +1 rank in Stealth and Nightvision. While in dim light or darkness, increase your direct-attack critical range by 10 percentage points. If you already have Nightvision, it provides no additional benefit.",
+      "activation_type": "passive"
+    },
+    {
+      "key": "shamanism",
+      "name": "Shamanism",
+      "category": "class",
+      "flavor_text": "You learn the rites by which spirits hear and answer.",
+      "rules_text": "Gain access to the Shamanism order and learn up to three Shamanism spells. The feature is distinct from the skill of the same name.",
+      "activation_type": "passive"
+    },
+    {
+      "key": "spiritual-aura",
+      "name": "Spiritual Aura",
+      "category": "class",
+      "flavor_text": "Your resolve gives nearby companions something steady to hold onto.",
+      "rules_text": "You and allies within 30 feet ignore Diminishment and Greater Diminishment on Willpower checks. Suffering and Broken still apply. The aura operates while you are conscious.",
+      "activation_type": "passive"
+    },
+    {
+      "key": "spiritwalker",
+      "name": "Spiritwalker",
+      "category": "class",
+      "flavor_text": "You sense the paths taken by those without flesh.",
+      "rules_text": "Gain access to Spirit magic and learn up to three Spirit spells.",
+      "activation_type": "passive"
+    },
+    {
+      "key": "stonetouch-technique",
+      "name": "Stonetouch Technique",
+      "category": "class",
+      "flavor_text": "A precisely placed blow arrests the body\u2019s motion.",
+      "rules_text": "While unarmored, after an unarmed hit you may spend 1 Stamina, with no extra action, to force an Endurance save. On failure, the target is Stunned. Its normal start-of-turn saves can end the condition. Use once per hit.",
+      "activation_type": "passive"
+    },
+    {
+      "key": "tactical-training",
+      "name": "Tactical Training",
+      "category": "class",
+      "flavor_text": "Practice gives your strength a clear purpose in battle.",
+      "rules_text": "Increase maximum Stamina by 1 and learn one tactic whose prerequisites you meet.",
+      "activation_type": "passive"
+    },
+    {
+      "key": "toxic-fire",
+      "name": "Toxic Fire",
+      "category": "class",
+      "flavor_text": "Your venom carries an unstable alchemical heat.",
+      "rules_text": "Whenever your Alchemical Venom inflicts Poisoned, it also inflicts Burning. Resolve the two conditions separately.",
+      "activation_type": "passive"
+    },
+    {
+      "key": "unbridled-power",
+      "name": "Unbridled Power",
+      "category": "class",
+      "flavor_text": "You force your body to pay for a final surge of magic.",
+      "rules_text": "Once per 24 hours, spend a minor action to restore up to 2 Sorcerous Power, no higher than your maximum, and take 2 Eldritch damage. Resolve this as one self-damage event with one Suffering check. Protective saves cannot reduce it. It can Defeat or kill you under the normal rules.",
+      "activation_type": "passive"
+    },
+    {
+      "key": "warrior-of-the-temple",
+      "name": "Warrior of the Temple",
+      "category": "class",
+      "flavor_text": "Your martial oath includes initiation into a magical tradition.",
+      "rules_text": "Gain access to one order of magic and learn up to two level-0 spells from it.",
+      "activation_type": "passive"
+    },
+    {
+      "key": "weirdblood",
+      "name": "Weirdblood",
+      "category": "class",
+      "flavor_text": "The changes in your blood bring dangerous understanding.",
+      "rules_text": "Gain access to Forbidden magic and learn up to three Forbidden spells.",
+      "activation_type": "passive"
+    },
+    {
+      "key": "wild-eyed",
+      "name": "Wild Eyed",
+      "category": "class",
+      "flavor_text": "Once you begin an assault, you find it easier to keep striking.",
+      "rules_text": "Reduce only the multiple-attack penalty by one tier: your second attack has no such penalty, and your third or later attack is Diminished. For save attacks, reduce the corresponding save bonus by one tier. Other penalties are unchanged.",
+      "activation_type": "passive"
+    },
+    {
+      "key": "wild-frenzy",
+      "name": "Wild Frenzy",
+      "category": "class",
+      "flavor_text": "Your beast companion answers your aggression with its own.",
+      "rules_text": "Each beast companion you control may make one additional attack on its turn, paying a minor action and the normal multiple-attack penalty. It still needs a command to take offensive actions.",
+      "activation_type": "passive"
+    },
+    {
+      "key": "moonsight",
+      "name": "Moonsight",
+      "category": "talent",
+      "flavor_text": "You have learned to trust the faintest light.",
+      "rules_text": "Gain Nightvision. If you already have it, choose a different eligible talent.",
+      "activation_type": "passive"
+    },
+    {
+      "key": "foretold",
+      "name": "Foretold",
+      "category": "talent",
+      "flavor_text": "A promised future seems reluctant to release you.",
+      "rules_text": "Increase maximum Luck by 2\\.",
+      "activation_type": "passive"
+    },
+    {
+      "key": "sorcerous-potency",
+      "name": "Sorcerous Potency",
+      "category": "talent",
+      "flavor_text": "You gather more power before your strength is spent.",
+      "rules_text": "Increase maximum Sorcerous Power by 1\\.",
+      "activation_type": "passive"
+    },
+    {
+      "key": "otherworldly-spirit",
+      "name": "Otherworldly Spirit",
+      "category": "talent",
+      "flavor_text": "Your spirit can hold another fragment of magical knowledge.",
+      "rules_text": "Increase Sorcerous Soul by 1\\. This grants capacity, not an automatically learned spell.",
+      "activation_type": "passive"
+    },
+    {
+      "key": "combat-training",
+      "name": "Combat Training",
+      "category": "talent",
+      "flavor_text": "Practice turns a familiar weapon into a dependable tool.",
+      "rules_text": "Gain +1 rank in Melee or Ranged.",
+      "activation_type": "passive"
+    },
+    {
+      "key": "veteran",
+      "name": "Veteran",
+      "category": "talent",
+      "flavor_text": "You have learned to endure the demands of battle.",
+      "rules_text": "Increase maximum Wounds and Stamina by 1 each. **Prerequisite:** Combat Training.",
+      "activation_type": "passive"
+    },
+    {
+      "key": "scarred",
+      "name": "Scarred",
+      "category": "talent",
+      "flavor_text": "Old injuries have left you harder to break.",
+      "rules_text": "Increase maximum Wounds by 1 and gain +1 rank in Willpower. **Prerequisite:** Veteran.",
+      "activation_type": "passive"
+    },
+    {
+      "key": "vigor",
+      "name": "Vigor",
+      "category": "talent",
+      "flavor_text": "A deep reserve of effort carries you through hardship.",
+      "rules_text": "Increase maximum Stamina by 2\\.",
+      "activation_type": "passive"
+    },
+    {
+      "key": "relentless",
+      "name": "Relentless",
+      "category": "talent",
+      "flavor_text": "You keep your purpose when exhaustion threatens it.",
+      "rules_text": "Increase maximum Stamina by 1 and gain +1 rank in Willpower. **Prerequisite:** Vigor.",
+      "activation_type": "passive"
+    },
+    {
+      "key": "stoneskull",
+      "name": "Stoneskull",
+      "category": "talent",
+      "flavor_text": "A rattling blow rarely scatters your thoughts for long.",
+      "rules_text": "You are immune to Dazed. Staggered still affects you, but ends when a successful save would reduce it to Dazed.",
+      "activation_type": "passive"
+    },
+    {
+      "key": "deadly",
+      "name": "Deadly",
+      "category": "talent",
+      "flavor_text": "You recognize the difference between a hit and a telling hit.",
+      "rules_text": "Increase your direct-attack critical range by 3 percentage points.",
+      "activation_type": "passive"
+    },
+    {
+      "key": "flanker",
+      "name": "Flanker",
+      "category": "talent",
+      "flavor_text": "You exploit an enemy\u2019s divided attention.",
+      "rules_text": "Your Melee attacks are Enhanced when you and a conscious ally threaten the target from opposite sides. In play without a grid, the GM must confirm the target cannot keep both attackers in front. **Prerequisite:** Prowler.",
+      "activation_type": "passive"
+    },
+    {
+      "key": "prowler",
+      "name": "Prowler",
+      "category": "talent",
+      "flavor_text": "You move carefully and react before danger closes.",
+      "rules_text": "Gain +1 rank in Reflexes and Stealth.",
+      "activation_type": "passive"
+    },
+    {
+      "key": "arms-mastery",
+      "name": "Arms Mastery",
+      "category": "talent",
+      "flavor_text": "You study the subtleties of a chosen weapon.",
+      "rules_text": "Learn one Weapon Technique for one weapon type. **Prerequisite:** Combat Training.",
+      "activation_type": "passive"
+    },
+    {
+      "key": "point-blank-attack",
+      "name": "Point Blank Attack",
+      "category": "talent",
+      "flavor_text": "Close pressure does not spoil your shot.",
+      "rules_text": "Ignore Diminishment for ranged attacks at melee range with your mastered weapon. **Prerequisite:** Arms Mastery for that weapon.",
+      "activation_type": "passive"
+    },
+    {
+      "key": "accuracy",
+      "name": "Accuracy",
+      "category": "talent",
+      "flavor_text": "You wait for a clean line through a crowded fight.",
+      "rules_text": "With your mastered weapon, ignore Diminishment for firing into melee and the chance of hitting an unintended target. **Prerequisite:** Arms Mastery for that weapon.",
+      "activation_type": "passive"
+    },
+    {
+      "key": "careful-aim",
+      "name": "Careful Aim",
+      "category": "talent",
+      "flavor_text": "You find the opening in a target\u2019s protection.",
+      "rules_text": "With your mastered weapon, ignore normal cover; treat heavy cover as normal cover. Total cover still prevents targeting. **Prerequisite:** Arms Mastery for that weapon.",
+      "activation_type": "passive"
+    },
+    {
+      "key": "secondary-attack",
+      "name": "Secondary Attack",
+      "category": "talent",
+      "flavor_text": "Repeated practice lets you recover your weapon for another strike.",
+      "rules_text": "You may make one additional attack with your mastered weapon on your turn, paying its normal minor action and multiple-attack penalty. **Prerequisites:** Combat Training, Arms Mastery for that weapon, character level 3\\.",
+      "activation_type": "passive"
+    },
+    {
+      "key": "ternary-attack",
+      "name": "Ternary Attack",
+      "category": "talent",
+      "flavor_text": "Your attack sequence extends into a relentless combination.",
+      "rules_text": "You may make one additional attack with your mastered weapon on your turn, paying its normal minor action and multiple-attack penalty. This can combine with Secondary Attack, but grants no extra actions. **Prerequisites:** Combat Training, Arms Mastery for that weapon, character level 7\\.",
+      "activation_type": "passive"
+    },
+    {
+      "key": "spell-mastery",
+      "name": "Spell Mastery",
+      "category": "talent",
+      "flavor_text": "You shape a familiar working with greater control.",
+      "rules_text": "Learn one Spell Technique. **Prerequisite:** Sorcerous Potency.",
+      "activation_type": "passive"
+    },
+    {
+      "key": "sorcerous-conversion",
+      "name": "Sorcerous Conversion",
+      "category": "talent",
+      "flavor_text": "You turn physical effort into magical force.",
+      "rules_text": "When paying Sorcerous Power for a spell or feature, you may spend Stamina instead, one for one. This does not increase your Power maximum or count as restoring Power.",
+      "activation_type": "passive"
+    },
+    {
+      "key": "elemental-conversion",
+      "name": "Elemental Conversion",
+      "category": "talent",
+      "flavor_text": "You understand the kinship between flame, frost, and storm.",
+      "rules_text": "When casting a spell that deals Cold, Fire, or Storm damage, you may change that damage to either of the other two types. This changes damage only, not secondary conditions such as Burning.",
+      "activation_type": "passive"
+    },
+    {
+      "key": "spellblade",
+      "name": "Spellblade",
+      "category": "talent",
+      "flavor_text": "Magic flashes through your weapon at the instant of commitment.",
+      "rules_text": "Before a melee attack, spend 1 Sorcerous Power without an extra action. The attack deals +1 wound and its entire damage becomes Enchanted. This is spent even if you miss and can be used once per attack.",
+      "activation_type": "passive"
+    },
+    {
+      "key": "brawler",
+      "name": "Brawler",
+      "category": "talent",
+      "flavor_text": "You know how to make an unarmed blow count.",
+      "rules_text": "Your unarmed attacks deal normal damage rather than Lesser Attack damage. The penalty for attacking an armed target remains.",
+      "activation_type": "passive"
+    },
+    {
+      "key": "martial-arts",
+      "name": "Martial Arts",
+      "category": "talent",
+      "flavor_text": "Your strikes flow into a practiced combination.",
+      "rules_text": "You may make one additional unarmed attack on your turn, paying the normal minor action and multiple-attack penalty. **Prerequisite:** Brawler.",
+      "activation_type": "passive"
+    },
+    {
+      "key": "elemental-fist",
+      "name": "Elemental Fist",
+      "category": "talent",
+      "flavor_text": "Your blows carry the bite of winter, fire, or thunder.",
+      "rules_text": "For each unarmed attack, choose Physical, Cold, Fire, or Storm damage. **Prerequisites:** Martial Arts and Elemental Conversion.",
+      "activation_type": "passive"
+    },
+    {
+      "key": "gore",
+      "name": "Gore",
+      "category": "talent",
+      "flavor_text": "You know the lethal angles of your natural weapons.",
+      "rules_text": "Increase your critical range by 5 percentage points when attacking with Bite/Claws or Horns. **Prerequisite:** Bite/Claws or Horns.",
+      "activation_type": "passive"
+    },
+    {
+      "key": "elder-knowledge",
+      "name": "Elder Knowledge",
+      "category": "talent",
+      "flavor_text": "Study or revelation opens a new magical tradition to you.",
+      "rules_text": "Gain access to one order of magic. This does not grant spells, Soul capacity, or additional Potential.",
+      "activation_type": "passive"
+    },
+    {
+      "key": "wild-vigor",
+      "name": "Wild Vigor",
+      "category": "talent",
+      "flavor_text": "You can summon a fierce reserve when the fighting begins.",
+      "rules_text": "Increase maximum Stamina by 1\\. While you have at least one level of Suffering, your Endurance checks are Enhanced. This talent qualifies you for Frenzy and War Howl.",
+      "activation_type": "passive"
+    },
+    {
+      "key": "armor-breaker",
+      "name": "Armor Breaker",
+      "category": "tactic",
+      "flavor_text": "You prepare a blow aimed at a defensive weakness.",
+      "rules_text": "Before your next weapon attack this turn, activate this tactic. That attack gains Armor Piercing. **Prerequisite:** Deadly.",
+      "activation_type": "minor"
+    },
+    {
+      "key": "brace",
+      "name": "Brace",
+      "category": "tactic",
+      "flavor_text": "You set your shield to receive the worst of an incoming blow.",
+      "rules_text": "While wielding a shield, gain a separate 10% Shield Save against damaging hits until the start of your next turn. Roll after Armor; success reduces damage by 2 wounds. **Prerequisite:** Veteran and a wielded shield.",
+      "activation_type": "minor"
+    },
+    {
+      "key": "charge",
+      "name": "Charge",
+      "category": "tactic",
+      "flavor_text": "You close the distance in a sudden rush.",
+      "rules_text": "Move up to 25 feet. Apply Slowed and difficult terrain normally. This movement does not include an attack.",
+      "activation_type": "minor"
+    },
+    {
+      "key": "cleave",
+      "name": "Cleave",
+      "category": "tactic",
+      "flavor_text": "Your finishing strike carries into the enemy beside your fallen foe.",
+      "rules_text": "When your melee attack reduces a foe from positive Wounds to 0, choose a different foe within your reach and adjacent to that foe. It makes a Reflexes save or takes damage equal to the original attack\u2019s damage before the first foe\u2019s defenses, of the same type. Resolve its defenses normally. This secondary damage cannot trigger another Cleave. **Prerequisite:** Character level 3\\.",
+      "activation_type": "minor"
+    },
+    {
+      "key": "counter-attack",
+      "name": "Counter Attack",
+      "category": "tactic",
+      "flavor_text": "You answer an enemy\u2019s commitment with a strike of your own.",
+      "rules_text": "**Response:** After an enemy within your melee reach resolves an attack against you, make one melee attack against it. You must remain able to act. **Prerequisite:** Combat Training.",
+      "activation_type": "minor"
+    },
+    {
+      "key": "leadership",
+      "name": "Leadership",
+      "category": "tactic",
+      "flavor_text": "A firm command gives courage a place to return.",
+      "rules_text": "End Fear on yourself or one ally within 30 feet who can hear you. This does not end Horror. **Prerequisites:** Veteran, character level 5\\.",
+      "activation_type": "minor"
+    },
+    {
+      "key": "disrupting-blow",
+      "name": "Disrupting Blow",
+      "category": "tactic",
+      "flavor_text": "You strike as an enemy gathers the breath and will for magic.",
+      "rules_text": "**Response:** When an enemy within melee reach begins casting, attack before the spell resolves. If you inflict at least 1 wound, the spell fails; its action and declared resources are spent. Otherwise it resolves normally. **Prerequisite:** Veteran.",
+      "activation_type": "minor"
+    },
+    {
+      "key": "execute",
+      "name": "Execute",
+      "category": "tactic",
+      "flavor_text": "You turn a telling strike into a decisive one.",
+      "rules_text": "When you critically hit, add 1 wound to the attack before defenses. **Prerequisite:** Deadly.",
+      "activation_type": "minor"
+    },
+    {
+      "key": "frenzy",
+      "name": "Frenzy",
+      "category": "tactic",
+      "flavor_text": "You throw yourself into a sustained flurry of violence.",
+      "rules_text": "For 3 rounds, you may make one additional melee attack on each of your turns, paying the normal minor action and multiple-attack penalty. **Prerequisite:** Wild Vigor.",
+      "activation_type": "minor"
+    },
+    {
+      "key": "guarding-blow",
+      "name": "Guarding Blow",
+      "category": "tactic",
+      "flavor_text": "Your strike forces an enemy to recover before pressing the attack.",
+      "rules_text": "On a hit, force a Reflexes save. On failure, the target\u2019s next attack before the end of its next turn is Diminished. **Prerequisite:** Veteran.",
+      "activation_type": "minor"
+    },
+    {
+      "key": "knock-down",
+      "name": "Knock Down",
+      "category": "tactic",
+      "flavor_text": "You turn force and timing against your opponent\u2019s footing.",
+      "rules_text": "On a melee hit, force an Athletics save. On failure, the target falls Prone.",
+      "activation_type": "minor"
+    },
+    {
+      "key": "order",
+      "name": "Order",
+      "category": "tactic",
+      "flavor_text": "Your command calls for immediate, decisive action.",
+      "rules_text": "Choose an ally within 30 feet who can hear you. Immediately after your current action resolves, it takes one major action, with no minor or free actions granted. This is not a new turn: it does not reset attack counts, saves, durations, or resources. A creature can benefit from Order only once per round. **Prerequisites:** Leadership, character level 7\\.",
+      "activation_type": "minor"
+    },
+    {
+      "key": "pin-down",
+      "name": "Pin Down",
+      "category": "tactic",
+      "flavor_text": "You punish the first step of an enemy\u2019s retreat.",
+      "rules_text": "**Response:** When an enemy within melee reach begins voluntary movement, attack before it leaves its space. If you inflict at least 1 wound, its movement ends and it cannot move voluntarily again this turn. **Prerequisite:** Veteran.",
+      "activation_type": "minor"
+    },
+    {
+      "key": "push-back",
+      "name": "Push Back",
+      "category": "tactic",
+      "flavor_text": "You drive an opponent away with a forceful impact.",
+      "rules_text": "On a melee hit, force an Athletics save. On failure, push the target up to 10 feet directly away. A solid obstacle ends the push. This is forced movement and does not trigger Pin Down.",
+      "activation_type": "minor"
+    },
+    {
+      "key": "resurgence",
+      "name": "Resurgence",
+      "category": "tactic",
+      "flavor_text": "You draw on hard-earned endurance to stay in the fight.",
+      "rules_text": "Restore 1 Wound to yourself, up to your maximum. **Prerequisites:** Scarred, character level 3\\.",
+      "activation_type": "minor"
+    },
+    {
+      "key": "shadow-kick",
+      "name": "Shadow Kick",
+      "category": "tactic",
+      "flavor_text": "You answer an opening with a swift unarmed counter.",
+      "rules_text": "**Response:** After an enemy within unarmed reach resolves an attack against you, make one unarmed attack against it. You must remain able to act. **Prerequisite:** Martial Arts.",
+      "activation_type": "minor"
+    },
+    {
+      "key": "shield-bash",
+      "name": "Shield Bash",
+      "category": "tactic",
+      "flavor_text": "Your protection becomes a blunt weapon for a moment.",
+      "rules_text": "Make one additional melee attack using your wielded shield and Melee skill. It is a Lesser Attack and uses the normal multiple-attack penalty. The tactic\u2019s minor action pays for this attack. **Prerequisite:** A wielded shield.",
+      "activation_type": "minor"
+    },
+    {
+      "key": "storm-fist",
+      "name": "Storm Fist",
+      "category": "tactic",
+      "flavor_text": "Your hands move with the repeated force of a gathering storm.",
+      "rules_text": "For 3 rounds, you may make one additional unarmed attack on each turn, paying the normal minor action and multiple-attack penalty. This does not change its damage type. **Prerequisite:** Martial Arts.",
+      "activation_type": "minor"
+    },
+    {
+      "key": "sunder",
+      "name": "Sunder",
+      "category": "tactic",
+      "flavor_text": "You damage the protection rather than merely the wearer.",
+      "rules_text": "On a hit with an Armor Piercing weapon, reduce the target\u2019s worn armor base save to 10% if higher. This happens after the triggering hit; other armor bonuses still apply. Repeated uses do not reduce the base further. Repair takes 1 hour, appropriate tools, materials worth one-quarter of the armor\u2019s listed price, and a successful Craft check. A failed check can be retried with another hour, without consuming additional materials. Natural Armor is unaffected. **Prerequisites:** Arms Mastery and an attack with Armor Piercing.",
+      "activation_type": "minor"
+    },
+    {
+      "key": "sweep",
+      "name": "Sweep",
+      "category": "tactic",
+      "flavor_text": "You use a long weapon to take an enemy\u2019s legs from under it.",
+      "rules_text": "On a hit with a two-handed melee weapon, force a Reflexes save. On failure, the target falls Prone. **Prerequisite:** A two-handed melee weapon.",
+      "activation_type": "minor"
+    },
+    {
+      "key": "war-howl",
+      "name": "War Howl",
+      "category": "tactic",
+      "flavor_text": "Your voice carries the promise of violence.",
+      "rules_text": "Choose one enemy within 30 feet that can hear you. It makes a Willpower save or suffers Fear of you for 3 rounds, with normal start-of-turn saves. **Prerequisite:** Wild Vigor.",
+      "activation_type": "minor"
+    },
+    {
+      "key": "wind",
+      "name": "Wind",
+      "category": "tactic",
+      "flavor_text": "A punishing strike steals the breath needed for the next effort.",
+      "rules_text": "On a melee hit, force an additional Endurance save. On failure, the target loses 1 Stamina, to a minimum of 0\\. This is separate from its Suffering check.",
+      "activation_type": "minor"
+    }
+  ],
+  "backgrounds": [
+    {
+      "name": "Acolyte",
+      "description": "You served a shrine or temple, tending its rites and the needs of its people.",
+      "attributes": [
+        "Intellect +1",
+        "Resolve +1"
+      ],
+      "skills": [
+        "Faith",
+        "Medicine",
+        "Mythos "
+      ],
+      "feature": "Magus",
+      "equipment": [
+        "Robes"
+      ]
+    },
+    {
+      "name": "Acolyte-Knight",
+      "description": "You trained to defend a religious community with both conviction and steel.",
+      "attributes": [
+        "Strength +1",
+        "Resolve +1"
+      ],
+      "skills": [
+        "Melee",
+        "Faith",
+        "Mythos "
+      ],
+      "feature": "Man-at-Arms",
+      "equipment": [
+        "Helmet",
+        "3 candles"
+      ]
+    },
+    {
+      "name": "Acolyte-Sorcerer",
+      "description": "You studied the places where sacred tradition and arcane practice meet.",
+      "attributes": [
+        "Intellect +1",
+        "Resolve +1"
+      ],
+      "skills": [
+        "Faith",
+        "Sorcery",
+        "Mythos "
+      ],
+      "feature": "Magus",
+      "equipment": [
+        "Robes"
+      ]
+    },
+    {
+      "name": "Adventurer",
+      "description": "You have already traveled dangerous roads and learned to prepare for the unexpected.",
+      "attributes": [
+        "Strength +1",
+        "Intellect +1"
+      ],
+      "skills": [
+        "Melee",
+        "Riding",
+        "Survival "
+      ],
+      "feature": "Danger Sense",
+      "equipment": [
+        "Rope",
+        "grappling hook"
+      ]
+    },
+    {
+      "name": "Barbarian",
+      "description": "You grew up where strength, endurance, and knowledge of the land mattered more than formal schooling.",
+      "attributes": [
+        "Strength +1",
+        "Vitality +1"
+      ],
+      "skills": [
+        "Melee",
+        "Riding",
+        "Nature Lore "
+      ],
+      "feature": "Blood Rage",
+      "equipment": [
+        "Fur cape"
+      ]
+    },
+    {
+      "name": "Brigand",
+      "description": "You survived through intimidation, opportunism, and the threat of a drawn blade.",
+      "attributes": [
+        "Strength +1",
+        "Vitality +1"
+      ],
+      "skills": [
+        "Melee",
+        "Coercion",
+        "Deception "
+      ],
+      "feature": "Danger Sense",
+      "equipment": [
+        "Mask"
+      ]
+    },
+    {
+      "name": "Brigand-Archer",
+      "description": "You learned to watch a road from cover and make the first shot count.",
+      "attributes": [
+        "Agility +1",
+        "Strength +1"
+      ],
+      "skills": [
+        "Ranged",
+        "Coercion",
+        "Deception "
+      ],
+      "feature": "Danger Sense",
+      "equipment": [
+        "Mask"
+      ]
+    },
+    {
+      "name": "Cultist",
+      "description": "You pursued forbidden truths among people who welcomed dangerous revelations.",
+      "attributes": [
+        "Intellect +1",
+        "Vitality +1"
+      ],
+      "skills": [
+        "Sorcery",
+        "Mythos",
+        "Eldritch Lore "
+      ],
+      "feature": "Magus",
+      "equipment": [
+        "Dagger"
+      ]
+    },
+    {
+      "name": "Cultist Barbarian",
+      "description": "Your martial traditions were shaped by secret rites and unsettling powers.",
+      "attributes": [
+        "Strength +1",
+        "Vitality +1"
+      ],
+      "skills": [
+        "Melee",
+        "Mythos",
+        "Eldritch Lore "
+      ],
+      "feature": "Dark Soul",
+      "equipment": [
+        "Fur cape"
+      ]
+    },
+    {
+      "name": "Escaped Slave",
+      "description": "You escaped a life of captivity and learned to endure, hide, and seize a chance at freedom.",
+      "attributes": [
+        "Strength +1",
+        "Resolve +1"
+      ],
+      "skills": [
+        "Athletics",
+        "Stealth",
+        "Survival "
+      ],
+      "feature": "Toil",
+      "equipment": [
+        "Rope"
+      ]
+    },
+    {
+      "name": "Farmer",
+      "description": "Long seasons of labor taught you patience, practical strength, and the needs of living things.",
+      "attributes": [
+        "Strength +1",
+        "Vitality +1"
+      ],
+      "skills": [
+        "Athletics",
+        "Nature Lore",
+        "Riding "
+      ],
+      "feature": "Hardy",
+      "equipment": [
+        "3 rations"
+      ]
+    },
+    {
+      "name": "Fisher",
+      "description": "You earned your living from the water, reading weather and waiting for the right moment.",
+      "attributes": [
+        "Agility +1",
+        "Resolve +1"
+      ],
+      "skills": [
+        "Survival",
+        "Sailing",
+        "Nature Lore "
+      ],
+      "feature": "Peaceful",
+      "equipment": [
+        "Fishing rod"
+      ]
+    },
+    {
+      "name": "Healer",
+      "description": "You tended injuries and illness, learning to distinguish a hopeful sign from a dangerous one.",
+      "attributes": [
+        "Intellect +1",
+        "Resolve +1"
+      ],
+      "skills": [
+        "Medicine",
+        "Comprehension",
+        "Research "
+      ],
+      "feature": "Wisened",
+      "equipment": [
+        "Robes"
+      ]
+    },
+    {
+      "name": "Hermit",
+      "description": "Years of seclusion gave you time to study the world beyond ordinary distractions.",
+      "attributes": [
+        "Intellect +1",
+        "Resolve +1"
+      ],
+      "skills": [
+        "Survival",
+        "Comprehension",
+        "Nature Lore "
+      ],
+      "feature": "Wisened",
+      "equipment": [
+        "Robes"
+      ]
+    },
+    {
+      "name": "Hermit-Shaman",
+      "description": "In solitude, you learned to listen to the spirits of the wild.",
+      "attributes": [
+        "Intellect +1",
+        "Vitality +1"
+      ],
+      "skills": [
+        "Shamanism",
+        "Comprehension",
+        "Nature Lore "
+      ],
+      "feature": "Wisened",
+      "equipment": [
+        "Robes"
+      ]
+    },
+    {
+      "name": "Hermit-Sorcerer",
+      "description": "Your isolation sheltered arcane studies that might have drawn unwelcome attention elsewhere.",
+      "attributes": [
+        "Intellect +1",
+        "Resolve +1"
+      ],
+      "skills": [
+        "Sorcery",
+        "Comprehension",
+        "Nature Lore "
+      ],
+      "feature": "Wisened",
+      "equipment": [
+        "Robes"
+      ]
+    },
+    {
+      "name": "Hunter",
+      "description": "You followed tracks, watched the wind, and learned the habits of your quarry.",
+      "attributes": [
+        "Agility +1",
+        "Vitality +1"
+      ],
+      "skills": [
+        "Ranged",
+        "Survival",
+        "Nature Lore "
+      ],
+      "feature": "Alert",
+      "equipment": [
+        "Hunting trap"
+      ]
+    },
+    {
+      "name": "Mercenary",
+      "description": "You sold your fighting skill and learned to value reliable equipment and dependable companions.",
+      "attributes": [
+        "Strength +1",
+        "Vitality +1"
+      ],
+      "skills": [
+        "Melee",
+        "Ranged",
+        "Riding "
+      ],
+      "feature": "Man-at-Arms",
+      "equipment": [
+        "Helmet"
+      ]
+    },
+    {
+      "name": "Noble",
+      "description": "You were raised among privilege, obligation, and the careful language of influence.",
+      "attributes": [
+        "Social +1",
+        "Resolve +1"
+      ],
+      "skills": [
+        "Melee",
+        "Riding",
+        "Diplomacy "
+      ],
+      "feature": "Regal",
+      "equipment": [
+        "Gold ring "
+      ]
+    },
+    {
+      "name": "Sailor",
+      "description": "You worked aboard ships, sharing hard labor and close quarters with a demanding crew.",
+      "attributes": [
+        "Strength +1",
+        "Vitality +1"
+      ],
+      "skills": [
+        "Unarmed",
+        "Athletics",
+        "Survival "
+      ],
+      "feature": "Rowdy",
+      "equipment": [
+        "Mask"
+      ]
+    },
+    {
+      "name": "Sailor-Pirate",
+      "description": "You lived by quick hands, quick decisions, and the uncertain fortunes of raiding.",
+      "attributes": [
+        "Agility +1",
+        "Strength +1"
+      ],
+      "skills": [
+        "Melee",
+        "Athletics",
+        "Deception "
+      ],
+      "feature": "Rowdy",
+      "equipment": [
+        "Mask"
+      ]
+    },
+    {
+      "name": "Scholar",
+      "description": "You devoted yourself to books, records, and the patient work of understanding.",
+      "attributes": [
+        "Intellect +1",
+        "Resolve +1"
+      ],
+      "skills": [
+        "History",
+        "Research",
+        "Comprehension "
+      ],
+      "feature": "Wisened",
+      "equipment": [
+        "Robes",
+        "history book"
+      ]
+    },
+    {
+      "name": "Scholar-Mage",
+      "description": "Your scholarship led from ordinary texts into the practice of magic.",
+      "attributes": [
+        "Intellect +1",
+        "Resolve +1"
+      ],
+      "skills": [
+        "Sorcery",
+        "Research",
+        "Comprehension "
+      ],
+      "feature": "Magus",
+      "equipment": [
+        "Robes"
+      ]
+    },
+    {
+      "name": "Soldier",
+      "description": "You learned discipline, formation, and endurance in organized military service.",
+      "attributes": [
+        "Strength +1",
+        "Vitality +1"
+      ],
+      "skills": [
+        "Melee",
+        "Ranged",
+        "Riding "
+      ],
+      "feature": "Rigor",
+      "equipment": [
+        "Helmet"
+      ]
+    },
+    {
+      "name": "Thief",
+      "description": "You made a living where locks, shadows, and unattended valuables meet.",
+      "attributes": [
+        "Agility +1",
+        "Strength +1"
+      ],
+      "skills": [
+        "Reflexes",
+        "Stealth",
+        "Deception "
+      ],
+      "feature": "Danger Sense",
+      "equipment": [
+        "Lock picks"
+      ]
+    },
+    {
+      "name": "Thief-Scoundrel",
+      "description": "You relied as much on a convincing story as on a quiet step.",
+      "attributes": [
+        "Agility +1",
+        "Social +1"
+      ],
+      "skills": [
+        "Reflexes",
+        "Stealth",
+        "Deception "
+      ],
+      "feature": "Danger Sense",
+      "equipment": [
+        "Lock picks"
+      ]
+    },
+    {
+      "name": "Treasure Hunter",
+      "description": "You sought valuables in abandoned places and learned to suspect the obvious route.",
+      "attributes": [
+        "Agility +1",
+        "Intellect +1"
+      ],
+      "skills": [
+        "Reflexes",
+        "Stealth",
+        "Comprehension "
+      ],
+      "feature": "Danger Sense",
+      "equipment": [
+        "Rope",
+        "lock picks"
+      ]
+    },
+    {
+      "name": "Wanderer",
+      "description": "You made your home on the road, accepting hardship and hospitality in equal measure.",
+      "attributes": [
+        "Vitality +1",
+        "Resolve +1"
+      ],
+      "skills": [
+        "Melee",
+        "Riding",
+        "Survival "
+      ],
+      "feature": "Peaceful",
+      "equipment": [
+        "Hooded cape"
+      ]
+    },
+    {
+      "name": "Wandering Mage",
+      "description": "You carried your magical studies from settlement to settlement, learning wherever you could.",
+      "attributes": [
+        "Intellect +1",
+        "Vitality +1"
+      ],
+      "skills": [
+        "Sorcery",
+        "Riding",
+        "Survival "
+      ],
+      "feature": "Magus",
+      "equipment": [
+        "Hooded cape"
+      ]
+    },
+    {
+      "name": "Wandering Shaman",
+      "description": "You journeyed among communities and wild places, honoring the spirits found in each.",
+      "attributes": [
+        "Vitality +1",
+        "Resolve +1"
+      ],
+      "skills": [
+        "Shamanism",
+        "Nature Lore",
+        "Survival "
+      ],
+      "feature": "Magus",
+      "equipment": [
+        "Hooded cape"
+      ]
+    },
+    {
+      "name": "Witch Hunter",
+      "description": "You learned to investigate hidden supernatural threats and meet them with steady resolve.",
+      "attributes": [
+        "Agility +1",
+        "Resolve +1"
+      ],
+      "skills": [
+        "Ranged",
+        "Faith",
+        "Mythos "
+      ],
+      "feature": "Alert",
+      "equipment": [
+        "Cloak"
+      ]
+    }
+  ],
+  "classes": [
+    {
+      "name": "Outlander",
+      "description": "A traveler at home beyond roads and walls, the Outlander combines wilderness knowledge, practical weapon training, and the first mysteries of nature magic.",
+      "starting_role": "Rogue",
+      "primary_skills": [
+        "Melee",
+        "Ranged",
+        "Survival",
+        "Nature Lore"
+      ],
+      "levels": [
+        {
+          "level": 1,
+          "feature": "Denizen of the Wild"
+        },
+        {
+          "level": 2,
+          "feature": "Nature Lore Enhanced"
+        },
+        {
+          "level": 3,
+          "feature": "Rogue +1"
+        },
+        {
+          "level": 4,
+          "feature": "1 Weapon Technique"
+        },
+        {
+          "level": 5,
+          "feature": "Attack Skill Increase"
+        },
+        {
+          "level": 6,
+          "feature": "Rogue +1"
+        },
+        {
+          "level": 7,
+          "feature": "Mobile Dodge"
+        },
+        {
+          "level": 8,
+          "feature": "Attack Skill Increase"
+        },
+        {
+          "level": 9,
+          "feature": "Rogue +1"
+        },
+        {
+          "level": 10,
+          "feature": "+1 Attack"
+        }
+      ],
+      "note": ""
+    },
+    {
+      "name": "Outlaw",
+      "description": "The Outlaw survives through timing, nerve, and an eye for an opening. Whether fugitive, rebel, or opportunist, they strike before an enemy can settle into the fight.",
+      "starting_role": "Rogue",
+      "primary_skills": [
+        "Melee",
+        "Ranged",
+        "Stealth",
+        "Deception"
+      ],
+      "levels": [
+        {
+          "level": 1,
+          "feature": "Outlaw's Cunning"
+        },
+        {
+          "level": 2,
+          "feature": "Awareness Enhanced"
+        },
+        {
+          "level": 3,
+          "feature": "Rogue +1"
+        },
+        {
+          "level": 4,
+          "feature": "1 Weapon Technique"
+        },
+        {
+          "level": 5,
+          "feature": "Attack Skill Increase"
+        },
+        {
+          "level": 6,
+          "feature": "Rogue +1"
+        },
+        {
+          "level": 7,
+          "feature": "Enhanced Lethality"
+        },
+        {
+          "level": 8,
+          "feature": "Attack Skill Increase"
+        },
+        {
+          "level": 9,
+          "feature": "Rogue +1"
+        },
+        {
+          "level": 10,
+          "feature": "+1 Attack"
+        }
+      ],
+      "note": ""
+    },
+    {
+      "name": "Adept",
+      "description": "The Adept disciplines body and spirit until an empty hand becomes a formidable weapon. Their training prizes movement, restraint, and concentrated bursts of supernatural force.",
+      "starting_role": "Martial",
+      "primary_skills": [
+        "Unarmed",
+        "Reflexes",
+        "Athletics",
+        "Willpower"
+      ],
+      "levels": [
+        {
+          "level": 1,
+          "feature": "Esoteric Way"
+        },
+        {
+          "level": 2,
+          "feature": "Reflexes Enhanced"
+        },
+        {
+          "level": 3,
+          "feature": "Martial +1"
+        },
+        {
+          "level": 4,
+          "feature": "+1 Initiative Bonus and +1 maximum Wound"
+        },
+        {
+          "level": 5,
+          "feature": "Attack Skill Increase"
+        },
+        {
+          "level": 6,
+          "feature": "Rogue +1"
+        },
+        {
+          "level": 7,
+          "feature": "Stonetouch Technique"
+        },
+        {
+          "level": 8,
+          "feature": "Attack Skill Increase"
+        },
+        {
+          "level": 9,
+          "feature": "Martial +1"
+        },
+        {
+          "level": 10,
+          "feature": "+1 Attack"
+        }
+      ],
+      "note": "At Adept level 6, gain the Rogue role increase: +1 Initiative Bonus and +2 percentage points to your critical range."
+    },
+    {
+      "name": "Heretic",
+      "description": "The Heretic pursues truths that established traditions forbid. Their power grows through dangerous insight and an increasing willingness to reach beyond safe limits.",
+      "starting_role": "Magus",
+      "primary_skills": [
+        "Sorcery",
+        "Eldritch Lore",
+        "Research",
+        "Willpower"
+      ],
+      "levels": [
+        {
+          "level": 1,
+          "feature": "Forbidden Knowledge"
+        },
+        {
+          "level": 2,
+          "feature": "Eldritch Lore Enhanced"
+        },
+        {
+          "level": 3,
+          "feature": "Magus +1"
+        },
+        {
+          "level": 4,
+          "feature": "+1 Sorcerous Power"
+        },
+        {
+          "level": 5,
+          "feature": "Attack Skill Increase"
+        },
+        {
+          "level": 6,
+          "feature": "Magus +1"
+        },
+        {
+          "level": 7,
+          "feature": "Unbridled Power"
+        },
+        {
+          "level": 8,
+          "feature": "Attack Skill Increase"
+        },
+        {
+          "level": 9,
+          "feature": "Magus +1"
+        },
+        {
+          "level": 10,
+          "feature": "Magus +1"
+        }
+      ],
+      "note": ""
+    },
+    {
+      "name": "Priest",
+      "description": "The Priest serves a sacred tradition, mediating between mortal needs and powers beyond the world. Their conviction can steady companions as surely as their spells.",
+      "starting_role": "Magus",
+      "primary_skills": [
+        "Faith",
+        "Mythos",
+        "Medicine",
+        "Diplomacy"
+      ],
+      "levels": [
+        {
+          "level": 1,
+          "feature": "Priesthood"
+        },
+        {
+          "level": 2,
+          "feature": "Mythos Enhanced"
+        },
+        {
+          "level": 3,
+          "feature": "Magus +1"
+        },
+        {
+          "level": 4,
+          "feature": "+1 Sorcerous Soul"
+        },
+        {
+          "level": 5,
+          "feature": "Attack Skill Increase"
+        },
+        {
+          "level": 6,
+          "feature": "Magus +1"
+        },
+        {
+          "level": 7,
+          "feature": "Spiritual Aura"
+        },
+        {
+          "level": 8,
+          "feature": "Attack Skill Increase"
+        },
+        {
+          "level": 9,
+          "feature": "Magus +1"
+        },
+        {
+          "level": 10,
+          "feature": "Magus +1"
+        }
+      ],
+      "note": ""
+    },
+    {
+      "name": "Mage",
+      "description": "The Mage approaches magic through study, practice, and the recovery of lost knowledge. Every new mystery offers another way to reshape the course of an adventure.",
+      "starting_role": "Magus",
+      "primary_skills": [
+        "Sorcery",
+        "Comprehension",
+        "Research",
+        "Eldritch Lore"
+      ],
+      "levels": [
+        {
+          "level": 1,
+          "feature": "Ancient Secrets"
+        },
+        {
+          "level": 2,
+          "feature": "Gain 1 Spell Technique"
+        },
+        {
+          "level": 3,
+          "feature": "Magus +1"
+        },
+        {
+          "level": 4,
+          "feature": "Gain 1 Spell Technique"
+        },
+        {
+          "level": 5,
+          "feature": "Attack Skill Increase"
+        },
+        {
+          "level": 6,
+          "feature": "Magus +1"
+        },
+        {
+          "level": 7,
+          "feature": "Lorekeeper"
+        },
+        {
+          "level": 8,
+          "feature": "Attack Skill Increase"
+        },
+        {
+          "level": 9,
+          "feature": "Magus +1"
+        },
+        {
+          "level": 10,
+          "feature": "Magus +1"
+        }
+      ],
+      "note": ""
+    },
+    {
+      "name": "Druid",
+      "description": "The Druid draws strength from living places and the old relationships between beast, branch, and soil. A companion often walks, flies, or climbs beside them.",
+      "starting_role": "Magus",
+      "primary_skills": [
+        "Shamanism",
+        "Nature Lore",
+        "Survival",
+        "Awareness"
+      ],
+      "levels": [
+        {
+          "level": 1,
+          "feature": "Druidic"
+        },
+        {
+          "level": 2,
+          "feature": "Nature Lore Enhanced"
+        },
+        {
+          "level": 3,
+          "feature": "Magus +1"
+        },
+        {
+          "level": 4,
+          "feature": "Awareness Enhanced"
+        },
+        {
+          "level": 5,
+          "feature": "Attack Skill Increase"
+        },
+        {
+          "level": 6,
+          "feature": "Magus +1"
+        },
+        {
+          "level": 7,
+          "feature": "Elder Oak"
+        },
+        {
+          "level": 8,
+          "feature": "Attack Skill Increase"
+        },
+        {
+          "level": 9,
+          "feature": "Magus +1"
+        },
+        {
+          "level": 10,
+          "feature": "Magus +1"
+        }
+      ],
+      "note": ""
+    },
+    {
+      "name": "Marauder",
+      "description": "The Marauder fights through momentum and aggression, trusting freedom of movement more than heavy protection. A broken enemy line is an invitation to press forward.",
+      "starting_role": "Martial",
+      "primary_skills": [
+        "Melee",
+        "Unarmed",
+        "Athletics",
+        "Riding"
+      ],
+      "levels": [
+        {
+          "level": 1,
+          "feature": "Ravager"
+        },
+        {
+          "level": 2,
+          "feature": "Riding Enhanced"
+        },
+        {
+          "level": 3,
+          "feature": "Martial +1"
+        },
+        {
+          "level": 4,
+          "feature": "+1 maximum Stamina"
+        },
+        {
+          "level": 5,
+          "feature": "Attack Skill Increase"
+        },
+        {
+          "level": 6,
+          "feature": "Martial +1"
+        },
+        {
+          "level": 7,
+          "feature": "Feral"
+        },
+        {
+          "level": 8,
+          "feature": "Attack Skill Increase"
+        },
+        {
+          "level": 9,
+          "feature": "Martial +1"
+        },
+        {
+          "level": 10,
+          "feature": "+1 Attack"
+        }
+      ],
+      "note": ""
+    },
+    {
+      "name": "Warrior",
+      "description": "The Warrior masters the demanding craft of battle. Reliable defenses, weapon training, and tactical discipline make them a steady presence when danger closes in.",
+      "starting_role": "Martial",
+      "primary_skills": [
+        "Melee",
+        "Ranged",
+        "Athletics",
+        "Endurance"
+      ],
+      "levels": [
+        {
+          "level": 1,
+          "feature": "Hardened"
+        },
+        {
+          "level": 2,
+          "feature": "Choose one Weapon Technique or eligible tactic"
+        },
+        {
+          "level": 3,
+          "feature": "Martial +1"
+        },
+        {
+          "level": 4,
+          "feature": "Choose one Weapon Technique or eligible tactic"
+        },
+        {
+          "level": 5,
+          "feature": "Attack Skill Increase"
+        },
+        {
+          "level": 6,
+          "feature": "Martial +1"
+        },
+        {
+          "level": 7,
+          "feature": "Armor Master"
+        },
+        {
+          "level": 8,
+          "feature": "Attack Skill Increase"
+        },
+        {
+          "level": 9,
+          "feature": "Martial +1"
+        },
+        {
+          "level": 10,
+          "feature": "+1 Attack"
+        }
+      ],
+      "note": ""
+    },
+    {
+      "name": "Templar",
+      "description": "The Templar joins martial discipline to sacred or esoteric purpose. Their training equips them to stand in the front rank and challenge hostile enchantments.",
+      "starting_role": "Martial",
+      "primary_skills": [
+        "Melee",
+        "Faith",
+        "Willpower",
+        "Mythos"
+      ],
+      "levels": [
+        {
+          "level": 1,
+          "feature": "Warrior of the Temple"
+        },
+        {
+          "level": 2,
+          "feature": "Willpower Enhanced"
+        },
+        {
+          "level": 3,
+          "feature": "Martial +1"
+        },
+        {
+          "level": 4,
+          "feature": "+1 spell learned and +1 Sorcerous Soul"
+        },
+        {
+          "level": 5,
+          "feature": "Attack Skill Increase"
+        },
+        {
+          "level": 6,
+          "feature": "Magus +1"
+        },
+        {
+          "level": 7,
+          "feature": "Rebuke"
+        },
+        {
+          "level": 8,
+          "feature": "Attack Skill Increase"
+        },
+        {
+          "level": 9,
+          "feature": "Martial +1"
+        },
+        {
+          "level": 10,
+          "feature": "+1 Attack"
+        }
+      ],
+      "note": ""
+    }
+  ],
+  "specializations": [
+    {
+      "name": "Psionic",
+      "description": "You cultivate the hidden force of thought, reaching inward for powers that may eventually draw the attention of stranger minds.",
+      "levels": [
+        {
+          "level": 1,
+          "feature": "Psionic"
+        },
+        {
+          "level": 3,
+          "feature": "+1 Sorcerous Power"
+        },
+        {
+          "level": 6,
+          "feature": "Eldritch Psi"
+        },
+        {
+          "level": 9,
+          "feature": "+1 Sorcerous Power"
+        }
+      ]
+    },
+    {
+      "name": "Savage",
+      "description": "You fight with untamed intensity, turning pain and relentless motion into an advantage.",
+      "levels": [
+        {
+          "level": 1,
+          "feature": "Wild Eyed"
+        },
+        {
+          "level": 3,
+          "feature": "+1 Initiative Bonus"
+        },
+        {
+          "level": 6,
+          "feature": "Red Rage"
+        },
+        {
+          "level": 9,
+          "feature": "+1 maximum Wound"
+        }
+      ]
+    },
+    {
+      "name": "Necrotic",
+      "description": "You study the threshold between life and death, finding power where the dead have left their mark.",
+      "levels": [
+        {
+          "level": 1,
+          "feature": "Necromancer"
+        },
+        {
+          "level": 3,
+          "feature": "Learn one spell and gain +1 Sorcerous Soul"
+        },
+        {
+          "level": 6,
+          "feature": "Greater Undead"
+        },
+        {
+          "level": 9,
+          "feature": "+1 maximum Wound"
+        }
+      ]
+    },
+    {
+      "name": "Wildheart",
+      "description": "Predatory instinct and stubborn vitality guide you through danger.",
+      "levels": [
+        {
+          "level": 1,
+          "feature": "Fang and Claw"
+        },
+        {
+          "level": 3,
+          "feature": "+1 Initiative Bonus"
+        },
+        {
+          "level": 6,
+          "feature": "Heart of the Wild"
+        },
+        {
+          "level": 9,
+          "feature": "+1 Initiative Bonus"
+        }
+      ]
+    },
+    {
+      "name": "Battle",
+      "description": "You devote yourself to the practical arts of surviving and controlling a fight.",
+      "levels": [
+        {
+          "level": 1,
+          "feature": "Battle Armor"
+        },
+        {
+          "level": 3,
+          "feature": "+1 maximum Wound"
+        },
+        {
+          "level": 6,
+          "feature": "Tactical Training"
+        },
+        {
+          "level": 9,
+          "feature": "+1 maximum Wound"
+        }
+      ]
+    },
+    {
+      "name": "Elemental",
+      "description": "You attune your magic to the destructive and sustaining forces of the elements.",
+      "levels": [
+        {
+          "level": 1,
+          "feature": "Elementalist"
+        },
+        {
+          "level": 3,
+          "feature": "+1 Sorcerous Power"
+        },
+        {
+          "level": 6,
+          "feature": "Elemental Resistance"
+        },
+        {
+          "level": 9,
+          "feature": "+1 maximum Wound"
+        }
+      ]
+    },
+    {
+      "name": "Ghostsoul",
+      "description": "Your spirit rests lightly in the flesh, drawn toward the unseen presences around you.",
+      "levels": [
+        {
+          "level": 1,
+          "feature": "Spiritwalker"
+        },
+        {
+          "level": 3,
+          "feature": "Learn one spell and gain +1 Sorcerous Soul"
+        },
+        {
+          "level": 6,
+          "feature": "Ethereal"
+        },
+        {
+          "level": 9,
+          "feature": "+1 Sorcerous Power"
+        }
+      ]
+    },
+    {
+      "name": "Venom",
+      "description": "You learn the patient cruelty of toxins and the volatile mixtures that make them worse.",
+      "levels": [
+        {
+          "level": 1,
+          "feature": "Alchemical Venom"
+        },
+        {
+          "level": 3,
+          "feature": "+1 Initiative Bonus"
+        },
+        {
+          "level": 6,
+          "feature": "Toxic Fire"
+        },
+        {
+          "level": 9,
+          "feature": "+1 Initiative Bonus"
+        }
+      ]
+    },
+    {
+      "name": "Sacred",
+      "description": "You carry a connection to mythic powers, shaping your gifts toward revelation and restoration.",
+      "levels": [
+        {
+          "level": 1,
+          "feature": "Mythic Lore"
+        },
+        {
+          "level": 3,
+          "feature": "Learn one spell and gain +1 Sorcerous Soul"
+        },
+        {
+          "level": 6,
+          "feature": "Celestial Soul"
+        },
+        {
+          "level": 9,
+          "feature": "Learn one spell and gain +1 Sorcerous Soul"
+        }
+      ]
+    },
+    {
+      "name": "Shadow",
+      "description": "You find hidden paths and unexpected strength where the light begins to fail.",
+      "levels": [
+        {
+          "level": 1,
+          "feature": "Shadowmage"
+        },
+        {
+          "level": 3,
+          "feature": "+1 Initiative Bonus"
+        },
+        {
+          "level": 6,
+          "feature": "Shadowstalker"
+        },
+        {
+          "level": 9,
+          "feature": "+1 Sorcerous Power"
+        }
+      ]
+    },
+    {
+      "name": "Eldritch",
+      "description": "Otherworldly influence changes your body and opens your mind to forbidden possibilities.",
+      "levels": [
+        {
+          "level": 1,
+          "feature": "Eldritch Corruption"
+        },
+        {
+          "level": 3,
+          "feature": "+1 maximum Wound"
+        },
+        {
+          "level": 6,
+          "feature": "Weirdblood"
+        },
+        {
+          "level": 9,
+          "feature": "+1 maximum Wound"
+        }
+      ]
+    },
+    {
+      "name": "Rune",
+      "description": "Ancient signs bind power to the weapons and armor you carry.",
+      "levels": [
+        {
+          "level": 1,
+          "feature": "Rune Weapons"
+        },
+        {
+          "level": 3,
+          "feature": "+1 Initiative Bonus"
+        },
+        {
+          "level": 6,
+          "feature": "Rune Armor"
+        },
+        {
+          "level": 9,
+          "feature": "+1 maximum Wound"
+        }
+      ]
+    },
+    {
+      "name": "Beast",
+      "description": "You form a close bond with a powerful animal, learning to fight as a practiced pair.",
+      "levels": [
+        {
+          "level": 1,
+          "feature": "Greater Companion"
+        },
+        {
+          "level": 3,
+          "feature": "+1 Initiative Bonus"
+        },
+        {
+          "level": 6,
+          "feature": "Wild Frenzy"
+        },
+        {
+          "level": 9,
+          "feature": "+1 maximum Wound"
+        }
+      ]
+    },
+    {
+      "name": "Shamanistic",
+      "description": "You bargain with spirits and carry the memory of hard-won victories in ritual objects.",
+      "levels": [
+        {
+          "level": 1,
+          "feature": "Shamanism"
+        },
+        {
+          "level": 3,
+          "feature": "Learn one spell and gain +1 Sorcerous Soul"
+        },
+        {
+          "level": 6,
+          "feature": "Grim Trophy"
+        },
+        {
+          "level": 9,
+          "feature": "+1 Sorcerous Power"
+        }
+      ]
+    }
+  ],
+  "conditions": [
+    {
+      "key": "bleeding",
+      "name": "Bleeding",
+      "description": "At the start of your turn, make an Endurance save. On failure, take 1 Physical damage. This does not cause Suffering, but still calls for the same Endurance result when checking relevant Resistance or Weakness. It can trigger a Death Save."
+    },
+    {
+      "key": "blinded",
+      "name": "Blinded",
+      "description": "Vision-dependent checks and attacks have Greater Diminishment. Make a Faith save to end supernatural temporary blindness. Physical darkness uses visibility rules rather than this condition."
+    },
+    {
+      "key": "blinded-permanent",
+      "name": "Blinded (Permanent)",
+      "description": "As Blinded, but no condition save is allowed. Magic explicitly described as restorative can remove it."
+    },
+    {
+      "key": "broken",
+      "name": "Broken",
+      "description": "All checks, attacks, and saves suffer \u22121 tier. Only Long Recovery removes it. See Defeat."
+    },
+    {
+      "key": "burning",
+      "name": "Burning",
+      "description": "Make an Endurance save. On failure, take 1 Fire damage, then make the usual damage Endurance check for Suffering and Resistance or Weakness. A major action spent extinguishing flames with water or smothering them ends ordinary Burning."
+    },
+    {
+      "key": "chilled-or-slowed",
+      "name": "Chilled or Slowed",
+      "description": "Reduce each movement allowance by 5 feet, to a minimum of 0\\. Make an Endurance save to end it unless caused by worn equipment or another persistent physical source. Chilled and Slowed do not add their movement penalties together."
+    },
+    {
+      "key": "confused",
+      "name": "Confused",
+      "description": "Make a Willpower save. On failure, use available movement to approach the nearest ally by a reasonably safe route, then make one normal attack against that ally if possible. If no ally can be reached or attacked, take no hostile action that turn. The GM resolves ties randomly."
+    },
+    {
+      "key": "controlled",
+      "name": "Controlled",
+      "description": "Make a Willpower save. On failure, your controller directs your normal actions this turn. Control grants no extra actions and cannot force you to spend Luck. Orders to inflict direct self-harm allow an immediate additional Willpower save before you obey."
+    },
+    {
+      "key": "cursed-minor",
+      "name": "Cursed (Minor)",
+      "description": "Your skill checks, attacks, and saves are Diminished. Make a Faith save at dawn to end the curse."
+    },
+    {
+      "key": "cursed-greater",
+      "name": "Cursed (Greater)",
+      "description": "Your skill checks, attacks, and saves have Greater Diminishment. Make a Faith save at dawn to end the curse."
+    },
+    {
+      "key": "cursed-death",
+      "name": "Cursed (Death)",
+      "description": "As Greater Curse. Also make a Faith save each hour; on failure, take 1 Eldritch damage, causing Suffering normally. An hourly success prevents that damage but does not end the curse; a successful dawn save ends it."
+    },
+    {
+      "key": "dazed",
+      "name": "Dazed",
+      "description": "You have one fewer minor action on your turn. Make a Willpower save to end it."
+    },
+    {
+      "key": "fear",
+      "name": "Fear",
+      "description": "Your attacks and non-save skill checks are Diminished, and you cannot willingly approach the source of fear. Make a Willpower save to end it."
+    },
+    {
+      "key": "fortified",
+      "name": "Fortified",
+      "description": "Direct attacks against you are Diminished. Lasts for the source effect\u2019s duration; if none is given, until the start of the grantor\u2019s next turn."
+    },
+    {
+      "key": "fragile",
+      "name": "Fragile",
+      "description": "You are awake at 0 Wounds. Further positive damage causes Unconsciousness and a Death Save. Healing at least 1 Wound ends this condition."
+    },
+    {
+      "key": "frozen",
+      "name": "Frozen",
+      "description": "You cannot move or take actions. Make an Endurance save to end it."
+    },
+    {
+      "key": "held",
+      "name": "Held",
+      "description": "You cannot move away from the creature or object holding you. You can otherwise act. Make an Athletics or Reflexes save, your choice, to escape. The holder must maintain physical contact and can release you without an action."
+    },
+    {
+      "key": "horror",
+      "name": "Horror",
+      "description": "Your attacks and non-save skill checks have Greater Diminishment. Use your available movement to flee the source by the safest available route. A successful Willpower save reduces Horror to Fear."
+    },
+    {
+      "key": "immobile",
+      "name": "Immobile",
+      "description": "You cannot move from your position, but can otherwise act. Make an Athletics save to break free when the restraint can physically be broken."
+    },
+    {
+      "key": "loud",
+      "name": "Loud",
+      "description": "Your Stealth checks are Diminished. Ends when the source of the noise is removed or silenced."
+    },
+    {
+      "key": "poisoned",
+      "name": "Poisoned",
+      "description": "Make an Endurance save. On failure, take 1 Toxin damage, causing Suffering normally, and become Dazed until the start of your next turn. This poison-derived Dazed ends when Poisoned ends; unrelated Dazed effects follow their own rules."
+    },
+    {
+      "key": "prone",
+      "name": "Prone",
+      "description": "Melee attacks against you are Enhanced; ranged attacks against you are Diminished. Standing costs a minor action. You can crawl at half your normal movement. No save ends Prone."
+    },
+    {
+      "key": "staggered",
+      "name": "Staggered",
+      "description": "You have two fewer minor actions on your turn, to a minimum of 0\\. A successful Willpower save reduces Staggered to Dazed."
+    },
+    {
+      "key": "stealth-unknown",
+      "name": "Stealth (Unknown)",
+      "description": "Your next attack against a creature unaware of your presence gains Greater Enhancement. That attack reveals you and ends this condition."
+    },
+    {
+      "key": "stealth-unseen",
+      "name": "Stealth (Unseen)",
+      "description": "Your next attack against a creature that cannot see you gains Enhancement. That attack reveals you and ends this condition."
+    },
+    {
+      "key": "stunned",
+      "name": "Stunned",
+      "description": "You cannot take actions or move voluntarily. Make an Endurance save to end it."
+    },
+    {
+      "key": "unconscious",
+      "name": "Unconscious",
+      "description": "You are unaware of your surroundings and cannot act or move voluntarily. Unconsciousness from Defeat ends under the recovery rules; other sources specify their own duration or awakening method."
+    },
+    {
+      "key": "vexed",
+      "name": "Vexed",
+      "description": "Your nonattack skill checks, including saves, are Diminished. Your attacks are unaffected. Make a Willpower save to end it."
+    },
+    {
+      "key": "vulnerable",
+      "name": "Vulnerable",
+      "description": "Direct attacks against you are Enhanced. Make an Endurance save to end it."
+    },
+    {
+      "key": "vulnerable-greater",
+      "name": "Vulnerable (Greater)",
+      "description": "Direct attacks against you gain Greater Enhancement. Make an Endurance save to end it."
+    }
+  ],
+  "spells": [
+    {
+      "name": "Ancient Aegis",
+      "order": "Circle",
+      "tier": 0,
+      "flavor_text": "An old sigil catches the light just before a blow arrives.",
+      "rules_text": "**Order:** Circle. **Tier:** 0\\. **Casting Time:** Major action. **Range:** Self or one willing creature within 30 feet. **Duration:** 3 rounds; Focus.\n\nThe target becomes Fortified.",
+      "empowered": "Once during the duration, after an Armor Save fails, the target may reroll it. It must use the new result.",
+      "casting_time": "Major action",
+      "range_text": "Self or one willing creature within 30 feet",
+      "duration_text": "3 rounds; Focus.\n\nThe target becomes Fortified",
+      "requires_focus": true
+    },
+    {
+      "name": "Slumber of Toron",
+      "order": "Circle",
+      "tier": 1,
+      "flavor_text": "A slow, heavy drowsiness settles over the mind.",
+      "rules_text": "**Order:** Circle. **Tier:** 1\\. **Casting Time:** Major action. **Range:** One creature within 30 feet. **Duration:** 3 rounds; Focus.\n\nThe target makes a Willpower save. On failure, it falls Prone and Unconscious. It may repeat the save at the start of each turn; success wakes it. Positive wound damage or an adjacent creature\u2019s major action spent rousing it also ends the spell. This is sleep, not Defeat, and does not cause Broken.",
+      "empowered": "The initial Willpower save is Diminished; later saves are unaffected.",
+      "casting_time": "Major action",
+      "range_text": "One creature within 30 feet",
+      "duration_text": "3 rounds; Focus.\n\nThe target makes a Willpower save. On failure, it falls Prone and Unconscious. It may repeat the save at the start of each turn; success wakes it. Positive wound damage or an adjacent creature\u2019s major action spent rousing it also ends the spell. This is sleep, not Defeat, and does not cause Broken",
+      "requires_focus": true
+    },
+    {
+      "name": "Invisibility",
+      "order": "Circle",
+      "tier": 2,
+      "flavor_text": "Your outline thins until the world seems to show through you.",
+      "rules_text": "**Order:** Circle. **Tier:** 2\\. **Casting Time:** Major action. **Range:** Self or one willing creature touched. **Duration:** 1 minute; Focus.\n\nThe target becomes invisible. Vision alone cannot detect it, though sound, tracks, and other clues can. Treat it as Unseen against sight-dependent observers; attacks directed at its known location have Greater Diminishment. Making an attack or casting an offensive spell ends the spell after that action resolves. It is not automatically Unknown.",
+      "empowered": "The duration becomes 10 minutes.",
+      "casting_time": "Major action",
+      "range_text": "Self or one willing creature touched",
+      "duration_text": "1 minute; Focus.\n\nThe target becomes invisible. Vision alone cannot detect it, though sound, tracks, and other clues can. Treat it as Unseen against sight-dependent observers; attacks directed at its known location have Greater Diminishment. Making an attack or casting an offensive spell ends the spell after that action resolves. It is not automatically Unknown",
+      "requires_focus": true
+    },
+    {
+      "name": "Levitation",
+      "order": "Circle",
+      "tier": 2,
+      "flavor_text": "An unseen support lifts you away from the ground.",
+      "rules_text": "**Order:** Circle. **Tier:** 2\\. **Casting Time:** Major action. **Range:** Self or one willing creature touched. **Duration:** 1 minute; Focus.\n\nThe target can move vertically at its normal movement distances but cannot move horizontally without pulling on a surface or receiving outside help. Its equipment rises with it. When the spell ends, it descends harmlessly up to 30 feet; any remaining fall uses falling rules.",
+      "empowered": "You may affect one additional willing creature touched; both share one Focus slot.",
+      "casting_time": "Major action",
+      "range_text": "Self or one willing creature touched",
+      "duration_text": "1 minute; Focus.\n\nThe target can move vertically at its normal movement distances but cannot move horizontally without pulling on a surface or receiving outside help. Its equipment rises with it. When the spell ends, it descends harmlessly up to 30 feet; any remaining fall uses falling rules",
+      "requires_focus": true
+    },
+    {
+      "name": "Flight",
+      "order": "Circle",
+      "tier": 4,
+      "flavor_text": "The air itself seems to offer a path beneath your steps.",
+      "rules_text": "**Order:** Circle. **Tier:** 4\\. **Casting Time:** Major action. **Range:** Self or one willing creature touched. **Duration:** 1 minute; Focus.\n\nThe target can fly in any direction using its normal movement distances and can hover. When the spell ends, it descends harmlessly up to 30 feet; any remaining fall uses falling rules.",
+      "empowered": "The duration becomes 10 minutes.\n\n### Elemental Spells",
+      "casting_time": "Major action",
+      "range_text": "Self or one willing creature touched",
+      "duration_text": "1 minute; Focus.\n\nThe target can fly in any direction using its normal movement distances and can hover. When the spell ends, it descends harmlessly up to 30 feet; any remaining fall uses falling rules",
+      "requires_focus": true
+    },
+    {
+      "name": "Blood To Ice",
+      "order": "Elemental",
+      "tier": 0,
+      "flavor_text": "A deathly chill settles beneath the skin.",
+      "rules_text": "**Order:** Elemental. **Tier:** 0\\. **Casting Time:** Major action. **Range:** One creature within 30 feet. **Duration:** Instant.\n\nThe target makes an Endurance save. On failure, it takes 1 Cold damage.",
+      "empowered": "On a failed save, the target also becomes Chilled.",
+      "casting_time": "Major action",
+      "range_text": "One creature within 30 feet",
+      "duration_text": "Instant.\n\nThe target makes an Endurance save. On failure, it takes 1 Cold damage",
+      "requires_focus": false
+    },
+    {
+      "name": "Fire of Firanmor",
+      "order": "Elemental",
+      "tier": 0,
+      "flavor_text": "A narrow tongue of brilliant flame leaps from your hand.",
+      "rules_text": "**Order:** Elemental. **Tier:** 0\\. **Casting Time:** Major action. **Range:** One creature within 60 feet. **Duration:** Instant.\n\nMake a direct spell attack. On a hit, deal 1 Fire damage.",
+      "empowered": "If the hit inflicts at least 1 wound, the target also becomes Burning.",
+      "casting_time": "Major action",
+      "range_text": "One creature within 60 feet",
+      "duration_text": "Instant.\n\nMake a direct spell attack. On a hit, deal 1 Fire damage",
+      "requires_focus": false
+    },
+    {
+      "name": "Freezing Blade",
+      "order": "Elemental",
+      "tier": 0,
+      "flavor_text": "Frost gathers along a weapon\u2019s striking edge.",
+      "rules_text": "**Order:** Elemental. **Tier:** 0\\. **Casting Time:** Major action. **Range:** One weapon touched. **Duration:** 3 rounds; Focus.\n\nAttacks with the weapon may deal Cold instead of their usual damage type, chosen before each attack.",
+      "empowered": "Once during the spell, after the weapon inflicts a wound, its wielder may force the target to make an Endurance save or become Chilled. This costs no additional action.",
+      "casting_time": "Major action",
+      "range_text": "One weapon touched",
+      "duration_text": "3 rounds; Focus.\n\nAttacks with the weapon may deal Cold instead of their usual damage type, chosen before each attack",
+      "requires_focus": true
+    },
+    {
+      "name": "Ice Shard",
+      "order": "Elemental",
+      "tier": 0,
+      "flavor_text": "A translucent splinter forms and flies with a crack of frost.",
+      "rules_text": "**Order:** Elemental. **Tier:** 0\\. **Casting Time:** Major action. **Range:** One creature within 60 feet. **Duration:** Instant.\n\nMake a direct spell attack. On a hit, deal 1 Cold damage.",
+      "empowered": "The attack gains Armor Piercing.",
+      "casting_time": "Major action",
+      "range_text": "One creature within 60 feet",
+      "duration_text": "Instant.\n\nMake a direct spell attack. On a hit, deal 1 Cold damage",
+      "requires_focus": false
+    },
+    {
+      "name": "Summon Earth",
+      "order": "Elemental",
+      "tier": 1,
+      "flavor_text": "Stone and soil rise in answer to a low command.",
+      "rules_text": "**Order:** Elemental. **Tier:** 1\\. **Casting Time:** Major action. **Range:** A grounded point within 30 feet. **Duration:** 3 rounds; Focus.\n\nRaise a stationary earthen barrier up to 5 feet wide, 5 feet tall, and 1 foot thick on solid ground. It provides heavy cover when appropriate and has 3 Wounds, no armor, and immunity to Suffering and conditions. It cannot appear in an occupied space or trap a creature without an exit.",
+      "empowered": "The barrier has 5 Wounds and can be up to 10 feet wide.",
+      "casting_time": "Major action",
+      "range_text": "A grounded point within 30 feet",
+      "duration_text": "3 rounds; Focus.\n\nRaise a stationary earthen barrier up to 5 feet wide, 5 feet tall, and 1 foot thick on solid ground. It provides heavy cover when appropriate and has 3 Wounds, no armor, and immunity to Suffering and conditions. It cannot appear in an occupied space or trap a creature without an exit",
+      "requires_focus": true
+    },
+    {
+      "name": "Summon Fire",
+      "order": "Elemental",
+      "tier": 1,
+      "flavor_text": "A controlled flame wakes where you direct your hand.",
+      "rules_text": "**Order:** Elemental. **Tier:** 1\\. **Casting Time:** Major action. **Range:** One 5-foot space within 30 feet. **Duration:** 3 rounds; Focus.\n\nCreate stationary flame in an unoccupied space. A creature entering it or beginning its turn there makes a Reflexes save or takes 1 Fire damage, at most once per turn. Ordinary flammable materials may ignite; continuing mundane fire is subject to the environment.",
+      "empowered": "On a failed save, a creature also becomes Burning.",
+      "casting_time": "Major action",
+      "range_text": "One 5-foot space within 30 feet",
+      "duration_text": "3 rounds; Focus.\n\nCreate stationary flame in an unoccupied space. A creature entering it or beginning its turn there makes a Reflexes save or takes 1 Fire damage, at most once per turn. Ordinary flammable materials may ignite; continuing mundane fire is subject to the environment",
+      "requires_focus": true
+    },
+    {
+      "name": "Summon Water",
+      "order": "Elemental",
+      "tier": 1,
+      "flavor_text": "Clear water gathers from a shimmering fold in the air.",
+      "rules_text": "**Order:** Elemental. **Tier:** 1\\. **Casting Time:** Major action. **Range:** An open container or 5-foot space within 20 feet. **Duration:** Instant.\n\nCreate up to 5 gallons of ordinary fresh water. It can extinguish ordinary flames in the chosen space and end Burning on one creature there. It cannot be created inside a creature or sealed object and causes no attack damage.",
+      "empowered": "Create up to 10 gallons and end Burning on up to two creatures within 5 feet of the chosen point.",
+      "casting_time": "Major action",
+      "range_text": "An open container or 5-foot space within 20 feet",
+      "duration_text": "Instant.\n\nCreate up to 5 gallons of ordinary fresh water. It can extinguish ordinary flames in the chosen space and end Burning on one creature there. It cannot be created inside a creature or sealed object and causes no attack damage",
+      "requires_focus": false
+    },
+    {
+      "name": "Summon Wind",
+      "order": "Elemental",
+      "tier": 1,
+      "flavor_text": "A concentrated gust tears across the ground.",
+      "rules_text": "**Order:** Elemental. **Tier:** 1\\. **Casting Time:** Major action. **Range:** One creature or unattended object within 30 feet. **Duration:** Instant.\n\nA creature makes an Athletics save or is pushed 10 feet directly away from you. An unsecured object light enough for one person to carry moves without a save. The gust extinguishes unprotected candles and torches along its path.",
+      "empowered": "A creature failing the save is also knocked Prone; an object can move up to 20 feet.",
+      "casting_time": "Major action",
+      "range_text": "One creature or unattended object within 30 feet",
+      "duration_text": "Instant.\n\nA creature makes an Athletics save or is pushed 10 feet directly away from you. An unsecured object light enough for one person to carry moves without a save. The gust extinguishes unprotected candles and torches along its path",
+      "requires_focus": false
+    },
+    {
+      "name": "Summon Elemental",
+      "order": "Elemental",
+      "tier": 4,
+      "flavor_text": "Raw matter gathers around an awakening elemental will.",
+      "rules_text": "**Order:** Elemental. **Tier:** 4\\. **Casting Time:** Major action. **Range:** An unoccupied space within 30 feet. **Duration:** 3 rounds; Focus.\n\nSummon one elemental of earth, air, fire, or water using the Elemental profile. It acts under the summon rules.",
+      "empowered": "Its maximum and starting Wounds increase by 1, and its attacks deal +1 wound.\n\n### Forbidden Spells",
+      "casting_time": "Major action",
+      "range_text": "An unoccupied space within 30 feet",
+      "duration_text": "3 rounds; Focus.\n\nSummon one elemental of earth, air, fire, or water using the Elemental profile. It acts under the summon rules",
+      "requires_focus": true
+    },
+    {
+      "name": "Deep One",
+      "order": "Forbidden",
+      "tier": 0,
+      "flavor_text": "Your features take on a fleeting echo of creatures from lightless seas.",
+      "rules_text": "**Order:** Forbidden. **Tier:** 0\\. **Casting Time:** Major action. **Range:** Self. **Duration:** 10 minutes; Focus.\n\nYou can breathe underwater and swim at your normal movement distances. This grants no protection from crushing pressure or extreme temperatures.",
+      "empowered": "The duration becomes 1 hour.",
+      "casting_time": "Major action",
+      "range_text": "Self",
+      "duration_text": "10 minutes; Focus.\n\nYou can breathe underwater and swim at your normal movement distances. This grants no protection from crushing pressure or extreme temperatures",
+      "requires_focus": true
+    },
+    {
+      "name": "Ethereal Bats",
+      "order": "Forbidden",
+      "tier": 0,
+      "flavor_text": "Thin, impossible wings beat around a victim\u2019s head.",
+      "rules_text": "**Order:** Forbidden. **Tier:** 0\\. **Casting Time:** Major action. **Range:** One creature within 30 feet. **Duration:** Instant.\n\nThe target makes a Willpower save. On failure, it takes 1 Eldritch damage.",
+      "empowered": "On failure, it also becomes Vexed.",
+      "casting_time": "Major action",
+      "range_text": "One creature within 30 feet",
+      "duration_text": "Instant.\n\nThe target makes a Willpower save. On failure, it takes 1 Eldritch damage",
+      "requires_focus": false
+    },
+    {
+      "name": "Spider of Kadthor",
+      "order": "Forbidden",
+      "tier": 3,
+      "flavor_text": "A many-jointed shape climbs out of a tear in ordinary space.",
+      "rules_text": "**Order:** Forbidden. **Tier:** 3\\. **Casting Time:** Major action. **Range:** An unoccupied space within 30 feet. **Duration:** 3 rounds; Focus.\n\nSummon one Spider of Kadthor using its profile.",
+      "empowered": "The spider gains +1 maximum and starting Wound, and its first successful bite during the spell forces an Endurance save or inflicts Poisoned.\n\n### Mythic Spells",
+      "casting_time": "Major action",
+      "range_text": "An unoccupied space within 30 feet",
+      "duration_text": "3 rounds; Focus.\n\nSummon one Spider of Kadthor using its profile",
+      "requires_focus": true
+    },
+    {
+      "name": "Dawn Symbol",
+      "order": "Mythic",
+      "tier": 0,
+      "flavor_text": "A sign of approaching dawn steadies the spirit.",
+      "rules_text": "**Order:** Mythic. **Tier:** 0\\. **Casting Time:** Major action. **Range:** One willing creature within 30 feet. **Duration:** Instant.\n\nThe target may immediately attempt a Willpower save against one Fear, Horror, Confused, or Controlled condition. A successful save has that condition\u2019s normal result.",
+      "empowered": "The granted save is Enhanced.",
+      "casting_time": "Major action",
+      "range_text": "One willing creature within 30 feet",
+      "duration_text": "Instant.\n\nThe target may immediately attempt a Willpower save against one Fear, Horror, Confused, or Controlled condition. A successful save has that condition\u2019s normal result",
+      "requires_focus": false
+    },
+    {
+      "name": "Runelight",
+      "order": "Mythic",
+      "tier": 0,
+      "flavor_text": "A luminous sign hangs upon the object you bless.",
+      "rules_text": "**Order:** Mythic. **Tier:** 0\\. **Casting Time:** Major action. **Range:** One object touched. **Duration:** 1 hour; Focus.\n\nThe object sheds bright light within 20 feet and dim light for another 20 feet. Covering it blocks the light. You may choose its color, but it causes no damage.",
+      "empowered": "You may end ordinary supernatural Blinded on one creature touching the object when you cast. It does not cure permanent blindness.",
+      "casting_time": "Major action",
+      "range_text": "One object touched",
+      "duration_text": "1 hour; Focus.\n\nThe object sheds bright light within 20 feet and dim light for another 20 feet. Covering it blocks the light. You may choose its color, but it causes no damage",
+      "requires_focus": true
+    },
+    {
+      "name": "Word of Awakening",
+      "order": "Mythic",
+      "tier": 0,
+      "flavor_text": "A clear word reaches the sleeper through pain and darkness.",
+      "rules_text": "**Order:** Mythic. **Tier:** 0\\. **Casting Time:** Major action. **Range:** One creature within 10 feet. **Duration:** Instant.\n\nAwaken a living creature Unconscious from Defeat or ordinary sleep. A creature at 0 Wounds remains Fragile and becomes Broken as normal. This does not heal Wounds or end magically imposed sleep unless that effect allows it.",
+      "empowered": "The target also removes one level of Suffering.",
+      "casting_time": "Major action",
+      "range_text": "One creature within 10 feet",
+      "duration_text": "Instant.\n\nAwaken a living creature Unconscious from Defeat or ordinary sleep. A creature at 0 Wounds remains Fragile and becomes Broken as normal. This does not heal Wounds or end magically imposed sleep unless that effect allows it",
+      "requires_focus": false
+    },
+    {
+      "name": "Celestial Wind",
+      "order": "Mythic",
+      "tier": 1,
+      "flavor_text": "A gentle current carries renewed strength through battered flesh.",
+      "rules_text": "**Order:** Mythic. **Tier:** 1\\. **Casting Time:** Major action. **Range:** One willing creature within 30 feet. **Duration:** Instant.\n\nRestore 1 Wound. A creature can benefit from Celestial Wind only once between the end of one rest that restores resources and the end of its next such rest, regardless of caster.",
+      "empowered": "Restore 2 Wounds instead. The same per-target limit applies.",
+      "casting_time": "Major action",
+      "range_text": "One willing creature within 30 feet",
+      "duration_text": "Instant.\n\nRestore 1 Wound. A creature can benefit from Celestial Wind only once between the end of one rest that restores resources and the end of its next such rest, regardless of caster",
+      "requires_focus": false
+    },
+    {
+      "name": "Herbal Ritual",
+      "order": "Mythic",
+      "tier": 2,
+      "flavor_text": "Carefully prepared herbs become the vessel for a patient blessing.",
+      "rules_text": "**Order:** Mythic. **Tier:** 2\\. **Casting Time:** 10 minutes. **Range:** One willing creature touched. **Duration:** Instant.\n\nWith healer\u2019s supplies or suitable gathered herbs, spend 10 minutes to restore 2 Wounds and remove one level of Suffering. A creature can benefit from this ritual once per 24 hours. It is separate from a Minor Rest and does not count as one.",
+      "empowered": "Also end Poisoned or one Minor Curse on the target, your choice.",
+      "casting_time": "10 minutes",
+      "range_text": "One willing creature touched",
+      "duration_text": "Instant.\n\nWith healer\u2019s supplies or suitable gathered herbs, spend 10 minutes to restore 2 Wounds and remove one level of Suffering. A creature can benefit from this ritual once per 24 hours. It is separate from a Minor Rest and does not count as one",
+      "requires_focus": false
+    },
+    {
+      "name": "Circle of Silver",
+      "order": "Mythic",
+      "tier": 3,
+      "flavor_text": "A pale ring marks a refuge against hostile powers.",
+      "rules_text": "**Order:** Mythic. **Tier:** 3\\. **Casting Time:** Major action. **Range:** A 10-foot-radius circle centered on your position when cast. **Duration:** 3 rounds; Focus.\n\nYou and allies inside the stationary circle are Fortified. Hostile undead or summoned creatures entering it for the first time each turn, or starting a turn inside, make a Faith save or take 1 Light damage, at most once per turn.",
+      "empowered": "Allies inside also gain Enhancement on Willpower saves.\n\n### Nature Spells",
+      "casting_time": "Major action",
+      "range_text": "A 10-foot-radius circle centered on your position when cast",
+      "duration_text": "3 rounds; Focus.\n\nYou and allies inside the stationary circle are Fortified. Hostile undead or summoned creatures entering it for the first time each turn, or starting a turn inside, make a Faith save or take 1 Light damage, at most once per turn",
+      "requires_focus": true
+    },
+    {
+      "name": "Ant Swarm",
+      "order": "Nature",
+      "tier": 0,
+      "flavor_text": "A crawling tide gathers around your foe\u2019s feet.",
+      "rules_text": "**Order:** Nature. **Tier:** 0\\. **Casting Time:** Major action. **Range:** One creature within 30 feet. **Duration:** Instant.\n\nThe target makes a Reflexes save. On failure, it takes 1 Physical damage and becomes Vexed.",
+      "empowered": "The target also becomes Slowed on a failed save.",
+      "casting_time": "Major action",
+      "range_text": "One creature within 30 feet",
+      "duration_text": "Instant.\n\nThe target makes a Reflexes save. On failure, it takes 1 Physical damage and becomes Vexed",
+      "requires_focus": false
+    },
+    {
+      "name": "Venomsting",
+      "order": "Nature",
+      "tier": 0,
+      "flavor_text": "A spectral barb carries the malice of venomous things.",
+      "rules_text": "**Order:** Nature. **Tier:** 0\\. **Casting Time:** Major action. **Range:** One creature within 30 feet. **Duration:** Instant.\n\nMake a direct spell attack. On a hit, deal 1 Toxin damage.",
+      "empowered": "If the hit inflicts at least 1 wound, the target also becomes Poisoned.",
+      "casting_time": "Major action",
+      "range_text": "One creature within 30 feet",
+      "duration_text": "Instant.\n\nMake a direct spell attack. On a hit, deal 1 Toxin damage",
+      "requires_focus": false
+    },
+    {
+      "name": "Wyrd of the Wild",
+      "order": "Nature",
+      "tier": 0,
+      "flavor_text": "Roots, tracks, and birdcalls seem to arrange themselves into meaning.",
+      "rules_text": "**Order:** Nature. **Tier:** 0\\. **Casting Time:** Major action. **Range:** Self or one willing creature touched. **Duration:** 10 minutes; Focus.\n\nThe target\u2019s Nature Lore and Survival checks are Enhanced.",
+      "empowered": "Those checks gain Greater Enhancement instead.",
+      "casting_time": "Major action",
+      "range_text": "Self or one willing creature touched",
+      "duration_text": "10 minutes; Focus.\n\nThe target\u2019s Nature Lore and Survival checks are Enhanced",
+      "requires_focus": true
+    },
+    {
+      "name": "Snow Storm",
+      "order": "Nature",
+      "tier": 3,
+      "flavor_text": "A sudden white squall swallows the ground and bites exposed flesh.",
+      "rules_text": "**Order:** Nature. **Tier:** 3\\. **Casting Time:** Major action. **Range:** A 15-foot-radius area centered within 60 feet. **Duration:** Instant.\n\nEach creature in the area makes a Reflexes save. On failure, it takes 2 Cold damage and becomes Chilled. On success, it takes 1 Cold damage without becoming Chilled; that damage is a hit for defenses and Suffering.",
+      "empowered": "Increase the damage on a failed save to 3; successful-save damage is unchanged.",
+      "casting_time": "Major action",
+      "range_text": "A 15-foot-radius area centered within 60 feet",
+      "duration_text": "Instant.\n\nEach creature in the area makes a Reflexes save. On failure, it takes 2 Cold damage and becomes Chilled. On success, it takes 1 Cold damage without becoming Chilled; that damage is a hit for defenses and Suffering",
+      "requires_focus": false
+    },
+    {
+      "name": "Ember of Rakarn",
+      "order": "Nature",
+      "tier": 5,
+      "flavor_text": "An ember of the world\u2019s untamed fury blossoms into a consuming blaze.",
+      "rules_text": "**Order:** Nature. **Tier:** 5\\. **Casting Time:** Major action. **Range:** A 15-foot-radius area centered within 60 feet. **Duration:** Instant.\n\nEach creature in the area makes a Reflexes save. On failure, it takes 1d6 Fire damage and becomes Burning. Roll damage once for all targets. On success, it takes 1 Fire damage without Burning.",
+      "empowered": "Add 1 wound to the shared failed-save damage result; successful-save damage is unchanged.\n\n### Necromancy Spells",
+      "casting_time": "Major action",
+      "range_text": "A 15-foot-radius area centered within 60 feet",
+      "duration_text": "Instant.\n\nEach creature in the area makes a Reflexes save. On failure, it takes 1d6 Fire damage and becomes Burning. Roll damage once for all targets. On success, it takes 1 Fire damage without Burning",
+      "requires_focus": false
+    },
+    {
+      "name": "Deathsense",
+      "order": "Necromancy",
+      "tier": 0,
+      "flavor_text": "You feel the still places where life has recently departed.",
+      "rules_text": "**Order:** Necromancy. **Tier:** 0\\. **Casting Time:** Major action. **Range:** Self. **Duration:** 10 minutes; Focus.\n\nYou sense the direction of corpses and undead within 30 feet unless separated by solid stone or metal. You learn neither identity nor exact number.",
+      "empowered": "You can distinguish undead from ordinary remains and know their approximate distance.",
+      "casting_time": "Major action",
+      "range_text": "Self",
+      "duration_text": "10 minutes; Focus.\n\nYou sense the direction of corpses and undead within 30 feet unless separated by solid stone or metal. You learn neither identity nor exact number",
+      "requires_focus": true
+    },
+    {
+      "name": "Grave Chill",
+      "order": "Necromancy",
+      "tier": 0,
+      "flavor_text": "The cold of buried stone reaches for a living heart.",
+      "rules_text": "**Order:** Necromancy. **Tier:** 0\\. **Casting Time:** Major action. **Range:** One creature within 30 feet. **Duration:** Instant.\n\nThe target makes an Endurance save or takes 1 Cold damage.",
+      "empowered": "On failure, it also becomes Chilled.",
+      "casting_time": "Major action",
+      "range_text": "One creature within 30 feet",
+      "duration_text": "Instant.\n\nThe target makes an Endurance save or takes 1 Cold damage",
+      "requires_focus": false
+    },
+    {
+      "name": "Raise Servitor",
+      "order": "Necromancy",
+      "tier": 0,
+      "flavor_text": "A lifeless frame rises under a borrowed purpose.",
+      "rules_text": "**Order:** Necromancy. **Tier:** 0\\. **Casting Time:** Major action. **Range:** One intact small or human-sized corpse within 10 feet. **Duration:** 10 minutes; Focus.\n\nAnimate one Grave Servitor using the summon rules. It cannot speak, remember its former life, or restore the person who died. When the spell ends it becomes an ordinary corpse again.",
+      "empowered": "Its maximum and starting Wounds increase by 1\\.\n\n### Psionic Spells",
+      "casting_time": "Major action",
+      "range_text": "One intact small or human-sized corpse within 10 feet",
+      "duration_text": "10 minutes; Focus.\n\nAnimate one Grave Servitor using the summon rules. It cannot speak, remember its former life, or restore the person who died. When the spell ends it becomes an ordinary corpse again",
+      "requires_focus": true
+    },
+    {
+      "name": "Mental Ward",
+      "order": "Psionic",
+      "tier": 0,
+      "flavor_text": "You still the surface of a mind against intrusion.",
+      "rules_text": "**Order:** Psionic. **Tier:** 0\\. **Casting Time:** Major action. **Range:** One willing creature within 30 feet. **Duration:** 3 rounds; Focus.\n\nThe target\u2019s Willpower saves are Enhanced.",
+      "empowered": "The target may immediately repeat one save against Controlled or Confused, with this Enhancement.",
+      "casting_time": "Major action",
+      "range_text": "One willing creature within 30 feet",
+      "duration_text": "3 rounds; Focus.\n\nThe target\u2019s Willpower saves are Enhanced",
+      "requires_focus": true
+    },
+    {
+      "name": "Mind Lance",
+      "order": "Psionic",
+      "tier": 0,
+      "flavor_text": "A focused thought strikes like a needle.",
+      "rules_text": "**Order:** Psionic. **Tier:** 0\\. **Casting Time:** Major action. **Range:** One creature within 30 feet. **Duration:** Instant.\n\nThe target makes a Willpower save or takes 1 Eldritch damage.",
+      "empowered": "On failure, it also becomes Vexed.",
+      "casting_time": "Major action",
+      "range_text": "One creature within 30 feet",
+      "duration_text": "Instant.\n\nThe target makes a Willpower save or takes 1 Eldritch damage",
+      "requires_focus": false
+    },
+    {
+      "name": "Quiet Communion",
+      "order": "Psionic",
+      "tier": 0,
+      "flavor_text": "A thought crosses the distance without a spoken word.",
+      "rules_text": "**Order:** Psionic. **Tier:** 0\\. **Casting Time:** Major action. **Range:** One willing creature within 30 feet. **Duration:** 10 minutes; Focus.\n\nYou and the target can exchange thoughts while within 30 feet. You must share a language; this cannot read unspoken thoughts or force an answer.",
+      "empowered": "A second willing creature joins the same link and shares its Focus slot.\n\n### Runic Spells",
+      "casting_time": "Major action",
+      "range_text": "One willing creature within 30 feet",
+      "duration_text": "10 minutes; Focus.\n\nYou and the target can exchange thoughts while within 30 feet. You must share a language; this cannot read unspoken thoughts or force an answer",
+      "requires_focus": true
+    },
+    {
+      "name": "Rune of Holding",
+      "order": "Runic",
+      "tier": 0,
+      "flavor_text": "A binding mark appears beneath the target.",
+      "rules_text": "**Order:** Runic. **Tier:** 0\\. **Casting Time:** Major action. **Range:** One creature within 30 feet. **Duration:** Instant.\n\nThe target makes an Athletics save or becomes Held by magical bonds anchored to its space. Normal Held saves end them.",
+      "empowered": "The initial save is Diminished.",
+      "casting_time": "Major action",
+      "range_text": "One creature within 30 feet",
+      "duration_text": "Instant.\n\nThe target makes an Athletics save or becomes Held by magical bonds anchored to its space. Normal Held saves end them",
+      "requires_focus": false
+    },
+    {
+      "name": "Rune of Impact",
+      "order": "Runic",
+      "tier": 0,
+      "flavor_text": "A sharp symbol leaps from your hand and breaks against a foe.",
+      "rules_text": "**Order:** Runic. **Tier:** 0\\. **Casting Time:** Major action. **Range:** One creature within 30 feet. **Duration:** Instant.\n\nMake a direct spell attack. On a hit, deal 1 Runic damage.",
+      "empowered": "The attack gains Armor Piercing.",
+      "casting_time": "Major action",
+      "range_text": "One creature within 30 feet",
+      "duration_text": "Instant.\n\nMake a direct spell attack. On a hit, deal 1 Runic damage",
+      "requires_focus": false
+    },
+    {
+      "name": "Watch Rune",
+      "order": "Runic",
+      "tier": 0,
+      "flavor_text": "A patient sign waits for the touch of an intruder.",
+      "rules_text": "**Order:** Runic. **Tier:** 0\\. **Casting Time:** Major action. **Range:** One door, container, or 5-foot space touched. **Duration:** 8 hours; Focus.\n\nThe rune gives you a mental alert when a creature other than you crosses the marked space or opens the marked object, provided you are within 300 feet. It identifies the location, not the intruder.",
+      "empowered": "On casting, designate up to five creatures that do not trigger it.\n\n### Shadow Spells",
+      "casting_time": "Major action",
+      "range_text": "One door, container, or 5-foot space touched",
+      "duration_text": "8 hours; Focus.\n\nThe rune gives you a mental alert when a creature other than you crosses the marked space or opens the marked object, provided you are within 300 feet. It identifies the location, not the intruder",
+      "requires_focus": true
+    },
+    {
+      "name": "Shadowsight",
+      "order": "Shadow",
+      "tier": 0,
+      "flavor_text": "Darkness unfolds into shapes and edges.",
+      "rules_text": "**Order:** Shadow. **Tier:** 0\\. **Casting Time:** Major action. **Range:** Self. **Duration:** 10 minutes; Focus.\n\nIgnore dim-light penalties. Darkness imposes only Diminishment, rather than Greater Diminishment, on vision-dependent checks within 30 feet.",
+      "empowered": "Ignore both dim-light and ordinary darkness penalties within 30 feet. Magical darkness is unaffected unless its source allows this sight.",
+      "casting_time": "Major action",
+      "range_text": "Self",
+      "duration_text": "10 minutes; Focus.\n\nIgnore dim-light penalties. Darkness imposes only Diminishment, rather than Greater Diminishment, on vision-dependent checks within 30 feet",
+      "requires_focus": true
+    },
+    {
+      "name": "Shadowmerge",
+      "order": "Shadow",
+      "tier": 1,
+      "flavor_text": "Your shape settles into the darkness around it.",
+      "rules_text": "**Order:** Shadow. **Tier:** 1\\. **Casting Time:** Major action. **Range:** Self. **Duration:** 1 minute; Focus.\n\nWhile in dim light or darkness, your Stealth checks gain Greater Enhancement and you can attempt to hide using those shadows. Entering bright light suppresses these benefits until you leave it.",
+      "empowered": "Casting and maintaining this spell does not itself reveal your presence; on casting, you may attempt one Stealth check without a separate action.",
+      "casting_time": "Major action",
+      "range_text": "Self",
+      "duration_text": "1 minute; Focus.\n\nWhile in dim light or darkness, your Stealth checks gain Greater Enhancement and you can attempt to hide using those shadows. Entering bright light suppresses these benefits until you leave it",
+      "requires_focus": true
+    },
+    {
+      "name": "Shadowshift",
+      "order": "Shadow",
+      "tier": 1,
+      "flavor_text": "One patch of darkness releases you as another receives you.",
+      "rules_text": "**Order:** Shadow. **Tier:** 1\\. **Casting Time:** Major action. **Range:** Self; destination within 20 feet. **Duration:** Instant.\n\nWhile in dim light or darkness, teleport to an unoccupied space you can see within range that is also in dim light or darkness. This is not movement through intervening spaces and does not trigger movement Responses.",
+      "empowered": "Increase the distance to 40 feet.",
+      "casting_time": "Major action",
+      "range_text": "Self; destination within 20 feet",
+      "duration_text": "Instant.\n\nWhile in dim light or darkness, teleport to an unoccupied space you can see within range that is also in dim light or darkness. This is not movement through intervening spaces and does not trigger movement Responses",
+      "requires_focus": false
+    },
+    {
+      "name": "Claws of Darkness",
+      "order": "Shadow",
+      "tier": 2,
+      "flavor_text": "Black talons stretch from your hands like solid silhouettes.",
+      "rules_text": "**Order:** Shadow. **Tier:** 2\\. **Casting Time:** Major action. **Range:** Self. **Duration:** 3 rounds; Focus.\n\nYour unarmed attacks deal normal damage rather than Lesser Attack damage and may deal Eldritch damage. This does not grant extra attacks or remove the armed-opponent penalty.",
+      "empowered": "One successful claw attack during the duration may deal +1 wound, declared after the hit but before defenses.\n\n### Shamanism Spells",
+      "casting_time": "Major action",
+      "range_text": "Self",
+      "duration_text": "3 rounds; Focus.\n\nYour unarmed attacks deal normal damage rather than Lesser Attack damage and may deal Eldritch damage. This does not grant extra attacks or remove the armed-opponent penalty",
+      "requires_focus": true
+    },
+    {
+      "name": "Ancestral Counsel",
+      "order": "Shamanism",
+      "tier": 0,
+      "flavor_text": "A remembered voice offers guidance at the edge of hearing.",
+      "rules_text": "**Order:** Shamanism. **Tier:** 0\\. **Casting Time:** Major action. **Range:** Self or one willing creature touched. **Duration:** 10 minutes; Focus.\n\nChoose History, Nature Lore, or Survival. The target\u2019s checks using that skill are Enhanced.",
+      "empowered": "Choose two of the listed skills instead.",
+      "casting_time": "Major action",
+      "range_text": "Self or one willing creature touched",
+      "duration_text": "10 minutes; Focus.\n\nChoose History, Nature Lore, or Survival. The target\u2019s checks using that skill are Enhanced",
+      "requires_focus": true
+    },
+    {
+      "name": "Spirit Lash",
+      "order": "Shamanism",
+      "tier": 0,
+      "flavor_text": "A cord of unseen force snaps toward a foe.",
+      "rules_text": "**Order:** Shamanism. **Tier:** 0\\. **Casting Time:** Major action. **Range:** One creature within 30 feet. **Duration:** Instant.\n\nMake a direct spell attack. On a hit, deal 1 Eldritch damage.",
+      "empowered": "On a hit, the target must also make an Athletics save or be pushed 5 feet directly away.",
+      "casting_time": "Major action",
+      "range_text": "One creature within 30 feet",
+      "duration_text": "Instant.\n\nMake a direct spell attack. On a hit, deal 1 Eldritch damage",
+      "requires_focus": false
+    },
+    {
+      "name": "Warding Totem",
+      "order": "Shamanism",
+      "tier": 0,
+      "flavor_text": "A small token becomes the center of a protective presence.",
+      "rules_text": "**Order:** Shamanism. **Tier:** 0\\. **Casting Time:** Major action. **Range:** One unattended object touched. **Duration:** 3 rounds; Focus.\n\nFix the totem in its space. Allies within 10 feet gain Enhancement on saves against Fear and Horror. Moving the totem ends the spell.",
+      "empowered": "The radius increases to 20 feet.\n\n### Spirit Spells",
+      "casting_time": "Major action",
+      "range_text": "One unattended object touched",
+      "duration_text": "3 rounds; Focus.\n\nFix the totem in its space. Allies within 10 feet gain Enhancement on saves against Fear and Horror. Moving the totem ends the spell",
+      "requires_focus": true
+    },
+    {
+      "name": "Spectral Touch",
+      "order": "Spirit",
+      "tier": 0,
+      "flavor_text": "An insubstantial hand reaches toward a living foe.",
+      "rules_text": "**Order:** Spirit. **Tier:** 0\\. **Casting Time:** Major action. **Range:** One creature within 30 feet. **Duration:** Instant.\n\nMake a direct spell attack. On a hit, deal 1 Eldritch damage.",
+      "empowered": "On a hit, the target must also make a Willpower save or become Vexed.",
+      "casting_time": "Major action",
+      "range_text": "One creature within 30 feet",
+      "duration_text": "Instant.\n\nMake a direct spell attack. On a hit, deal 1 Eldritch damage",
+      "requires_focus": false
+    },
+    {
+      "name": "Spirit Lantern",
+      "order": "Spirit",
+      "tier": 0,
+      "flavor_text": "A soft glow gathers around otherwise unseen presences.",
+      "rules_text": "**Order:** Spirit. **Tier:** 0\\. **Casting Time:** Major action. **Range:** A 10-foot-radius area centered within 30 feet. **Duration:** 3 rounds; Focus.\n\nInvisible or incorporeal spirits in the stationary area become visibly outlined. This removes their advantage from being unseen but does not remove their other defenses.",
+      "empowered": "Increase the radius to 20 feet.",
+      "casting_time": "Major action",
+      "range_text": "A 10-foot-radius area centered within 30 feet",
+      "duration_text": "3 rounds; Focus.\n\nInvisible or incorporeal spirits in the stationary area become visibly outlined. This removes their advantage from being unseen but does not remove their other defenses",
+      "requires_focus": true
+    },
+    {
+      "name": "Whisper of Spirits",
+      "order": "Spirit",
+      "tier": 0,
+      "flavor_text": "Faint voices gather around a place touched by memory.",
+      "rules_text": "**Order:** Spirit. **Tier:** 0\\. **Casting Time:** Major action. **Range:** Self; spirits within 30 feet. **Duration:** 10 minutes; Focus.\n\nYou can perceive and converse with willing nearby spirits that the GM determines are present. This neither summons a spirit nor compels truthful answers.",
+      "empowered": "You may share what you hear and see with one willing creature touched when casting.",
+      "casting_time": "Major action",
+      "range_text": "Self; spirits within 30 feet",
+      "duration_text": "10 minutes; Focus.\n\nYou can perceive and converse with willing nearby spirits that the GM determines are present. This neither summons a spirit nor compels truthful answers",
+      "requires_focus": true
+    },
+    {
+      "name": "Ghostform",
+      "order": "Spirit",
+      "tier": 3,
+      "flavor_text": "Your body becomes a pale outline between the material and the unseen.",
+      "rules_text": "**Order:** Spirit. **Tier:** 3\\. **Casting Time:** Major action. **Range:** Self. **Duration:** 3 rounds; Focus.\n\nGain a 50% Ethereal Save in place of, not in addition to, any smaller Ethereal Save. You may pass through creatures but cannot finish in their space. You cannot pass through solid objects. Your attacks and interactions remain otherwise normal.",
+      "empowered": "You may pass through up to 5 feet of nonmagical solid material during each movement action, provided you can reach an open space. If you cannot, your movement stops before entering it.",
+      "casting_time": "Major action",
+      "range_text": "Self",
+      "duration_text": "3 rounds; Focus.\n\nGain a 50% Ethereal Save in place of, not in addition to, any smaller Ethereal Save. You may pass through creatures but cannot finish in their space. You cannot pass through solid objects. Your attacks and interactions remain otherwise normal",
+      "requires_focus": true
+    }
+  ],
+  "creatures": [
+    {
+      "name": "Small Companion",
+      "category": "companion",
+      "description": "Raven, owl, eagle, bat, monkey, or snake. Flying kinds fly at normal movement; monkey and snake climb. Natural attack deals 1 Physical damage. Choose Awareness, Stealth, or Athletics for Enhancement. A bat navigates ordinary darkness within 20 feet by hearing.",
+      "base_wounds": 2,
+      "attack_tier": 7,
+      "endurance": 7,
+      "reflexes": 10,
+      "willpower": 7,
+      "other": 7,
+      "major_move_ft": 20,
+      "minor_move_ft": 10,
+      "armor_save_percent": 0
+    },
+    {
+      "name": "Direwolf",
+      "category": "companion",
+      "description": "A sure-footed hunter. Its bite deals 1 Physical damage, and Survival checks to track by scent gain Enhancement.",
+      "base_wounds": 4,
+      "attack_tier": 10,
+      "endurance": 10,
+      "reflexes": 9,
+      "willpower": 7,
+      "other": 8,
+      "major_move_ft": 30,
+      "minor_move_ft": 15,
+      "armor_save_percent": 0
+    },
+    {
+      "name": "Panther",
+      "category": "companion",
+      "description": "A patient ambush predator. Its claws deal 1 Physical damage, and Stealth checks gain Enhancement.",
+      "base_wounds": 3,
+      "attack_tier": 10,
+      "endurance": 8,
+      "reflexes": 11,
+      "willpower": 7,
+      "other": 8,
+      "major_move_ft": 30,
+      "minor_move_ft": 15,
+      "armor_save_percent": 0
+    },
+    {
+      "name": "Bear",
+      "category": "companion",
+      "description": "A powerful and enduring beast. Its claws deal 1 Physical damage, and Athletics checks gain Enhancement.",
+      "base_wounds": 5,
+      "attack_tier": 10,
+      "endurance": 11,
+      "reflexes": 7,
+      "willpower": 8,
+      "other": 8,
+      "major_move_ft": 20,
+      "minor_move_ft": 10,
+      "armor_save_percent": 0
+    },
+    {
+      "name": "Spider of Kadthor",
+      "category": "summon",
+      "description": "An unnatural climber with a 1-Eldritch-damage bite. Climbs walls and ceilings at normal movement. Once during the summon, a major action forces one creature within 20 feet to make a Reflexes save or become Held by webbing.",
+      "base_wounds": 3,
+      "attack_tier": 10,
+      "endurance": 9,
+      "reflexes": 10,
+      "willpower": 8,
+      "other": 7,
+      "major_move_ft": 20,
+      "minor_move_ft": 10,
+      "armor_save_percent": 0
+    },
+    {
+      "name": "Elemental",
+      "category": "summon",
+      "description": "Its strike deals 1 damage. Choose earth (Physical), air (Storm), fire (Fire), or water (Cold) when summoned. Uncanny Resistance to that type. Air flies, water swims, earth and fire move on solid ground.",
+      "base_wounds": 5,
+      "attack_tier": 11,
+      "endurance": 11,
+      "reflexes": 9,
+      "willpower": 9,
+      "other": 8,
+      "major_move_ft": 20,
+      "minor_move_ft": 10,
+      "armor_save_percent": 0
+    },
+    {
+      "name": "Grave Servitor",
+      "category": "summon",
+      "description": "Its crude strike deals 1 Physical damage. Undead and immune to Fear and Poisoned. Greater Undead increases its Wounds.",
+      "base_wounds": 2,
+      "attack_tier": 8,
+      "endurance": 8,
+      "reflexes": 6,
+      "willpower": 7,
+      "other": 6,
+      "major_move_ft": 20,
+      "minor_move_ft": 10,
+      "armor_save_percent": 0
+    },
+    {
+      "name": "Skeleton",
+      "category": "npc",
+      "description": "Old bones stir beneath scraps of rusted equipment. Whatever animates them remembers how to kill.",
+      "base_wounds": 2,
+      "attack_tier": 8,
+      "melee": 8,
+      "endurance": 8,
+      "reflexes": 6,
+      "willpower": 7,
+      "other": 5,
+      "stamina": 0,
+      "initiative": 0,
+      "armor_note": "rusted light armor",
+      "behavior": "Obeys simple commands and attacks the nearest accessible enemy. It pursues without concern for its survival but cannot devise elaborate plans.",
+      "major_move_ft": 20,
+      "minor_move_ft": 10,
+      "armor_save_percent": 15
+    },
+    {
+      "name": "Goblin Archer",
+      "category": "npc",
+      "description": "A wiry scavenger peers over a drawn bow, watching for distracted prey and a clear path of escape.",
+      "base_wounds": 2,
+      "attack_tier": 7,
+      "melee": 7,
+      "ranged": 9,
+      "endurance": 6,
+      "reflexes": 9,
+      "willpower": 6,
+      "other": 6,
+      "stamina": 1,
+      "initiative": 2,
+      "armor_note": "patched light armor",
+      "behavior": "Fires from cover, using Precision when it can hold position. If threatened in melee, it retreats toward allies or concealment. At 1 Wound, it seeks escape unless cornered.",
+      "major_move_ft": 20,
+      "minor_move_ft": 10,
+      "armor_save_percent": 15
+    },
+    {
+      "name": "Bandit Mauler",
+      "category": "npc",
+      "description": "A scarred robber hefts a heavy maul, relying on a crushing first blow to silence resistance.",
+      "base_wounds": 3,
+      "attack_tier": 9,
+      "melee": 9,
+      "endurance": 9,
+      "reflexes": 6,
+      "willpower": 7,
+      "other": 6,
+      "stamina": 2,
+      "initiative": 0,
+      "armor_note": "battered light armor",
+      "behavior": "Demands surrender before closing on an isolated opponent. Uses Heavy Blow when already within reach, leaving its remaining minor action for movement or removing Suffering. It may surrender if its allies fall.",
+      "major_move_ft": 20,
+      "minor_move_ft": 10,
+      "armor_save_percent": 15
+    }
+  ],
+  "advancement": [
+    {
+      "level": 1,
+      "xp": 0
+    },
+    {
+      "level": 2,
+      "xp": 30
+    },
+    {
+      "level": 3,
+      "xp": 40
+    },
+    {
+      "level": 4,
+      "xp": 50
+    },
+    {
+      "level": 5,
+      "xp": 60
+    },
+    {
+      "level": 6,
+      "xp": 70
+    },
+    {
+      "level": 7,
+      "xp": 80
+    },
+    {
+      "level": 8,
+      "xp": 90
+    },
+    {
+      "level": 9,
+      "xp": 100
+    },
+    {
+      "level": 10,
+      "xp": 110
+    }
+  ]
+}
