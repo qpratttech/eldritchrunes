@@ -87,6 +87,39 @@ class ArmorSaveCombatTest extends TestCase
         $this->assertStringContainsString('Rune Armor prevents Armor Piercing.', $protected['summary']);
     }
 
+    public function test_armor_features_apply_when_their_conditions_are_met(): void
+    {
+        $user = User::factory()->create();
+        $character = \App\Models\Character::create(['user_id' => $user->id, 'name' => 'Hide']);
+        $this->grant($character, 'Armor Master');
+        $this->grant($character, 'Battle Armor');
+        $this->assertSame(0, $character->fresh()->armorSavePercent());
+
+        $this->grant($character, 'Natural Armor');
+        $this->assertSame(10, $character->fresh()->armorSavePercent());
+
+        $heavy = Item::query()->where('name', 'Heavy armor')->firstOrFail();
+        $worn = CharacterInventory::create([
+            'character_id' => $character->id,
+            'item_id' => $heavy->id,
+            'quantity' => 1,
+            'equipped_slot' => 'worn',
+        ]);
+        $this->assertSame(50, $character->fresh()->armorSavePercent());
+
+        $worn->update(['equipped_slot' => null]);
+        $this->assertSame(10, $character->fresh()->armorSavePercent());
+    }
+
+    private function grant(\App\Models\Character $character, string $name): void
+    {
+        CharacterFeature::create([
+            'character_id' => $character->id,
+            'feature_id' => Feature::query()->where('name', $name)->value('id'),
+            'source_type' => 'class',
+        ]);
+    }
+
     private function ready(\App\Models\Character $character): void
     {
         CharacterResource::query()->where('character_id', $character->id)->where('resource_key', 'major_action')->update(['current_value' => 1]);

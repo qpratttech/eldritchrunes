@@ -40,7 +40,7 @@ class Character extends Model
 
     public function armorSavePercent(): int
     {
-        $this->loadMissing('inventory.item.armor');
+        $this->loadMissing(['inventory.item.armor', 'features.feature']);
         $save = 0;
         $wearingSuit = false;
         foreach ($this->inventory as $row) {
@@ -52,11 +52,25 @@ class Character extends Model
             }
             $save += (int) $row->item->armor->base_save_percent;
         }
-        if (! $wearingSuit && in_array('natural_armor', $this->derivation_json['flags'] ?? [], true)) {
+        if ($wearingSuit) {
+            if ($this->hasNamedFeature('Armor Master')) {
+                $save += 10;
+            }
+            if ($this->hasNamedFeature('Battle Armor')) {
+                $save += 10;
+            }
+        } elseif ($this->hasNamedFeature('Natural Armor') || in_array('natural_armor', $this->derivation_json['flags'] ?? [], true)) {
             $save += 10;
         }
 
         return min(95, $save);
+    }
+
+    public function hasNamedFeature(string $name): bool
+    {
+        $this->loadMissing('features.feature');
+
+        return $this->features->contains(fn ($row) => strcasecmp((string) $row->feature?->name, $name) === 0);
     }
 
     public function wearingArmorSuit(): bool
