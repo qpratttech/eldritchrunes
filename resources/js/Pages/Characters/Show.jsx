@@ -124,6 +124,24 @@ export default function Show({ sheet, classes, items = [], spells = [], techniqu
                     <label className="mt-1 block text-sm text-parchment-dim">Level {sheet.level} · XP
                         <input className={`${inputClass} mt-1`} type="number" min="0" value={details.data.xp} onChange={(e) => details.setData('xp', Number(e.target.value))} />
                     </label>
+                    <form onSubmit={advanceClass} className="mt-3 flex gap-2">
+                        <select name="class_id" className={`${inputClass} min-w-0 flex-1`}>{classes.map((row) => <option key={row.id} value={row.id}>{row.name}</option>)}</select>
+                        <button className={buttonClass}>Advance</button>
+                    </form>
+                    {errors.choices && <p className="mt-2 text-sm text-maroon">{errors.choices}</p>}
+                    {errors.class_id && <p className="mt-2 text-sm text-maroon">{errors.class_id}</p>}
+                    {advance && (
+                        <AdvanceDialog
+                            advance={advance}
+                            setAdvance={setAdvance}
+                            sheet={sheet}
+                            spells={spells}
+                            techniques={techniques}
+                            attackSkills={attackSkills}
+                            talents={talents}
+                            onSave={(choices) => router.post(`/characters/${sheet.id}/classes`, { class_id: advance.classId, choices }, { preserveScroll: true, onSuccess: () => setAdvance(null) })}
+                        />
+                    )}
                     <dl className="mt-4 space-y-2 text-sm">
                         <div className="flex items-center justify-between gap-2">
                             <StatLabel icon={art['major-action']} label="Major Action" tip={statTips.major} />
@@ -458,24 +476,6 @@ export default function Show({ sheet, classes, items = [], spells = [], techniqu
                             {errors.name && <p className="text-sm text-maroon">{errors.name}</p>}
                         </form>
                     </div>
-                    <form onSubmit={advanceClass} className="flex gap-2">
-                        <select name="class_id" className={inputClass}>{classes.map((row) => <option key={row.id} value={row.id}>{row.name}</option>)}</select>
-                        <button className={buttonClass}>Advance</button>
-                    </form>
-                    {errors.choices && <p className="text-sm text-maroon">{errors.choices}</p>}
-                    {errors.class_id && <p className="text-sm text-maroon">{errors.class_id}</p>}
-                    {advance && (
-                        <AdvanceDialog
-                            advance={advance}
-                            setAdvance={setAdvance}
-                            sheet={sheet}
-                            spells={spells}
-                            techniques={techniques}
-                            attackSkills={attackSkills}
-                            talents={talents}
-                            onSave={(choices) => router.post(`/characters/${sheet.id}/classes`, { class_id: advance.classId, choices }, { preserveScroll: true, onSuccess: () => setAdvance(null) })}
-                        />
-                    )}
                 </section>
             </div>
             <form onSubmit={(e) => { e.preventDefault(); details.patch(`/characters/${sheet.id}`); }} className="mt-8 grid gap-3 border border-line p-4 md:grid-cols-4">
@@ -684,7 +684,7 @@ const statTips = {
     focus: 'Focus is how many ongoing spells you can maintain at once. Learning your first spell raises it to 1 if it was 0. It becomes at least 2 at character level 4 and at least 3 at character level 7, if you know a spell. Focus is capacity, not a point pool. Maintaining a spell does not spend an action.',
     crit: 'A direct attack critically hits when the roll succeeds and falls in this range. A critical deals +1 wound, or +2 for a two-handed melee attack. Saving-throw attacks cannot critically hit.',
     init: 'Add this bonus to a 2d6 roll at the start of combat. Act from the highest total to the lowest. Ties go to the higher bonus.',
-    armor: 'A flat percentile save against a damaging hit. Success on a roll from 01 through this number negates the hit. A worn suit sets this to that armor’s save, and a second suit replaces the first. Suffering does not change an Armor Save.',
+    armor: 'A flat percentile save against a damaging hit. Success on a roll from 01 through this number negates the hit. A worn suit sets this to that armor’s save. Armor Master and Battle Armor each add 10 percentage points while a suit is worn. Natural Armor is a 10% save while no suit is worn. Suffering does not change an Armor Save.',
     move: 'The first number is feet for a major move. The second is feet for a minor move. Difficult terrain costs twice as much.',
     coin: 'Wealth carried. Ten silver pieces equal one gold piece.',
 };
