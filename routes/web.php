@@ -32,6 +32,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/characters', [CharacterController::class, 'store'])->name('characters.store');
         Route::get('/characters/{character}', [CharacterController::class, 'show'])->name('characters.show');
         Route::patch('/characters/{character}', [CharacterController::class, 'update'])->name('characters.update');
+        Route::patch('/characters/{character}/portrait', [CharacterController::class, 'setPortrait'])->name('characters.portrait');
         Route::delete('/characters/{character}', [CharacterController::class, 'destroy'])->name('characters.destroy');
     Route::post('/characters/{character}/conditions', [CharacterController::class, 'addCondition'])->name('characters.conditions.store');
     Route::delete('/characters/{character}/conditions/{combatantCondition}', [CharacterController::class, 'removeCondition'])->name('characters.conditions.destroy');

@@ -122,4 +122,57 @@ class NpcPageTest extends TestCase
         $this->assertSame(2, $template->fresh()->stats_json['suffering']);
         $this->actingAs($gm)->patch("/npcs/{$template->id}", ['suffering' => 9])->assertSessionHasErrors('suffering');
     }
+
+    public function test_a_new_creature_keeps_the_same_fields_as_the_tome(): void
+    {
+        $gm = User::factory()->create(['is_gm' => true]);
+
+        $this->actingAs($gm)->post('/npcs', [
+            'name' => 'Marsh Lurker',
+            'category' => 'npc',
+            'description' => 'It waits under the reeds.',
+            'behavior' => 'Strikes the nearest creature, then withdraws into the water.',
+            'base_wounds' => 4,
+            'armor_save_percent' => 10,
+            'armor_note' => 'slick hide',
+            'major_move_ft' => 20,
+            'minor_move_ft' => 10,
+            'stamina' => 1,
+            'power' => 0,
+            'focus' => 0,
+            'initiative' => 1,
+            'melee' => 9,
+            'ranged' => null,
+            'attack_tier' => 9,
+            'endurance' => 9,
+            'reflexes' => 8,
+            'willpower' => 6,
+            'other' => 6,
+            'skills' => [['name' => 'Stealth', 'tip' => 'Stealth checks in water are Enhanced.']],
+            'features' => [['name' => 'Amphibious', 'tip' => 'It breathes water and air.']],
+            'attacks' => [[
+                'name' => 'Bite',
+                'tier' => 9,
+                'range_ft' => 5,
+                'damage' => '1 Physical',
+                'resolution' => 'attack',
+                'cost' => 'major',
+                'tip' => 'Its bite deals 1 Physical damage.',
+                'heavy' => false,
+                'two_handed' => false,
+            ]],
+        ])->assertRedirect();
+
+        $template = CreatureTemplate::query()->where('name', 'Marsh Lurker')->first();
+        $this->assertNotNull($template);
+        $this->assertSame(4, $template->base_wounds);
+        $this->assertSame(10, $template->armor_save_percent);
+        $this->assertSame(9, $template->stats_json['melee']);
+        $this->assertArrayNotHasKey('ranged', $template->stats_json);
+        $this->assertSame('slick hide', $template->stats_json['armor_note']);
+        $this->assertSame('Stealth', $template->traits_json['skills'][0]['name']);
+        $this->assertSame('Amphibious', $template->traits_json['features'][0]['name']);
+        $this->assertSame('Bite', $template->actions()->value('name'));
+        $this->assertSame(9, $template->actions()->value('attack_tier'));
+    }
 }

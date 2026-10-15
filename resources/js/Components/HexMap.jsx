@@ -135,6 +135,21 @@ function pathBlocked(from, to, blocks, square = false) {
     return crosses(from, to, blocks, true, square);
 }
 
+function tokenPortrait(image) {
+    const maxEdge = 768;
+    const longest = Math.max(image.naturalWidth, image.naturalHeight);
+    if (!longest || longest <= maxEdge) return image;
+    const ratio = maxEdge / longest;
+    const canvas = document.createElement('canvas');
+    canvas.width = Math.max(1, Math.round(image.naturalWidth * ratio));
+    canvas.height = Math.max(1, Math.round(image.naturalHeight * ratio));
+    const context = canvas.getContext('2d');
+    context.imageSmoothingEnabled = true;
+    context.imageSmoothingQuality = 'high';
+    context.drawImage(image, 0, 0, canvas.width, canvas.height);
+    return canvas;
+}
+
 export default function HexMap({ scene, tokens = [], isGm, tool, blockIcon = 'rock', userId, movement = 'open', activeCombatantId, gmVision = false, scale = 1, onPick }) {
     gridScale = Math.min(2, Math.max(0.5, Number(scale) || 1)) * 2;
     const art = usePage().props.art || {};
@@ -154,6 +169,7 @@ export default function HexMap({ scene, tokens = [], isGm, tool, blockIcon = 'ro
     const blockIcons = useRef({});
     const backgrounds = useRef({});
     const portraits = useRef(new Map());
+    const shadeKey = useRef('');
     const [ghost, setGhost] = useState(null);
     const [iconReady, setIconReady] = useState(false);
     const [turnReady, setTurnReady] = useState(false);
@@ -446,41 +462,63 @@ export default function HexMap({ scene, tokens = [], isGm, tool, blockIcon = 'ro
         const fogged = new Set(settings.fogged || []);
         if (!gmVision && settings.lighting !== 'day') {
             const { width, height } = mapSize();
-            const w = Math.max(1, Math.ceil(width));
-            const h = Math.max(1, Math.ceil(height));
+            const shadeScale = 0.25;
+            const w = Math.max(1, Math.ceil(width * shadeScale));
+            const h = Math.max(1, Math.ceil(height * shadeScale));
+            const key = [
+                settings.lighting,
+                w,
+                h,
+                square ? 1 : 0,
+                scene?.feet_per_cell || 5,
+                lights.map((source) => {
+                    const at = lightCell(source);
+                    return [source.id, at.x, at.y, source.enabled === false ? 0 : 1, source.bright_radius_ft || 20, source.dim_radius_ft || 20].join(':');
+                }).join('|'),
+                tokens.filter((token) => token.nightvision).map((token) => {
+                    const at = ghost?.id === token.id ? ghost : token;
+                    return `${token.id}:${at.x}:${at.y}`;
+                }).join('|'),
+            ].join(';');
             if (!shade.current) shade.current = document.createElement('canvas');
             const layer = shade.current;
             if (layer.width !== w || layer.height !== h) {
                 layer.width = w;
                 layer.height = h;
+                shadeKey.current = '';
             }
-            const shadeCtx = layer.getContext('2d');
-            shadeCtx.setTransform(1, 0, 0, 1, 0, 0);
-            shadeCtx.globalCompositeOperation = 'source-over';
-            shadeCtx.clearRect(0, 0, w, h);
-            shadeCtx.fillStyle = settings.lighting === 'twilight' ? 'rgba(7,7,8,0.5)' : '#070708';
-            shadeCtx.fillRect(0, 0, w, h);
-            shadeCtx.globalCompositeOperation = 'destination-out';
-            const feet = scene.feet_per_cell || 5;
-            const step = square ? cellSize() : hexSize() * Math.sqrt(3);
-            lights.filter((source) => source.enabled !== false).forEach((source) => {
-                const at = lightCell(source);
-                const { x, y } = center(at.x, at.y, square);
-                const brightPx = Math.max(step * 0.55, ((source.bright_radius_ft || 20) / feet) * step);
-                const reachPx = lightReach(source);
-                const gradient = shadeCtx.createRadialGradient(x, y, 0, x, y, reachPx);
-                const brightStop = Math.min(0.78, brightPx / reachPx);
-                gradient.addColorStop(0, 'rgba(0,0,0,1)');
-                gradient.addColorStop(brightStop * 0.42, 'rgba(0,0,0,0.96)');
-                gradient.addColorStop(brightStop, 'rgba(0,0,0,0.55)');
-                gradient.addColorStop(1, 'rgba(0,0,0,0)');
-                shadeCtx.fillStyle = gradient;
-                shadeCtx.beginPath();
-                shadeCtx.arc(x, y, reachPx, 0, Math.PI * 2);
-                shadeCtx.fill();
-            });
-            paintNightvision(shadeCtx);
-            ctx.drawImage(layer, 0, 0);
+            if (shadeKey.current !== key) {
+                const shadeCtx = layer.getContext('2d');
+                shadeCtx.setTransform(1, 0, 0, 1, 0, 0);
+                shadeCtx.clearRect(0, 0, w, h);
+                shadeCtx.setTransform(shadeScale, 0, 0, shadeScale, 0, 0);
+                shadeCtx.globalCompositeOperation = 'source-over';
+                shadeCtx.fillStyle = settings.lighting === 'twilight' ? 'rgba(7,7,8,0.5)' : '#070708';
+                shadeCtx.fillRect(0, 0, width, height);
+                shadeCtx.globalCompositeOperation = 'destination-out';
+                const feet = scene.feet_per_cell || 5;
+                const step = square ? cellSize() : hexSize() * Math.sqrt(3);
+                lights.filter((source) => source.enabled !== false).forEach((source) => {
+                    const at = lightCell(source);
+                    const { x, y } = center(at.x, at.y, square);
+                    const brightPx = Math.max(step * 0.55, ((source.bright_radius_ft || 20) / feet) * step);
+                    const reachPx = lightReach(source);
+                    const gradient = shadeCtx.createRadialGradient(x, y, 0, x, y, reachPx);
+                    const brightStop = Math.min(0.78, brightPx / reachPx);
+                    gradient.addColorStop(0, 'rgba(0,0,0,1)');
+                    gradient.addColorStop(brightStop * 0.42, 'rgba(0,0,0,0.96)');
+                    gradient.addColorStop(brightStop, 'rgba(0,0,0,0.55)');
+                    gradient.addColorStop(1, 'rgba(0,0,0,0)');
+                    shadeCtx.fillStyle = gradient;
+                    shadeCtx.beginPath();
+                    shadeCtx.arc(x, y, reachPx, 0, Math.PI * 2);
+                    shadeCtx.fill();
+                });
+                paintNightvision(shadeCtx);
+                shadeKey.current = key;
+            }
+            ctx.imageSmoothingEnabled = true;
+            ctx.drawImage(layer, 0, 0, width, height);
         }
 
         const viewers = tokens.map((token) => (ghost?.id === token.id ? ghost : token));
@@ -506,16 +544,18 @@ export default function HexMap({ scene, tokens = [], isGm, tool, blockIcon = 'ro
         const markAnchor = (token, at) => {
             const { x, y } = center(at.x, at.y, square);
             const image = token.portrait_url ? portraits.current.get(token.portrait_url) : null;
-            if (image?.naturalWidth) {
+            const sourceWidth = image?.naturalWidth || image?.width;
+            const sourceHeight = image?.naturalHeight || image?.height;
+            if (sourceWidth && sourceHeight) {
                 const boxWidth = square ? cellSize() : hexSize() * Math.sqrt(3);
                 const boxHeight = square ? cellSize() : hexSize() * 2;
                 const large = (token.footprint || 1) >= 2;
                 const scale = large
-                    ? (boxWidth * 2) / image.naturalWidth
-                    : (boxHeight * 1.5 * (Number(token.portrait_scale) || 1)) / image.naturalHeight;
-                const width = image.naturalWidth * scale;
+                    ? (boxWidth * 2) / sourceWidth
+                    : (boxHeight * 1.5 * (Number(token.portrait_scale) || 1)) / sourceHeight;
+                const width = sourceWidth * scale;
                 const footY = square ? y + cellSize() / 2 : y + hexSize();
-                return { left: x + width / 2 + 4 * gridScale, base: footY, image, width, height: image.naturalHeight * scale, footY };
+                return { left: x + width / 2 + 4 * gridScale, base: footY, image, width, height: sourceHeight * scale, footY };
             }
             const radius = hexSize() * 0.93;
             return { left: x + radius + 4 * gridScale, base: y + radius, image: null, width: 0, height: 0, footY: 0, x, y, radius };
@@ -548,7 +588,7 @@ export default function HexMap({ scene, tokens = [], isGm, tool, blockIcon = 'ro
             const { x, y } = center(at.x, at.y, square);
             const active = token.combatant_id != null && Number(token.combatant_id) === Number(activeCombatantId);
             const image = anchor.image;
-            if (image?.naturalWidth) {
+            if (anchor.width) {
                 const { width, height, footY } = anchor;
                 ctx.save();
                 ctx.shadowColor = 'rgba(0, 0, 0, 0.85)';
@@ -656,8 +696,11 @@ export default function HexMap({ scene, tokens = [], isGm, tool, blockIcon = 'ro
             const src = token.portrait_url;
             if (!src || portraits.current.has(src)) return;
             const image = new Image();
-            portraits.current.set(src, image);
-            image.onload = () => setPortraitTick((tick) => tick + 1);
+            portraits.current.set(src, null);
+            image.onload = () => {
+                portraits.current.set(src, tokenPortrait(image));
+                setPortraitTick((tick) => tick + 1);
+            };
             image.src = src;
         });
     }, [tokens]);

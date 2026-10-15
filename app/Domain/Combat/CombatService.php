@@ -197,14 +197,16 @@ class CombatService
             $heavy = false;
         }
         $priced = ActionPool::spendCharacter($character, $heavy);
+        $shift = ActionPool::noteCharacterAttack($character);
         $this->defeatedName = null;
         $forcedSave = $kind === 'spell' ? SpellAttack::forcedSave((string) $spell?->rules_text) : null;
         if ($forcedSave) {
-            return $this->logSheetAttack($character, $this->spellSavePayload($character, $spell, $forcedSave, $priced, $victimCharacter, $victimCreature, $target, $circumstance), $actor, $target, $victimCharacter, $victimCreature);
+            return $this->logSheetAttack($character, $this->spellSavePayload($character, $spell, $forcedSave, $priced, $victimCharacter, $victimCreature, $target, self::stackedCircumstance($circumstance, -$shift)), $actor, $target, $victimCharacter, $victimCreature);
         }
 
         $attackerSuffering = $this->sufferingRanks($character);
         $critRange = $this->critRange($character);
+        $circumstance = self::stackedCircumstance($circumstance, $shift);
         $check = $this->resolveCheck($this->skillTier($character, $skill, $circumstance)['tier'], $critRange, true);
         $check['circumstance'] = $circumstance;
         $check['modifier'] = AttackLog::circumstance($circumstance);
@@ -577,17 +579,22 @@ class CombatService
         $character = $actor->character;
         $critRange = 3;
         if ($character && $skill) {
-            $penalty = $turn->attack_count === 0 ? 0 : ($turn->attack_count === 1 ? -1 : -2);
-            $sheet = $this->skillTier($character, $skill, $penalty);
+            $shift = ActionPool::noteCharacterAttack($character);
+            $sheet = $this->skillTier($character, $skill, $shift);
             $critRange = $this->critRange($character);
             $check = $this->resolveCheck($sheet['tier'], $critRange, true);
+            $check['circumstance'] = $shift;
+            $check['modifier'] = AttackLog::circumstance($shift);
             $check['skill'] = $skill->name;
             $check['attacker_suffering'] = $this->sufferingRanks($character);
         } else {
             $actor->loadMissing('creature.template');
+            $shift = $actor->creature ? ActionPool::noteCreatureAttack($actor->creature) : 0;
             $suffering = max(0, min(2, (int) ($actor->creature?->overrides_json['suffering'] ?? $actor->creature?->template?->stats_json['suffering'] ?? 0)));
-            $tier = max(0, (int) ($actor->creature?->template?->stats_json['attack_tier'] ?? 6) - $suffering);
+            $tier = max(0, (int) ($actor->creature?->template?->stats_json['attack_tier'] ?? 6) - $suffering + $shift);
             $check = $this->resolveCheck($tier, 3, true);
+            $check['circumstance'] = $shift;
+            $check['modifier'] = AttackLog::circumstance($shift);
             $check['skill'] = 'Attack';
             $check['attacker_suffering'] = $suffering;
         }
@@ -1091,6 +1098,11 @@ class CombatService
         }
 
         return $this->openTurn($encounter, $combatant);
+    }
+
+    private static function stackedCircumstance(int $chosen, int $shift): int
+    {
+        return max(-2, min(2, $chosen + $shift));
     }
 
     /**

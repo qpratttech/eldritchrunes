@@ -343,9 +343,11 @@ class CampaignController extends Controller
         if ($action && ($action->resolution_type ?? 'attack') !== 'save') {
             $priced = ActionPool::spendCreature($instance, (bool) ($action->effects_json['heavy'] ?? false));
         }
+        $shift = ActionPool::noteCreatureAttack($instance);
         [$victimCharacter, $victimCreature, $armor] = $this->victim($campaign, $data['target_type'], (int) $data['target_id']);
         $suffering = max(0, min(2, (int) ($instance->overrides_json['suffering'] ?? 0)));
-        $result = $combat->creatureStrike($instance->template, $data['attack'], $armor, $suffering, (int) ($data['circumstance'] ?? 0), (bool) $victimCharacter?->preventsArmorPiercing());
+        $circumstance = max(-2, min(2, (int) ($data['circumstance'] ?? 0) + (($action && ($action->resolution_type ?? 'attack') === 'save') ? -$shift : $shift)));
+        $result = $combat->creatureStrike($instance->template, $data['attack'], $armor, $suffering, $circumstance, (bool) $victimCharacter?->preventsArmorPiercing());
         if (is_int($result['damage'] ?? null)) {
             if ($victimCharacter) {
                 $resource = CharacterResource::query()->where('character_id', $victimCharacter->id)->where('resource_key', 'wounds')->first();

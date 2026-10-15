@@ -87,6 +87,71 @@ class ArmorSaveCombatTest extends TestCase
         $this->assertStringContainsString('Rune Armor prevents Armor Piercing.', $protected['summary']);
     }
 
+    public function test_a_second_weapon_allows_a_diminished_minor_attack_and_a_third_is_greatly_diminished(): void
+    {
+        $user = User::factory()->create();
+        $attacker = app(CharacterCreator::class)->create($user, $this->fighter('Brute'));
+        $sword = Item::query()->where('name', 'Sword')->firstOrFail();
+        $dagger = Item::query()->where('name', 'Dagger')->firstOrFail();
+        CharacterInventory::create(['character_id' => $attacker->id, 'item_id' => $sword->id, 'quantity' => 1, 'equipped_slot' => 'wielded']);
+        $combat = app(CombatService::class);
+
+        $first = $combat->sheetAttack($attacker->fresh(), 'weapon', $sword->id, null, false);
+        $this->assertSame(['major'], $first['actions']);
+        $this->assertStringNotContainsString('Diminishment', $first['summary']);
+
+        try {
+            $combat->sheetAttack($attacker->fresh(), 'weapon', $dagger->id, null, false);
+            $this->fail('A second attack needs a second wielded weapon or a feature.');
+        } catch (\Illuminate\Validation\ValidationException $exception) {
+            $this->assertSame('Not enough actions to do that.', $exception->validator->errors()->first('action'));
+        }
+
+        CharacterInventory::create(['character_id' => $attacker->id, 'item_id' => $dagger->id, 'quantity' => 1, 'equipped_slot' => 'wielded']);
+        $second = $combat->sheetAttack($attacker->fresh(), 'weapon', $dagger->id, null, false);
+        $this->assertSame(['minor'], $second['actions']);
+        $this->assertStringContainsString('Diminishment.', $second['summary']);
+        $this->assertStringNotContainsString('Greater Diminishment', $second['summary']);
+
+        $attacker->update(['derivation_json' => ['flags' => ['extra_attacks' => 1]]]);
+        $third = $combat->sheetAttack($attacker->fresh(), 'weapon', $sword->id, null, false);
+        $this->assertSame(['minor'], $third['actions']);
+        $this->assertStringContainsString('Greater Diminishment.', $third['summary']);
+    }
+
+    public function test_armor_features_apply_when_their_conditions_are_met(): void
+    {
+        $user = User::factory()->create();
+        $character = \App\Models\Character::create(['user_id' => $user->id, 'name' => 'Hide']);
+        $this->grant($character, 'Armor Master');
+        $this->grant($character, 'Battle Armor');
+        $this->assertSame(0, $character->fresh()->armorSavePercent());
+
+        $this->grant($character, 'Natural Armor');
+        $this->assertSame(10, $character->fresh()->armorSavePercent());
+
+        $heavy = Item::query()->where('name', 'Heavy armor')->firstOrFail();
+        $worn = CharacterInventory::create([
+            'character_id' => $character->id,
+            'item_id' => $heavy->id,
+            'quantity' => 1,
+            'equipped_slot' => 'worn',
+        ]);
+        $this->assertSame(50, $character->fresh()->armorSavePercent());
+
+        $worn->update(['equipped_slot' => null]);
+        $this->assertSame(10, $character->fresh()->armorSavePercent());
+    }
+
+    private function grant(\App\Models\Character $character, string $name): void
+    {
+        CharacterFeature::create([
+            'character_id' => $character->id,
+            'feature_id' => Feature::query()->where('name', $name)->value('id'),
+            'source_type' => 'class',
+        ]);
+    }
+
     private function ready(\App\Models\Character $character): void
     {
         CharacterResource::query()->where('character_id', $character->id)->where('resource_key', 'major_action')->update(['current_value' => 1]);
