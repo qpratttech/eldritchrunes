@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { useForm } from '@inertiajs/react';
 import Shell, { Mark, Portrait, buttonClass, inputClass, quietClass } from '../../Components/Shell';
 
-const steps = ['Identity', 'Species', 'Variance', 'Background', 'Class', 'Other Skills', 'Path', 'Gear'];
+const steps = ['Identity', 'Species', 'Variance', 'Background', 'Class', 'Other Skills', 'Path', 'Gear', 'Finalize'];
 
 export default function Wizard({ species, backgrounds, classes, specializations, features, skills, items, spells, techniques = [] }) {
     const [step, setStep] = useState(0);
@@ -141,7 +141,7 @@ export default function Wizard({ species, backgrounds, classes, specializations,
     }
 
     const spellPotential = chosenClass?.role?.name === 'Magus' ? 1 : 0;
-    const specialOptions = specialOptionsForStep(step, {
+    const optionContext = {
         speciesFeatures,
         owned,
         backgroundFeature: chosenBackground?.grants_json?.feature,
@@ -150,7 +150,11 @@ export default function Wizard({ species, backgrounds, classes, specializations,
         specializationFeature: (specializations.find((row) => row.id === form.data.specialization_id)?.progression_json || []).find((level) => Number(level.level) === 1)?.feature,
         featureCatalog,
         choices: form.data.choices,
-    });
+    };
+    const specialOptions = (step === steps.length - 1 ? [1, 2, 3, 4, 6] : [step])
+        .flatMap((index) => specialOptionsForStep(index, optionContext))
+        .filter((option, index, list) => list.findIndex((row) => row.key === option.key) === index);
+    const chosenGear = gearPackages.find((pack) => pack.key === form.data.gear_package);
 
     useEffect(() => {
         if (!specialOpen) return undefined;
@@ -307,6 +311,37 @@ export default function Wizard({ species, backgrounds, classes, specializations,
                     ))}
                 </div>
             )}
+            {step === 8 && (
+                <div className="space-y-6">
+                    <p className="text-sm text-silver">Attributes may rise past 10. Special options can be left unset.</p>
+                    <dl className="grid gap-4 md:grid-cols-2">
+                        <Summary label="Name" value={form.data.name || 'Unnamed'} />
+                        <Summary label="Species" value={chosenSpecies?.name} />
+                        <Summary label="Variance" value={[...form.data.variance_primary, ...form.data.variance_secondary].join(', ')} />
+                        <Summary label="Background" value={chosenBackground?.name} />
+                        <Summary label="Class" value={chosenClass?.name} />
+                        <Summary label="Other skills" value={form.data.other_skills.map((key) => skills.find((skill) => skill.key === key)?.name || key).join(', ')} />
+                        <Summary label="Path" value={specializations.find((row) => row.id === form.data.specialization_id)?.name || 'No specialization'} />
+                        <Summary label="Gear" value={chosenGear ? (chosenGear.key === 'cash' ? 'Buy your own starting gear' : chosenGear.label) : ''} />
+                    </dl>
+                    {specialOptions.length > 0 && (
+                        <section>
+                            <h2 className="font-display text-2xl">Special options</h2>
+                            <ul className="mt-2 space-y-2 text-sm">
+                                {specialOptions.map((option) => {
+                                    const chosen = choiceSummary(option, form.data.choices, form.data.rogue_skill, skills);
+                                    return (
+                                        <li key={option.key} className="border border-line bg-panel p-3">
+                                            <span className="font-display text-xl">{option.title}</span>
+                                            <span className={`mt-1 block ${chosen ? 'text-parchment' : 'text-silver'}`}>{chosen || 'Not chosen'}</span>
+                                        </li>
+                                    );
+                                })}
+                            </ul>
+                        </section>
+                    )}
+                </div>
+            )}
             {step === 7 && (
                 <div>
                     <p className="mb-4 text-sm text-silver">Starting purse: 10 gold, 0 silver. The common kit and background gear are already packed.</p>
@@ -331,7 +366,7 @@ export default function Wizard({ species, backgrounds, classes, specializations,
                     )}
                     {step < steps.length - 1
                         ? <button type="button" className={buttonClass} onClick={continueStep}>Continue</button>
-                        : <button type="button" className={buttonClass} disabled={form.processing || !form.data.gear_package} onClick={() => form.post('/characters')}>Finish character</button>}
+                        : <button type="button" className={buttonClass} disabled={form.processing} onClick={() => form.post('/characters')}>Create character</button>}
                 </div>
             </div>
             {specialOpen && (
@@ -432,7 +467,7 @@ function FeaturePick({ title, rows, selected, owned, speciesFeatures, selectedAl
 }
 
 const CHOICE_SPECS = {
-    'attribute focus': { kind: 'attribute', title: 'Attribute Focus', key: 'Attribute Focus', detail: 'Choose one attribute. It increases by 1 step, to a maximum of 10.' },
+    'attribute focus': { kind: 'attribute', title: 'Attribute Focus', key: 'Attribute Focus', detail: 'Choose one attribute. It increases by 1 step.' },
     skilled: { kind: 'nonattack', title: 'Skilled', key: 'Skilled', detail: 'Choose one nonattack skill. It increases by 2 ranks.' },
     versatile: { kind: 'nonattack_two', title: 'Versatile', key: 'Versatile', detail: 'Choose two different nonattack skills. Each increases by 1 rank.' },
     talented: { kind: 'talent', title: 'Talented', key: 'Talented', detail: 'Choose one talent.' },
@@ -441,6 +476,32 @@ const CHOICE_SPECS = {
     magus: { kind: 'two_spells', title: 'Magus', key: 'Magus', detail: 'Learn two tier-0 spells.' },
     rogue: { kind: 'rogue', title: 'Rogue', key: 'Rogue', detail: 'Gain +1 rank in one nonattack skill.' },
 };
+
+function Summary({ label, value }) {
+    return (
+        <div className="border border-line bg-panel p-4">
+            <dt className="text-xs tracking-widest text-silver uppercase">{label}</dt>
+            <dd className="mt-1 font-display text-2xl">{value || 'Not chosen'}</dd>
+        </div>
+    );
+}
+
+function choiceSummary(option, choices, rogueSkill, skills) {
+    if (option.kind === 'attribute') return ATTRIBUTES.find((row) => row.key === choices['Attribute Focus']?.attribute)?.name || '';
+    if (option.kind === 'nonattack') return skills.find((skill) => skill.key === choices.Skilled?.skill)?.name || '';
+    if (option.kind === 'nonattack_two') return (choices.Versatile?.skills || []).map((key) => skills.find((skill) => skill.key === key)?.name || key).join(', ');
+    if (option.kind === 'talent') return choices.Talented?.talent || '';
+    if (option.kind === 'damage_type') return choices['Elemental Resistance']?.damage_type || '';
+    if (option.kind === 'accursed') return [choices.Accursed?.damage_type, choices.Accursed?.primary].filter(Boolean).join(', ');
+    if (option.kind === 'two_spells') return [choices.Magus?.order, (choices.Magus?.spells || []).length ? `${choices.Magus.spells.length} spells` : ''].filter(Boolean).join(', ');
+    if (option.kind === 'rogue') return skills.find((skill) => skill.key === rogueSkill)?.name || '';
+    if (option.kind === 'order') return choices[option.key]?.order || '';
+    if (option.kind === 'learn_spells' || option.kind === 'weapon_technique') {
+        const current = choices[option.key] || {};
+        return [current.order, (current.spells || []).length ? `${current.spells.length} spells` : '', current.weapon_type_id ? 'Weapon technique' : ''].filter(Boolean).join(', ');
+    }
+    return '';
+}
 
 function choiceSpec(name) {
     if (!name) return null;

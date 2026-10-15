@@ -38,7 +38,7 @@ class FeatureMechanics
         }
 
         return match ($name) {
-            'Attribute Focus' => [['choice' => 'attribute', 'amount' => 1, 'capped' => true]],
+            'Attribute Focus' => [['choice' => 'attribute', 'amount' => 1]],
             'Talented' => [['choice' => 'talent']],
             'Accursed' => [['choice' => 'damage_type'], ['choice' => 'extra_primary'], ['flag' => 'uncanny_weakness']],
             'Ancient Knowledge' => [['resource' => 'sorcerous_soul', 'amount' => 2]],

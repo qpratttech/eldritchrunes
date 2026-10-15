@@ -6,6 +6,7 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title inertia>Eldritch Runes</title>
     <link rel="icon" type="image/png" href="{{ rtrim((string) config('filesystems.disks.s3.url'), '/') }}/branding/favicon.png">
+    @viteReactRefresh
     @vite(['resources/css/app.css', 'resources/js/app.jsx'])
     @inertiaHead
 </head>

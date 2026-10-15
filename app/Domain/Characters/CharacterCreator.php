@@ -139,9 +139,9 @@ class CharacterCreator
                 $owned[] = strtolower($feature->name);
                 $granted[] = [$feature, $source, $sourceId, $choices[$feature->name] ?? null];
 
-                if ($feature->name === 'Accursed') {
-                    $extra = $choices['Accursed']['primary'] ?? null;
-                    $extraFeature = $extra ? $this->feature($extra, ['creation_primary']) : null;
+                if ($feature->name === 'Accursed' && ! empty($choices['Accursed']['primary'])) {
+                    $extra = $choices['Accursed']['primary'];
+                    $extraFeature = $this->feature($extra, ['creation_primary']);
                     if (! $extraFeature) {
                         $errors['choices'] = 'Accursed asks for an additional Primary feature.';
                     } elseif (in_array(strtolower($extraFeature->name), $owned, true)) {
@@ -214,8 +214,10 @@ class CharacterCreator
             } elseif ($roleName === 'Rogue') {
                 $resources['initiative_bonus'] += 2;
                 $rogueSkill = $input['rogue_skill'] ?? null;
-                $skill = $skills[$rogueSkill] ?? null;
-                if (! $skill || $skill->is_attack_skill) {
+                $skill = is_string($rogueSkill) && $rogueSkill !== '' ? ($skills[$rogueSkill] ?? null) : null;
+                if ($rogueSkill === null || $rogueSkill === '') {
+                    $ledger[] = 'Rogue starting role: +2 Initiative.';
+                } elseif (! $skill || $skill->is_attack_skill) {
                     $errors['rogue_skill'] = 'Rogue asks for +1 rank in one nonattack skill.';
                 } else {
                     $ranks[$skill->key] += 1;
@@ -265,13 +267,8 @@ class CharacterCreator
                 }
                 $excess = $value - 10;
                 $target = $overflow[$key] ?? null;
-                if (! $target || ! isset($attrs[$target]) || $target === $key) {
-                    $errors['overflow'] = ucfirst($key).' would be '.$value.'. Assign the excess to another attribute below 10.';
-                    break;
-                }
-                if ($attrs[$target] + $excess > 10) {
-                    $errors['overflow'] = ucfirst($target).' cannot absorb the excess from '.ucfirst($key).'.';
-                    break;
+                if (! $target || ! isset($attrs[$target]) || $target === $key || $attrs[$target] + $excess > 10) {
+                    continue;
                 }
                 $attrs[$key] = 10;
                 $attrs[$target] += $excess;
@@ -548,25 +545,30 @@ class CharacterCreator
                 }
             } elseif (($effect['choice'] ?? null) === 'attribute') {
                 $key = $choice['attribute'] ?? null;
-                if (! isset($attrs[$key])) {
+                if ($key === null || $key === '') {
+                    // Attribute Focus can be left unset.
+                } elseif (! isset($attrs[$key])) {
                     $errors['choices'] = $label.' needs an attribute.';
-                } elseif (! empty($effect['capped']) && $attrs[$key] + $effect['amount'] > 10) {
-                    $errors['choices'] = $label.' cannot raise an attribute above 10.';
                 } else {
                     $attrs[$key] += $effect['amount'];
                     $ledger[] = $label.' increases '.ucfirst($key).' by '.$effect['amount'].'.';
                 }
             } elseif (($effect['choice'] ?? null) === 'nonattack') {
-                $skill = $skills[$choice['skill'] ?? ''] ?? null;
-                if (! $skill || $skill->is_attack_skill) {
+                $picked = $choice['skill'] ?? '';
+                $skill = $picked === '' ? null : ($skills[$picked] ?? null);
+                if ($picked === '') {
+                    // Skilled can be left unset.
+                } elseif (! $skill || $skill->is_attack_skill) {
                     $errors['choices'] = $label.' needs one nonattack skill.';
                 } else {
                     $ranks[$skill->key] += $effect['amount'];
                     $ledger[] = $label.' grants +'.$effect['amount'].' '.$skill->name.'.';
                 }
             } elseif (($effect['choice'] ?? null) === 'nonattack_two') {
-                $picked = $choice['skills'] ?? [];
-                if (count($picked) !== 2 || count(array_unique($picked)) !== 2) {
+                $picked = array_values(array_filter($choice['skills'] ?? []));
+                if ($picked === []) {
+                    // Versatile can be left unset.
+                } elseif (count($picked) > 2 || count(array_unique($picked)) !== count($picked)) {
                     $errors['choices'] = $label.' needs two different nonattack skills.';
                 }
                 foreach ($picked as $key) {
@@ -578,8 +580,11 @@ class CharacterCreator
                     }
                 }
             } elseif (($effect['choice'] ?? null) === 'talent') {
-                $talent = Feature::query()->whereIn('category', ['talent', 'tactic'])->where('name', $choice['talent'] ?? '')->first();
-                if (! $talent) {
+                $talentName = $choice['talent'] ?? '';
+                $talent = $talentName === '' ? null : Feature::query()->whereIn('category', ['talent', 'tactic'])->where('name', $talentName)->first();
+                if ($talentName === '') {
+                    // Talented can be left unset.
+                } elseif (! $talent) {
                     $errors['choices'] = 'Talented needs a talent or tactic.';
                 } elseif (! $this->talentRequirementsMet($talent, $this->creationGrants)) {
                     $errors['choices'] = $talent->name.' requires '.implode(', ', $talent->prerequisites_json ?: ['a requirement you do not meet']).'.';
@@ -592,7 +597,9 @@ class CharacterCreator
                 $this->learnGrantedSpells($feature, $effect['grant'], $choice, $resources, $spellIds, $errors, $ledger, $label);
             } elseif (($effect['choice'] ?? null) === 'two_spells') {
                 $ids = $choice['spells'] ?? [];
-                if (count($ids) !== 2) {
+                if ($ids === []) {
+                    // Magus spells can be left unset.
+                } elseif (count($ids) !== 2) {
                     $errors['choices'] = 'Magus learns two tier-0 spells.';
                 } else {
                     foreach ($ids as $id) {
@@ -609,16 +616,16 @@ class CharacterCreator
                     }
                 }
             } elseif (($effect['choice'] ?? null) === 'technique') {
-                $this->learnTechnique($choice, $errors, $label);
-            } elseif (($effect['choice'] ?? null) === 'damage_type') {
-                if (empty($choice['damage_type'])) {
-                    $errors['choices'] = $label.' needs a damage type: Fire, Storm, or Cold.';
+                if (! empty($choice['weapon_type_id'])) {
+                    $this->learnTechnique($choice, $errors, $label);
                 }
+            } elseif (($effect['choice'] ?? null) === 'damage_type') {
+                // Fire, Storm, or Cold can be left unset.
             }
         }
         $rules = (string) $feature->rules_text;
         $grant = SpellGrant::fromText($rules);
-        if (SpellGrant::choosesOrder($rules) && ! ($grant['choose_order'] ?? false)) {
+        if (SpellGrant::choosesOrder($rules) && ! ($grant['choose_order'] ?? false) && trim((string) ($choice['order'] ?? '')) !== '') {
             $order = SpellGrant::order((string) ($choice['order'] ?? ''));
             if (! $order) {
                 $errors['choices'] = $label.' needs an order.';
@@ -636,7 +643,10 @@ class CharacterCreator
     private function learnTechnique(array $choice, array &$errors, string $label): void
     {
         $id = (int) ($choice['weapon_type_id'] ?? 0);
-        $type = $id > 0 ? WeaponType::query()->with(['item', 'techniques'])->find($id) : null;
+        if ($id === 0) {
+            return;
+        }
+        $type = WeaponType::query()->with(['item', 'techniques'])->find($id);
         $technique = $type?->techniques->first();
         $hidden = $type?->item?->created_by && (int) $type->item->created_by !== (int) $this->actorId;
         if (! $technique || $hidden || str_contains(strtolower((string) $type->item?->description), 'counts as')) {
@@ -669,7 +679,10 @@ class CharacterCreator
             return;
         }
         $orders = $grant['orders'];
-        if ($grant['choose_order']) {
+        $orderMissing = $grant['choose_order'] && trim((string) ($choice['order'] ?? '')) === '';
+        if ($orderMissing && $ids === []) {
+            $orders = null;
+        } elseif ($grant['choose_order']) {
             $picked = trim((string) ($choice['order'] ?? ''));
             $orders = [SpellGrant::order($picked)];
             if ($orders[0] === null) {

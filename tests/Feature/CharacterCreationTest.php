@@ -96,6 +96,47 @@ class CharacterCreationTest extends TestCase
         $this->assertSame(8, $steps['strength']);
     }
 
+    public function test_attributes_may_exceed_ten_when_overflow_is_not_assigned(): void
+    {
+        $user = User::factory()->create();
+        $character = app(CharacterCreator::class)->create($user, [
+            'name' => 'Sera',
+            'species_id' => Species::query()->where('name', 'Elf')->value('id'),
+            'variance_primary' => ['Greater Agility', 'Uncanny Agility'],
+            'variance_secondary' => ['Lucky'],
+            'background_id' => Background::query()->where('name', 'Thief')->value('id'),
+            'class_id' => HeroClass::query()->where('name', 'Outlaw')->value('id'),
+            'other_skills' => ['awareness', 'athletics', 'survival'],
+        ]);
+
+        $steps = collect(app(CharacterPresenter::class)->present($character)['attributes'])->pluck('step', 'key');
+        $this->assertSame(11, $steps['agility']);
+        $this->assertSame(7, $steps['strength']);
+    }
+
+    public function test_special_options_can_be_left_unset(): void
+    {
+        $user = User::factory()->create();
+        $character = app(CharacterCreator::class)->create($user, [
+            'name' => 'Lira',
+            'species_id' => Species::query()->where('name', 'Human')->value('id'),
+            'variance_primary' => ['Agile', 'Likable'],
+            'variance_secondary' => ['Lucky'],
+            'background_id' => Background::query()->where('name', 'Soldier')->value('id'),
+            'class_id' => HeroClass::query()->where('name', 'Outlaw')->value('id'),
+            'other_skills' => ['awareness', 'athletics', 'survival'],
+        ]);
+
+        $steps = collect(app(CharacterPresenter::class)->present($character)['attributes'])->pluck('step', 'key');
+        $this->assertSame(7, $steps['agility']);
+        $this->assertSame(7, $steps['strength']);
+        $this->assertSame(7, $steps['social']);
+        $this->assertSame(7, $steps['vitality']);
+        $this->assertFalse($character->features()->whereHas('feature', fn ($query) => $query->whereIn('category', ['talent', 'tactic']))->exists());
+        $this->assertSame(2, (int) $character->resources()->where('resource_key', 'initiative_bonus')->value('base_maximum'));
+        $this->assertSame(0, (int) $character->skills()->whereHas('skill', fn ($query) => $query->where('key', 'reflexes'))->value('base_rank'));
+    }
+
     public function test_attribute_focus_increases_the_chosen_attribute_by_one_step(): void
     {
         $user = User::factory()->create();
