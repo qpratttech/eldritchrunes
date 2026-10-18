@@ -5,6 +5,7 @@ namespace Tests\Feature;
 use App\Models\Campaign;
 use App\Models\CampaignMember;
 use App\Models\Character;
+use App\Models\Scene;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Hash;
@@ -35,7 +36,7 @@ class CampaignJoinTest extends TestCase
         $this->actingAs($player)->get('/campaigns')->assertOk()->assertInertia(fn (Assert $page) => $page
             ->where('can.campaigns', true)
             ->where('can.gm', false)
-            ->where('publicCampaigns', fn ($rows) => collect($rows)->contains(fn ($row) => $row['name'] === 'Ash Road' && $row['has_password'] === true)
+            ->where('publicCampaigns', fn ($rows) => collect($rows)->contains(fn ($row) => $row['name'] === 'Ash Road' && $row['has_password'] === true && $row['gm']['id'] === $gm->id && $row['gm']['name'] === $gm->name)
                 && collect($rows)->doesntContain(fn ($row) => $row['name'] === 'Secret Road'))
         );
 
@@ -89,7 +90,7 @@ class CampaignJoinTest extends TestCase
 
         $this->actingAs($gm)->get('/campaigns')->assertOk()->assertInertia(fn (Assert $page) => $page
             ->where('campaigns', fn ($rows) => collect($rows)->contains(
-                fn ($row) => $row['name'] === 'Closed Hall' && $row['can_add_character'] === true && $row['is_public'] === false
+                fn ($row) => $row['name'] === 'Closed Hall' && $row['can_add_character'] === true && $row['is_public'] === false && $row['gm']['id'] === $gm->id && $row['gm']['name'] === $gm->name
             ))
         );
 
@@ -102,5 +103,20 @@ class CampaignJoinTest extends TestCase
             ->where('roster.characters.0.name', 'Warden')
             ->where('roster.characters.0.can_open', true)
         );
+    }
+
+    public function test_a_new_campaign_map_starts_as_a_field_in_daylight(): void
+    {
+        $gm = User::factory()->create(['is_gm' => true]);
+
+        $this->actingAs($gm)->post('/campaigns', [
+            'name' => 'Ash Road',
+            'is_public' => false,
+        ])->assertRedirect();
+
+        $scene = Scene::query()->whereHas('campaign', fn ($query) => $query->where('name', 'Ash Road'))->first();
+        $this->assertNotNull($scene);
+        $this->assertSame('field', $scene->settings_json['background']);
+        $this->assertSame('day', $scene->settings_json['lighting']);
     }
 }

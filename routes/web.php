@@ -7,6 +7,7 @@ use App\Http\Controllers\CharacterController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\EncounterController;
 use App\Http\Controllers\NpcController;
+use App\Http\Controllers\PlayerController;
 use App\Http\Controllers\RulesController;
 use App\Http\Controllers\SceneController;
 use Illuminate\Support\Facades\Route;
@@ -18,22 +19,34 @@ Route::get('/', fn () => auth()->check()
 
 Route::middleware('guest')->group(function () {
     Route::get('/login', [AuthController::class, 'login'])->name('login');
-    Route::post('/login', [AuthController::class, 'authenticate']);
+    Route::get('/two-factor-challenge', function () {
+        if (! session()->has('login.id')) {
+            return redirect()->route('login');
+        }
+
+        return Inertia::render('Auth/TwoFactorChallenge');
+    })->name('two-factor.login');
     Route::get('/register', [AuthController::class, 'register'])->name('register');
     Route::post('/register', [AuthController::class, 'store']);
 });
 
 Route::middleware('auth')->group(function () {
-    Route::post('/logout', [AuthController::class, 'destroy'])->name('logout');
+    Route::get('/player', [PlayerController::class, 'show'])->name('player.show');
+    Route::get('/players/{user}', [PlayerController::class, 'publicPage'])->name('players.show');
+    Route::patch('/player', [PlayerController::class, 'update'])->name('player.update');
+    Route::delete('/player', [PlayerController::class, 'destroy'])->name('player.destroy');
+    Route::post('/player/role', [PlayerController::class, 'becomeGameMaster'])->name('player.role.store');
+    Route::delete('/player/role', [PlayerController::class, 'resignGameMaster'])->name('player.role.destroy');
     Route::get('/dashboard', DashboardController::class)->name('dashboard');
 
     Route::get('/characters', [CharacterController::class, 'index'])->name('characters.index');
     Route::get('/characters/create', [CharacterController::class, 'create'])->name('characters.create');
     Route::post('/characters', [CharacterController::class, 'store'])->name('characters.store');
-        Route::get('/characters/{character}', [CharacterController::class, 'show'])->name('characters.show');
-        Route::patch('/characters/{character}', [CharacterController::class, 'update'])->name('characters.update');
-        Route::patch('/characters/{character}/portrait', [CharacterController::class, 'setPortrait'])->name('characters.portrait');
-        Route::delete('/characters/{character}', [CharacterController::class, 'destroy'])->name('characters.destroy');
+    Route::get('/characters/{character}', [CharacterController::class, 'show'])->name('characters.show');
+    Route::patch('/characters/{character}', [CharacterController::class, 'update'])->name('characters.update');
+    Route::patch('/characters/{character}/portrait', [CharacterController::class, 'setPortrait'])->name('characters.portrait');
+    Route::delete('/characters/{character}/campaign', [CharacterController::class, 'leaveCampaign'])->name('characters.campaign.leave');
+    Route::delete('/characters/{character}', [CharacterController::class, 'destroy'])->name('characters.destroy');
     Route::post('/characters/{character}/conditions', [CharacterController::class, 'addCondition'])->name('characters.conditions.store');
     Route::delete('/characters/{character}/conditions/{combatantCondition}', [CharacterController::class, 'removeCondition'])->name('characters.conditions.destroy');
     Route::post('/characters/{character}/classes', [CharacterController::class, 'addClass'])->name('characters.classes');
@@ -41,13 +54,13 @@ Route::middleware('auth')->group(function () {
     Route::post('/characters/{character}/attacks', [CharacterController::class, 'attack'])->name('characters.attacks');
     Route::post('/characters/{character}/spells', [CharacterController::class, 'addSpell'])->name('characters.spells.store');
     Route::delete('/characters/{character}/spells/{characterSpell}', [CharacterController::class, 'removeSpell'])->name('characters.spells.destroy');
-        Route::post('/characters/{character}/techniques', [CharacterController::class, 'addTechnique'])->name('characters.techniques.store');
-        Route::delete('/characters/{character}/techniques/{characterTechnique}', [CharacterController::class, 'removeTechnique'])->name('characters.techniques.destroy');
-        Route::post('/characters/{character}/spell-techniques', [CharacterController::class, 'addSpellTechnique'])->name('characters.spell-techniques.store');
-        Route::delete('/characters/{character}/spell-techniques/{technique}', [CharacterController::class, 'removeSpellTechnique'])->name('characters.spell-techniques.destroy');
-        Route::post('/characters/{character}/orders', [CharacterController::class, 'addOrder'])->name('characters.orders.store');
-        Route::delete('/characters/{character}/orders/{access}', [CharacterController::class, 'removeOrder'])->name('characters.orders.destroy');
-        Route::post('/characters/{character}/companion', [CharacterController::class, 'setCompanion'])->name('characters.companion');
+    Route::post('/characters/{character}/techniques', [CharacterController::class, 'addTechnique'])->name('characters.techniques.store');
+    Route::delete('/characters/{character}/techniques/{characterTechnique}', [CharacterController::class, 'removeTechnique'])->name('characters.techniques.destroy');
+    Route::post('/characters/{character}/spell-techniques', [CharacterController::class, 'addSpellTechnique'])->name('characters.spell-techniques.store');
+    Route::delete('/characters/{character}/spell-techniques/{technique}', [CharacterController::class, 'removeSpellTechnique'])->name('characters.spell-techniques.destroy');
+    Route::post('/characters/{character}/orders', [CharacterController::class, 'addOrder'])->name('characters.orders.store');
+    Route::delete('/characters/{character}/orders/{access}', [CharacterController::class, 'removeOrder'])->name('characters.orders.destroy');
+    Route::post('/characters/{character}/companion', [CharacterController::class, 'setCompanion'])->name('characters.companion');
     Route::post('/characters/{character}/inventory', [CharacterController::class, 'addItem'])->name('characters.inventory.store');
     Route::delete('/characters/{character}/inventory/{inventory}', [CharacterController::class, 'removeItem'])->name('characters.inventory.destroy');
     Route::post('/characters/{character}/equipment/{inventory}/equip', [CharacterController::class, 'equip'])->name('characters.equip');
@@ -82,9 +95,9 @@ Route::middleware('auth')->group(function () {
     Route::post('/campaigns/{campaign}/members', [CampaignController::class, 'addMember'])->name('campaigns.members');
     Route::post('/campaigns/{campaign}/characters', [CampaignController::class, 'assignCharacter'])->name('campaigns.characters');
     Route::post('/campaigns/{campaign}/join', [CampaignController::class, 'join'])->name('campaigns.join');
-        Route::post('/campaigns/{campaign}/attacks', [CampaignController::class, 'attack'])->name('campaigns.attacks');
-        Route::post('/campaigns/{campaign}/checks', [CampaignController::class, 'check'])->name('campaigns.checks');
-        Route::post('/campaigns/{campaign}/dice', [CampaignController::class, 'dice'])->name('campaigns.dice');
+    Route::post('/campaigns/{campaign}/attacks', [CampaignController::class, 'attack'])->name('campaigns.attacks');
+    Route::post('/campaigns/{campaign}/checks', [CampaignController::class, 'check'])->name('campaigns.checks');
+    Route::post('/campaigns/{campaign}/dice', [CampaignController::class, 'dice'])->name('campaigns.dice');
 
     Route::post('/campaigns/{campaign}/encounters', [EncounterController::class, 'store'])->name('encounters.store');
     Route::post('/campaigns/{campaign}/combat', [EncounterController::class, 'addToCombat'])->name('campaigns.combat');

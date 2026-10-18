@@ -7,13 +7,17 @@ use App\Domain\Characters\CharacterPresenter;
 use App\Domain\Combat\ActionPool;
 use App\Domain\Combat\AttackLog;
 use App\Domain\Combat\CombatService;
+use App\Domain\Rules\Percentile;
 use App\Models\Campaign;
 use App\Models\CampaignMember;
 use App\Models\Character;
 use App\Models\CharacterResource;
 use App\Models\Combatant;
 use App\Models\CombatEvent;
+use App\Models\CombatTurn;
+use App\Models\ConditionDefinition;
 use App\Models\CreatureInstance;
+use App\Models\CreatureTemplate;
 use App\Models\Encounter;
 use App\Models\RulesetVersion;
 use App\Models\Scene;
@@ -33,7 +37,7 @@ class CampaignController extends Controller
                 $query->where('owner_id', $user->id)
                     ->orWhereHas('members', fn ($members) => $members->where('user_id', $user->id));
             })
-            ->with('members')
+            ->with(['members', 'owner'])
             ->latest()
             ->get()
             ->map(fn (Campaign $campaign) => [
@@ -44,11 +48,13 @@ class CampaignController extends Controller
                 'role' => $campaign->owner_id === $user->id ? 'gm' : 'player',
                 'can_delete' => CampaignAccess::isGm($user, $campaign),
                 'can_add_character' => CampaignAccess::isGm($user, $campaign),
+                'gm' => $this->campaignGm($campaign),
             ]);
         $publicCampaigns = Campaign::query()
             ->where('is_public', true)
             ->where('owner_id', '!=', $user->id)
             ->whereDoesntHave('members', fn ($members) => $members->where('user_id', $user->id))
+            ->with('owner')
             ->latest()
             ->get()
             ->map(fn (Campaign $campaign) => [
@@ -56,6 +62,7 @@ class CampaignController extends Controller
                 'name' => $campaign->name,
                 'description' => $campaign->description,
                 'has_password' => filled($campaign->password),
+                'gm' => $this->campaignGm($campaign),
             ]);
 
         return Inertia::render('Campaigns/Index', [
@@ -95,11 +102,27 @@ class CampaignController extends Controller
             'settings_json' => [
                 'cols' => 80,
                 'rows' => 48,
-                'lighting' => 'night-gloom',
+                'background' => 'field',
+                'lighting' => 'day',
             ],
         ]);
 
         return redirect()->route('campaigns.show', $campaign);
+    }
+
+    /**
+     * @return array{id: int, name: string}|null
+     */
+    private function campaignGm(Campaign $campaign): ?array
+    {
+        if (! $campaign->owner) {
+            return null;
+        }
+
+        return [
+            'id' => $campaign->owner->id,
+            'name' => $campaign->owner->name,
+        ];
     }
 
     public function join(Request $request, Campaign $campaign)
@@ -157,7 +180,7 @@ class CampaignController extends Controller
         $lastTargets = $encounter ? $this->lastAttackTargets($encounter) : [];
         $turn = null;
         if ($encounter?->active_combatant_id) {
-            $turn = \App\Models\CombatTurn::query()
+            $turn = CombatTurn::query()
                 ->where('encounter_id', $encounter->id)
                 ->where('combatant_id', $encounter->active_combatant_id)
                 ->where('round_number', $encounter->round_number)
@@ -204,7 +227,7 @@ class CampaignController extends Controller
                     'team' => $row->team,
                     'initiative' => $row->initiative_total,
                     'wounds' => $row->character_id
-                        ? \App\Models\CharacterResource::query()->where('character_id', $row->character_id)->where('resource_key', 'wounds')->value('current_value')
+                        ? CharacterResource::query()->where('character_id', $row->character_id)->where('resource_key', 'wounds')->value('current_value')
                         : $row->creature?->current_wounds,
                     'controller_user_id' => $row->controller_user_id,
                 ]),
@@ -215,9 +238,9 @@ class CampaignController extends Controller
                     'at' => $event->created_at?->format('H:i:s'),
                 ]),
             ] : null,
-            'conditions' => \App\Models\ConditionDefinition::query()->where('key', '!=', 'suffering')->orderBy('name')->get(['id', 'name', 'key', 'description']),
+            'conditions' => ConditionDefinition::query()->where('key', '!=', 'suffering')->orderBy('name')->get(['id', 'name', 'key', 'description']),
             'roster' => [
-                'characters' => Character::query()->where('campaign_id', $campaign->id)->with('conditions.condition')->get()->map(function (Character $character) use ($campaign, $encounter) {
+                'characters' => Character::query()->where('campaign_id', $campaign->id)->with(['conditions.condition', 'user'])->get()->map(function (Character $character) use ($campaign, $encounter) {
                     $sheet = app(CharacterPresenter::class)->present($character);
                     $combatant = $encounter?->combatants->first(fn ($row) => (int) $row->character_id === (int) $character->id);
                     $classes = collect($sheet['classes'])->map(fn ($row) => trim($row['name'].' '.$row['level']))->filter()->implode(' / ');
@@ -230,6 +253,10 @@ class CampaignController extends Controller
                         'in_combat' => (bool) $combatant,
                         'combatant_id' => $combatant?->id,
                         'subtitle' => collect([$sheet['species'], $classes])->filter()->implode(' · '),
+                        'player' => $character->user ? [
+                            'id' => $character->user->id,
+                            'name' => $character->user->name,
+                        ] : null,
                         'armor' => $this->characterArmor($character),
                         'wounds' => $sheet['resources']['wounds']['current'] ?? null,
                         'max' => $sheet['resources']['wounds']['max'] ?? null,
@@ -280,48 +307,48 @@ class CampaignController extends Controller
                         fn ($row) => $encounter?->combatants->contains(fn ($combatant) => (int) $combatant->creature_instance_id === (int) $row->id)
                     )->values())
                     ->map(function ($row) use ($encounter) {
-                    $stats = $row->template?->stats_json ?? [];
-                    $overrides = $row->overrides_json ?? [];
-                    $staminaMax = max(0, (int) ($stats['stamina'] ?? 0));
-                    $powerMax = max(0, (int) ($stats['power'] ?? $stats['sorcerous_power'] ?? 0));
-                    $focusMax = max(0, (int) ($stats['focus'] ?? 0));
+                        $stats = $row->template?->stats_json ?? [];
+                        $overrides = $row->overrides_json ?? [];
+                        $staminaMax = max(0, (int) ($stats['stamina'] ?? 0));
+                        $powerMax = max(0, (int) ($stats['power'] ?? $stats['sorcerous_power'] ?? 0));
+                        $focusMax = max(0, (int) ($stats['focus'] ?? 0));
 
-                    return [
-                    'id' => $row->id,
-                    'name' => $row->name,
-                    'combatant_id' => $encounter?->combatants->first(fn ($combatant) => (int) $combatant->creature_instance_id === (int) $row->id)?->id,
-                    'in_combat' => (bool) $encounter?->combatants->contains(fn ($combatant) => (int) $combatant->creature_instance_id === (int) $row->id),
-                    'portrait_url' => $row->template?->portrait_url,
-                    'wounds' => $row->current_wounds,
-                    'suffering' => max(0, min(2, (int) ($overrides['suffering'] ?? 0))),
-                    'stamina' => max(0, min($staminaMax, (int) ($overrides['stamina'] ?? $staminaMax))),
-                    'stamina_max' => $staminaMax,
-                    'power' => max(0, min($powerMax, (int) ($overrides['power'] ?? $powerMax))),
-                    'power_max' => $powerMax,
-                    'focus' => max(0, min($focusMax, (int) ($overrides['focus'] ?? $focusMax))),
-                    'focus_max' => $focusMax,
-                    'major_action' => max(0, min(1, (int) ($row->overrides_json['major_action'] ?? 1))),
-                    'minor_action' => max(0, min(2, (int) ($row->overrides_json['minor_action'] ?? 2))),
-                    'max' => $row->template?->base_wounds,
-                    'template' => $row->template?->name,
-                    'armor' => $row->template?->armor_save_percent,
-                    'initiative' => (int) ($row->template?->stats_json['initiative_bonus'] ?? $row->template?->stats_json['initiative'] ?? 0),
-                    'attacks' => $row->template?->actions->map(fn ($action) => [
-                        'name' => $action->name,
-                        'resolution' => $action->resolution_type,
-                        'tier' => $action->attack_tier ?? ($row->template->stats_json['attack_tier'] ?? null),
-                    ])->values(),
-                    'checks' => $this->creatureChecks($row->template),
-                    'skills' => $this->creatureSkills($row->template),
-                    'conditions' => $row->conditions->map(fn ($condition) => [
-                        'id' => $condition->id,
-                        'condition_id' => $condition->condition_id,
-                        'name' => $condition->condition?->name,
-                        'key' => $condition->condition?->key,
-                        'detail' => $condition->condition?->description,
-                    ])->values(),
-                ];
-                }),
+                        return [
+                            'id' => $row->id,
+                            'name' => $row->name,
+                            'combatant_id' => $encounter?->combatants->first(fn ($combatant) => (int) $combatant->creature_instance_id === (int) $row->id)?->id,
+                            'in_combat' => (bool) $encounter?->combatants->contains(fn ($combatant) => (int) $combatant->creature_instance_id === (int) $row->id),
+                            'portrait_url' => $row->template?->portrait_url,
+                            'wounds' => $row->current_wounds,
+                            'suffering' => max(0, min(2, (int) ($overrides['suffering'] ?? 0))),
+                            'stamina' => max(0, min($staminaMax, (int) ($overrides['stamina'] ?? $staminaMax))),
+                            'stamina_max' => $staminaMax,
+                            'power' => max(0, min($powerMax, (int) ($overrides['power'] ?? $powerMax))),
+                            'power_max' => $powerMax,
+                            'focus' => max(0, min($focusMax, (int) ($overrides['focus'] ?? $focusMax))),
+                            'focus_max' => $focusMax,
+                            'major_action' => max(0, min(1, (int) ($row->overrides_json['major_action'] ?? 1))),
+                            'minor_action' => max(0, min(2, (int) ($row->overrides_json['minor_action'] ?? 2))),
+                            'max' => $row->template?->base_wounds,
+                            'template' => $row->template?->name,
+                            'armor' => $row->template?->armor_save_percent,
+                            'initiative' => (int) ($row->template?->stats_json['initiative_bonus'] ?? $row->template?->stats_json['initiative'] ?? 0),
+                            'attacks' => $row->template?->actions->map(fn ($action) => [
+                                'name' => $action->name,
+                                'resolution' => $action->resolution_type,
+                                'tier' => $action->attack_tier ?? ($row->template->stats_json['attack_tier'] ?? null),
+                            ])->values(),
+                            'checks' => $this->creatureChecks($row->template),
+                            'skills' => $this->creatureSkills($row->template),
+                            'conditions' => $row->conditions->map(fn ($condition) => [
+                                'id' => $condition->id,
+                                'condition_id' => $condition->condition_id,
+                                'name' => $condition->condition?->name,
+                                'key' => $condition->condition?->key,
+                                'detail' => $condition->condition?->description,
+                            ])->values(),
+                        ];
+                    }),
             ],
         ]);
     }
@@ -455,7 +482,7 @@ class CampaignController extends Controller
         $suffering = max(0, min(2, (int) ($instance->overrides_json['suffering'] ?? 0)));
         $result = $this->rollTier(max(0, (int) $entry['tier'] - $suffering) + (int) ($data['circumstance'] ?? 0), $data['name']);
         $result['circumstance'] = (int) ($data['circumstance'] ?? 0);
-        $result['modifier'] = \App\Domain\Combat\AttackLog::circumstance($result['circumstance']);
+        $result['modifier'] = AttackLog::circumstance($result['circumstance']);
         $result['npc_id'] = $instance->id;
         $result['npc'] = $instance->name;
         $result['skill'] = $data['name'];
@@ -516,7 +543,7 @@ class CampaignController extends Controller
         return $character->armorSavePercent();
     }
 
-    private function creatureChecks(?\App\Models\CreatureTemplate $template): array
+    private function creatureChecks(?CreatureTemplate $template): array
     {
         $stats = $template?->stats_json ?? [];
         $rows = [
@@ -534,7 +561,7 @@ class CampaignController extends Controller
         ])->values()->all();
     }
 
-    private function creatureSkills(?\App\Models\CreatureTemplate $template): array
+    private function creatureSkills(?CreatureTemplate $template): array
     {
         $other = $template?->stats_json['other'] ?? null;
         if (! is_numeric($other)) {
@@ -561,8 +588,8 @@ class CampaignController extends Controller
      */
     private function rollTier(int $tier, string $name): array
     {
-        $percent = \App\Domain\Rules\Percentile::successPercent($tier);
-        $outcome = \App\Domain\Rules\Percentile::outcome($tier);
+        $percent = Percentile::successPercent($tier);
+        $outcome = Percentile::outcome($tier);
         if ($outcome === 'automatic') {
             return ['success' => true, 'display' => 'Auto', 'critical' => false, 'percent' => $percent, 'skill' => $name];
         }
@@ -573,7 +600,7 @@ class CampaignController extends Controller
 
         return [
             'success' => $roll <= $percent,
-            'display' => \App\Domain\Rules\Percentile::display($roll),
+            'display' => Percentile::display($roll),
             'roll' => $roll,
             'critical' => false,
             'can_crit' => false,

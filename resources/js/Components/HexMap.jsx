@@ -180,7 +180,7 @@ export default function HexMap({ scene, tokens = [], isGm, tool, blockIcon = 'ro
     const [measure, setMeasure] = useState(null);
     const measureDrag = useRef(false);
     const [view, setView] = useState(viewRef.current);
-    const settings = scene?.settings_json || { cols: 80, rows: 48, lighting: 'night-gloom' };
+    const settings = { cols: 80, rows: 48, lighting: 'day', ...(scene?.settings_json || {}) };
     const cols = settings.cols || 24;
     const rows = settings.rows || 16;
     const wall = (scene?.walls || []).find((row) => row.wall_type === 'hex');

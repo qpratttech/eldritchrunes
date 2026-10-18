@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Domain\Combat\CombatService;
 use App\Models\Attribute;
 use App\Models\Campaign;
 use App\Models\CampaignMember;
@@ -11,12 +12,12 @@ use App\Models\CharacterResource;
 use App\Models\CharacterSkill;
 use App\Models\Combatant;
 use App\Models\CombatEvent;
-use App\Models\Skill;
 use App\Models\CreatureInstance;
 use App\Models\CreatureTemplate;
 use App\Models\Encounter;
 use App\Models\Scene;
 use App\Models\SceneToken;
+use App\Models\Skill;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Inertia\Testing\AssertableInertia as Assert;
@@ -81,6 +82,8 @@ class CampaignCharactersTest extends TestCase
 
         $this->actingAs($player)->get("/campaigns/{$campaign->id}")->assertOk()->assertInertia(fn (Assert $page) => $page
             ->where('roster.characters.0.name', 'Sera')
+            ->where('roster.characters.0.player.id', $player->id)
+            ->where('roster.characters.0.player.name', $player->name)
             ->where('roster.characters.0.can_open', true)
             ->where('roster.characters.0.in_combat', true)
             ->where('roster.creatures', fn ($rows) => collect($rows)->count() === 1 && $rows[0]['name'] === 'Grey' && $rows[0]['in_combat'] === true && $rows[0]['suffering'] === 1 && $rows[0]['stamina'] === 1 && $rows[0]['stamina_max'] === 2 && $rows[0]['power'] === 1 && $rows[0]['power_max'] === 1)
@@ -417,7 +420,7 @@ class CampaignCharactersTest extends TestCase
         $this->assertStringContainsString('Grey rolls initiative. Rolled '.$wolfLog->payload_json['dice'][0].' and '.$wolfLog->payload_json['dice'][1].'.', $wolfLog->payload_json['summary']);
         $this->assertStringContainsString('Modifier +1.', $wolfLog->payload_json['summary']);
 
-        app(\App\Domain\Combat\CombatService::class)->rollInitiative($encounter->fresh());
+        app(CombatService::class)->rollInitiative($encounter->fresh());
         $session = CombatEvent::query()->where('encounter_id', $encounter->id)->where('event_type', 'initiative')->get();
         $this->assertCount(5, $session);
         $this->assertTrue($session->every(fn ($event) => str_contains($event->payload_json['summary'], 'rolls initiative.') && str_contains($event->payload_json['summary'], 'Modifier ')));

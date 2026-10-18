@@ -8,30 +8,37 @@ use App\Domain\Characters\CharacterCreator;
 use App\Domain\Characters\CharacterPresenter;
 use App\Domain\Combat\ActionPool;
 use App\Domain\Combat\CombatService;
+use App\Domain\Rules\SpellGrant;
+use App\Events\TableUpdated;
 use App\Models\Background;
 use App\Models\Campaign;
+use App\Models\CampaignMember;
 use App\Models\Character;
 use App\Models\CharacterInventory;
 use App\Models\CharacterOrderAccess;
+use App\Models\CharacterResource;
 use App\Models\CharacterSpell;
 use App\Models\CharacterTechnique;
-use App\Models\CharacterResource;
 use App\Models\CharacterWallet;
-use App\Models\CombatEvent;
-use App\Models\CreatureInstance;
 use App\Models\Combatant;
 use App\Models\CombatantCondition;
+use App\Models\CombatEvent;
 use App\Models\ConditionDefinition;
+use App\Models\CreatureInstance;
+use App\Models\Encounter;
 use App\Models\Feature;
 use App\Models\HeroClass;
 use App\Models\Item;
 use App\Models\MagicOrder;
+use App\Models\SceneToken;
 use App\Models\Skill;
 use App\Models\Specialization;
 use App\Models\Species;
 use App\Models\Spell;
+use App\Models\User;
 use App\Models\WeaponType;
 use Illuminate\Http\Request;
+use Illuminate\Support\Collection;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\ValidationException;
 use Inertia\Inertia;
@@ -88,16 +95,37 @@ class CharacterController extends Controller
             if ($combatant->encounter) {
                 $combat->withdraw($combatant->encounter, $combatant);
             } else {
-                \App\Models\SceneToken::query()->where('combatant_id', $combatant->id)->delete();
+                SceneToken::query()->where('combatant_id', $combatant->id)->delete();
                 $combatant->delete();
             }
         }
         $character->delete();
         if ($campaignId) {
-            event(new \App\Events\TableUpdated($campaignId));
+            event(new TableUpdated($campaignId));
         }
 
         return redirect()->route('characters.index');
+    }
+
+    public function leaveCampaign(Character $character, CombatService $combat)
+    {
+        abort_unless($this->canLeaveCampaign($character), 403);
+        $campaignId = $character->campaign_id;
+        if (! $campaignId) {
+            return back();
+        }
+
+        $combatants = Combatant::query()->where('character_id', $character->id)->with('encounter')->get();
+        foreach ($combatants as $combatant) {
+            if ($combatant->encounter && (int) $combatant->encounter->campaign_id === (int) $campaignId) {
+                $combat->withdraw($combatant->encounter, $combatant);
+            }
+        }
+        $character->update(['campaign_id' => null]);
+        $this->releaseCampaignAccess($character, $campaignId);
+        event(new TableUpdated($campaignId));
+
+        return back()->with('success', $character->name.' leaves the campaign.');
     }
 
     public function show(Character $character, CharacterPresenter $presenter)
@@ -105,7 +133,7 @@ class CharacterController extends Controller
         $this->authorizeView($character);
         $encounter = null;
         if ($character->campaign_id) {
-            $encounter = \App\Models\Encounter::query()
+            $encounter = Encounter::query()
                 ->where('campaign_id', $character->campaign_id)
                 ->where('status', 'active')
                 ->with('combatants.character', 'combatants.creature')
@@ -113,8 +141,11 @@ class CharacterController extends Controller
                 ->first();
         }
 
+        $sheet = $presenter->present($character);
+        $sheet['can_leave_campaign'] = (bool) $character->campaign_id && $this->canLeaveCampaign($character);
+
         return Inertia::render('Characters/Show', [
-            'sheet' => $presenter->present($character),
+            'sheet' => $sheet,
             'classes' => HeroClass::query()->visibleTo(request()->user())->with('role')->orderBy('name')->get()->map(fn (HeroClass $class) => [
                 'id' => $class->id,
                 'name' => $class->name,
@@ -167,7 +198,7 @@ class CharacterController extends Controller
         ]);
         $character->update(['portrait_path' => $data['portrait_path'] ?? null]);
         if ($character->campaign_id) {
-            event(new \App\Events\TableUpdated($character->campaign_id));
+            event(new TableUpdated($character->campaign_id));
         }
 
         return back();
@@ -320,7 +351,7 @@ class CharacterController extends Controller
     private function broadcastTable(?int $campaignId): void
     {
         if ($campaignId) {
-            event(new \App\Events\TableUpdated($campaignId));
+            event(new TableUpdated($campaignId));
         }
     }
 
@@ -508,7 +539,7 @@ class CharacterController extends Controller
         $this->authorizeView($character);
         $name = $request->validate(['name' => ['required', 'string']])['name'];
         $order = MagicOrder::query()->whereRaw('lower(name) = ?', [strtolower($name)])->first();
-        if (! $order || ! in_array($order->name, \App\Domain\Rules\SpellGrant::ORDERS, true)) {
+        if (! $order || ! in_array($order->name, SpellGrant::ORDERS, true)) {
             throw ValidationException::withMessages(['name' => 'Choose a spell order.']);
         }
         CharacterOrderAccess::query()->firstOrCreate([
@@ -565,9 +596,9 @@ class CharacterController extends Controller
     }
 
     /**
-     * @return \Illuminate\Support\Collection<int, array<string, mixed>>
+     * @return Collection<int, array<string, mixed>>
      */
-    private function weaponTechniques(?\App\Models\User $user)
+    private function weaponTechniques(?User $user)
     {
         return WeaponType::query()
             ->whereHas('techniques')
@@ -701,6 +732,43 @@ class CharacterController extends Controller
             'stackable' => true,
             'created_by' => $userId,
         ]);
+    }
+
+    private function releaseCampaignAccess(Character $character, int $campaignId): void
+    {
+        $stillPresent = Character::query()
+            ->where('campaign_id', $campaignId)
+            ->where('user_id', $character->user_id)
+            ->exists();
+        if ($stillPresent) {
+            return;
+        }
+        $campaign = Campaign::find($campaignId);
+        $owner = User::find($character->user_id);
+        if (! $campaign || ! $owner || CampaignAccess::isGm($owner, $campaign)) {
+            return;
+        }
+        CampaignMember::query()
+            ->where('campaign_id', $campaignId)
+            ->where('user_id', $owner->id)
+            ->delete();
+    }
+
+    private function canLeaveCampaign(Character $character): bool
+    {
+        $user = request()->user();
+        if (! $user) {
+            return false;
+        }
+        if ((int) $character->user_id === (int) $user->id) {
+            return true;
+        }
+        if (! $character->campaign_id) {
+            return false;
+        }
+        $campaign = Campaign::find($character->campaign_id);
+
+        return $campaign !== null && CampaignAccess::isGm($user, $campaign);
     }
 
     private function authorizeView(Character $character): void

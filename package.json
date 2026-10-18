@@ -19,6 +19,7 @@
     },
     "dependencies": {
         "@inertiajs/react": "^3.9.1",
+        "@laravel/passkeys": "^0.4.0",
         "laravel-echo": "^2.6.1",
         "pusher-js": "^8.6.0",
         "react": "^19.3.0",

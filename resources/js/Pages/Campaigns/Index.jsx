@@ -12,10 +12,12 @@ export default function Index({ campaigns, publicCampaigns = [], characters = []
                 {campaigns.map((campaign) => (
                     <div key={campaign.id} className="border border-line bg-panel px-4 py-3">
                         <div className="flex items-center justify-between gap-4">
-                            <Link href={`/campaigns/${campaign.id}`} className="min-w-0 flex-1 hover:text-silver">
-                                <div className="font-display text-3xl">{campaign.name}</div>
-                                <div className="text-sm text-silver">{campaign.role} · {campaign.is_public ? 'public' : 'private'} · {campaign.description}</div>
-                            </Link>
+                            <div className="min-w-0 flex-1">
+                                <Link href={`/campaigns/${campaign.id}`} className="block hover:text-silver">
+                                    <div className="font-display text-3xl">{campaign.name}</div>
+                                </Link>
+                                <div className="text-sm text-silver">{campaign.role} · {campaign.is_public ? 'public' : 'private'}{campaign.gm && <> · <GmLink gm={campaign.gm} /></>}{campaign.description ? ` · ${campaign.description}` : ''}</div>
+                            </div>
                             <div className="flex shrink-0 gap-2">
                                 {campaign.can_add_character && (
                                     <button type="button" className={buttonClass} onClick={() => setJoining(joining === campaign.id ? null : campaign.id)}>Join</button>
@@ -58,6 +60,10 @@ export default function Index({ campaigns, publicCampaigns = [], characters = []
     );
 }
 
+function GmLink({ gm }) {
+    return <Link href={`/players/${gm.id}`} className="underline hover:text-parchment">{gm.name}</Link>;
+}
+
 function Join({ campaign, characters }) {
     const [open, setOpen] = useState(false);
     return (
@@ -65,7 +71,7 @@ function Join({ campaign, characters }) {
             <div className="flex items-center justify-between gap-4">
                 <div className="min-w-0">
                     <div className="font-display text-3xl">{campaign.name}</div>
-                    <div className="text-sm text-silver">{campaign.description}{campaign.has_password ? ' · password required' : ''}</div>
+                    <div className="text-sm text-silver">{campaign.gm && <><GmLink gm={campaign.gm} /> · </>}{campaign.description}{campaign.has_password ? ' · password required' : ''}</div>
                 </div>
                 <button type="button" className={buttonClass} onClick={() => setOpen((current) => !current)}>Join</button>
             </div>

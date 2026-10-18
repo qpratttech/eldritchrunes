@@ -3,7 +3,13 @@
 namespace App\Domain\Characters;
 
 use App\Domain\Rules\Percentile;
+use App\Domain\Rules\SpellAttack;
 use App\Models\Character;
+use App\Models\CharacterOrderAccess;
+use App\Models\Item;
+use App\Models\MagicOrder;
+use App\Models\Specialization;
+use App\Models\Spell;
 
 class CharacterPresenter
 {
@@ -93,6 +99,10 @@ class CharacterPresenter
             'specialization' => $character->specialization?->name,
             'specialization_detail' => $this->specializationDetail($character->specialization),
             'campaign_id' => $character->campaign_id,
+            'campaign' => $character->campaign ? [
+                'id' => $character->campaign->id,
+                'name' => $character->campaign->name,
+            ] : null,
             'classes' => $character->classLevels->map(function ($row) {
                 $class = $row->heroClass;
                 $role = $class?->role;
@@ -163,14 +173,14 @@ class CharacterPresenter
             'specialization_progression' => collect($character->specialization?->progression_json ?? [])->map(fn ($level) => [
                 'level' => (int) ($level['level'] ?? 0),
                 'feature' => $level['feature'] ?? '',
-                'choice' => \App\Domain\Characters\CharacterAdvancement::choiceKinds((string) ($level['feature'] ?? '')),
-                'spell' => \App\Domain\Characters\CharacterAdvancement::spellChoice((string) ($level['feature'] ?? '')),
+                'choice' => CharacterAdvancement::choiceKinds((string) ($level['feature'] ?? '')),
+                'spell' => CharacterAdvancement::spellChoice((string) ($level['feature'] ?? '')),
             ])->values(),
-            'orders' => \App\Models\CharacterOrderAccess::query()
+            'orders' => CharacterOrderAccess::query()
                 ->where('character_id', $character->id)
                 ->get()
                 ->map(function ($row) {
-                    $name = \App\Models\MagicOrder::query()->whereKey($row->order_id)->value('name');
+                    $name = MagicOrder::query()->whereKey($row->order_id)->value('name');
 
                     return $name ? ['id' => $row->id, 'name' => $name] : null;
                 })
@@ -222,7 +232,7 @@ class CharacterPresenter
         return $name === 'Magus' ? 'Spellcaster' : $name;
     }
 
-    private function specializationDetail(?\App\Models\Specialization $specialization): ?string
+    private function specializationDetail(?Specialization $specialization): ?string
     {
         if (! $specialization) {
             return null;
@@ -236,7 +246,7 @@ class CharacterPresenter
         return $detail !== '' ? $detail : null;
     }
 
-    private function spellDetail(?\App\Models\Spell $spell): ?string
+    private function spellDetail(?Spell $spell): ?string
     {
         if (! $spell) {
             return null;
@@ -259,7 +269,7 @@ class CharacterPresenter
         return $detail !== '' ? $detail : null;
     }
 
-    private function itemDetail(?\App\Models\Item $item): ?string
+    private function itemDetail(?Item $item): ?string
     {
         if (! $item) {
             return null;
@@ -319,7 +329,7 @@ class CharacterPresenter
 
         foreach ($character->spells as $row) {
             $rules = (string) ($row->spell?->rules_text ?? '');
-            $save = \App\Domain\Rules\SpellAttack::forcedSave($rules);
+            $save = SpellAttack::forcedSave($rules);
             $direct = str_contains(strtolower($rules), 'direct spell attack');
             if (! $save && ! $direct) {
                 continue;

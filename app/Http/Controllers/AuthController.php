@@ -21,22 +21,6 @@ class AuthController extends Controller
         return Inertia::render('Auth/Register');
     }
 
-    public function authenticate(Request $request)
-    {
-        $credentials = $request->validate([
-            'email' => ['required', 'email'],
-            'password' => ['required'],
-        ]);
-
-        if (! Auth::attempt($credentials, $request->boolean('remember'))) {
-            return back()->withErrors(['email' => 'Those credentials do not match.'])->onlyInput('email');
-        }
-
-        $request->session()->regenerate();
-
-        return redirect()->intended(route('dashboard'));
-    }
-
     public function store(Request $request)
     {
         $data = $request->validate([
@@ -56,14 +40,5 @@ class AuthController extends Controller
         Auth::login($user);
 
         return redirect()->route('dashboard');
-    }
-
-    public function destroy(Request $request)
-    {
-        Auth::logout();
-        $request->session()->invalidate();
-        $request->session()->regenerateToken();
-
-        return redirect()->route('login');
     }
 }

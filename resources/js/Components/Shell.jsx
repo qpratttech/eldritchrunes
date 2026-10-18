@@ -89,12 +89,13 @@ export default function Shell({ title, children }) {
                             </Link>
                         )}
                     </nav>
-                    <form method="post" action="/logout" className="border-t border-line p-4">
-                        <input type="hidden" name="_token" value={document.querySelector('meta[name=csrf-token]')?.content || ''} />
-                        <div className="truncate text-sm text-silver">{auth.user?.name}</div>
-                        <div className="text-[11px] tracking-widest text-maroon uppercase">{auth.user?.is_gm ? 'Game master' : 'Player'}</div>
-                        <Link href="/logout" method="post" as="button" className="mt-3 text-xs text-parchment-dim hover:text-parchment">Sign out</Link>
-                    </form>
+                    <div className="border-t border-line p-4">
+                        <Link href="/player" onClick={closeNav} className={`block rounded px-1 py-1 ${path === '/player' ? 'text-parchment' : 'text-silver hover:text-parchment'}`}>
+                            <div className="truncate text-sm">{auth.user?.name}</div>
+                            <div className="text-[11px] tracking-widest text-maroon uppercase">{auth.user?.is_gm ? 'Game master' : 'Player'}</div>
+                        </Link>
+                        <Link href="/logout" method="post" as="button" className="mt-3 px-1 text-xs text-parchment-dim hover:text-parchment">Sign out</Link>
+                    </div>
                 </aside>
                 <main className="min-w-0 flex-1">
                     <header className="hidden items-end justify-between border-b border-line px-8 py-6 md:flex">

@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useForm, router, usePage } from '@inertiajs/react';
+import { Link, useForm, router, usePage } from '@inertiajs/react';
 import Shell, { CircumstanceSelect, Portrait, buttonClass, chanceLabel, inputClass, quietClass, successChance } from '../../Components/Shell';
 import ConditionPicker, { addCharacterCondition, removeCharacterCondition } from '../../Components/ConditionPicker';
 import LogText from '../../Components/LogText';
@@ -133,6 +133,22 @@ export default function Show({ sheet, classes, items = [], spells = [], techniqu
                             ))
                             : 'Level 1'}
                     </p>
+                    <div className="mt-3">
+                        <p className="text-sm text-parchment-dim">Campaign</p>
+                        {sheet.campaign ? (
+                            <div className="mt-1 flex items-center justify-between gap-2">
+                                <Link href={`/campaigns/${sheet.campaign.id}`} className="min-w-0 truncate text-parchment underline decoration-line underline-offset-4">{sheet.campaign.name}</Link>
+                                {sheet.can_leave_campaign && (
+                                    <button type="button" className={quietClass} onClick={() => {
+                                        if (!window.confirm(`Leave ${sheet.campaign.name}? ${sheet.name} will no longer be in that campaign.`)) return;
+                                        router.delete(`/characters/${sheet.id}/campaign`, { preserveScroll: true });
+                                    }}>Leave</button>
+                                )}
+                            </div>
+                        ) : (
+                            <p className="mt-1 text-sm text-silver">None</p>
+                        )}
+                    </div>
                     <label className="mt-1 block text-sm text-parchment-dim">Level {sheet.level} · XP
                         <input className={`${inputClass} mt-1`} type="number" min="0" value={details.data.xp} onChange={(e) => details.setData('xp', Number(e.target.value))} />
                     </label>
@@ -346,7 +362,7 @@ export default function Show({ sheet, classes, items = [], spells = [], techniqu
                         </div>
                     )}
                     <div className="border border-line bg-panel p-4">
-                        <h2 className="font-display text-2xl">Orders</h2>
+                        <h2 className="font-display text-2xl">Spell Orders</h2>
                         {(sheet.orders || []).length === 0 && <p className="mt-2 text-sm text-silver">No spell orders known.</p>}
                         {(sheet.orders || []).map((order) => (
                             <p key={order.id} className="mt-2 flex items-center justify-between gap-2 text-sm">

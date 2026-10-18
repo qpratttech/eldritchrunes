@@ -201,9 +201,9 @@ export default function Show({ campaign, scene, encounter, roster, conditions = 
                             </Menu>
                         )}
                         {campaign.is_gm && scene && (
-                            <Menu label={labelOf(scene.settings_json?.lighting || 'night-gloom')} open={menu === 'lighting'} onToggle={() => setMenu(menu === 'lighting' ? null : 'lighting')} tip="Choose how dark the map is.">
+                            <Menu label={labelOf(scene.settings_json?.lighting || 'day')} open={menu === 'lighting'} onToggle={() => setMenu(menu === 'lighting' ? null : 'lighting')} tip="Choose how dark the map is.">
                                 {['day', 'twilight', 'night-gloom'].map((lighting) => (
-                                    <button key={lighting} className={`${(scene.settings_json?.lighting || 'night-gloom') === lighting ? buttonClass : quietClass} w-full text-left`} onClick={() => { router.patch(`/scenes/${scene.id}`, { lighting }); setMenu(null); }}>{labelOf(lighting)}</button>
+                                    <button key={lighting} className={`${(scene.settings_json?.lighting || 'day') === lighting ? buttonClass : quietClass} w-full text-left`} onClick={() => { router.patch(`/scenes/${scene.id}`, { lighting }); setMenu(null); }}>{labelOf(lighting)}</button>
                                 ))}
                             </Menu>
                         )}
@@ -502,7 +502,7 @@ function Company({ campaign, roster, encounter, active, fight, conditions = [] }
                                     {row.can_open && <button type="submit" form={`pc-${row.id}`} className={chipClass}>Save</button>}
                                 </div>
                             </div>
-                            <p className="mt-1 text-sm text-silver">{row.subtitle}</p>
+                            <p className="mt-1 text-sm text-silver">{row.subtitle}{row.player && <>{row.subtitle ? ' · ' : ''}<Link href={`/players/${row.player.id}`} className="underline hover:text-parchment">{row.player.name}</Link></>}</p>
                             {row.can_open ? (
                                 <form id={`pc-${row.id}`} className="mt-3 grid grid-cols-3 gap-x-4 gap-y-3" onSubmit={(e) => { e.preventDefault(); router.patch(`/characters/${row.id}`, { xp: campaign.is_gm ? Math.max(0, Number(e.target.xp?.value) || 0) : undefined, resources: { wounds: e.target.wounds.value, major_action: Math.max(0, Math.min(1, Number(e.target.major_action.value) || 0)), minor_action: Math.max(0, Math.min(2, Number(e.target.minor_action.value) || 0)), luck: Math.max(0, Math.min(row.luck_max ?? 0, Number(e.target.luck.value) || 0)), stamina: Math.max(0, Math.min(row.stamina_max ?? 0, Number(e.target.stamina.value) || 0)), sorcerous_power: Math.max(0, Math.min(row.power_max ?? 0, Number(e.target.power.value) || 0)), focus: Math.max(0, Math.min(row.focus_max ?? 0, Number(e.target.focus.value) || 0)) }, suffering: Math.max(0, Math.min(2, Number(e.target.suffering.value) || 0)) }, { preserveScroll: true }); }}>
                                     <StatField icon={art['major-action']} label="Major Action">
