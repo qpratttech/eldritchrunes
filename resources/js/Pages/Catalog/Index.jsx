@@ -77,8 +77,24 @@ const fieldsFor = {
 
 function Tip({ text, children }) {
     if (!text) return children;
+    function keepInside(event) {
+        const anchor = event.currentTarget;
+        const tip = anchor.querySelector('[role="tooltip"]');
+        if (!tip) return;
+        const box = anchor.getBoundingClientRect();
+        const width = Math.min(320, window.innerWidth - 32);
+        tip.style.width = `${width}px`;
+        let shift = 0;
+        if (box.left + width > window.innerWidth - 16) {
+            shift = window.innerWidth - 16 - width - box.left;
+        }
+        if (box.left + shift < 16) {
+            shift = 16 - box.left;
+        }
+        tip.style.transform = `translateX(${shift}px)`;
+    }
     return (
-        <span className="group relative inline-block">
+        <span className="group relative inline-block" onMouseEnter={keepInside} onFocus={keepInside}>
             {children}
             <span role="tooltip" className="pointer-events-none absolute top-full left-0 z-30 mt-2 hidden w-80 border border-line bg-ink p-3 text-left text-xs leading-5 whitespace-pre-wrap text-parchment normal-case shadow-xl group-hover:block">
                 {text}
