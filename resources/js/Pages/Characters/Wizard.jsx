@@ -191,9 +191,9 @@ export default function Wizard({ species, backgrounds, classes, specializations,
             {step === 1 && (
                 <div className="grid gap-3 md:grid-cols-2">
                     {species.map((row) => (
-                        <button type="button" key={row.id} onClick={() => chooseSpecies(row)} className={`flex gap-3 border p-4 text-left ${form.data.species_id === row.id ? 'border-maroon bg-maroon-deep/30' : 'border-line bg-panel'}`}>
-                            <Portrait src={row.portrait_url} name={row.name} />
-                            <span>
+                        <button type="button" key={row.id} onClick={() => chooseSpecies(row)} className={`flex items-start gap-4 border p-4 text-left ${form.data.species_id === row.id ? 'border-maroon bg-maroon-deep/30' : 'border-line bg-panel'}`}>
+                            <Portrait src={row.portrait_url} name={row.name} size="2xl" />
+                            <span className="min-w-0 flex-1">
                                 <span className="block font-display text-2xl">{row.name}</span>
                                 <span className="text-sm text-parchment-dim">{row.description}</span>
                                 <span className="mt-2 block text-xs text-silver">

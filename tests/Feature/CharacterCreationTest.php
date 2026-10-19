@@ -5,24 +5,27 @@ namespace Tests\Feature;
 use App\Domain\Characters\CharacterAdvancement;
 use App\Domain\Characters\CharacterCreator;
 use App\Domain\Characters\CharacterPresenter;
+use App\Domain\Combat\ActionPool;
 use App\Domain\Combat\CombatService;
-use App\Models\CharacterAttribute;
-use App\Models\CharacterInventory;
-use App\Models\Item;
-use App\Models\CharacterSkill;
-use App\Models\CharacterOrderAccess;
-use App\Models\Skill;
-use App\Models\MagicOrder;
-use App\Models\Spell;
 use App\Models\Background;
 use App\Models\Campaign;
+use App\Models\CharacterAttribute;
+use App\Models\CharacterInventory;
+use App\Models\CharacterOrderAccess;
+use App\Models\CharacterResource;
+use App\Models\CharacterSkill;
 use App\Models\CombatEvent;
 use App\Models\Encounter;
 use App\Models\HeroClass;
+use App\Models\Item;
+use App\Models\MagicOrder;
 use App\Models\Scene;
-use App\Models\Species;
+use App\Models\Skill;
 use App\Models\Specialization;
+use App\Models\Species;
+use App\Models\Spell;
 use App\Models\User;
+use App\Models\WeaponType;
 use Database\Seeders\RulesetSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Validation\ValidationException;
@@ -61,7 +64,7 @@ class CharacterCreationTest extends TestCase
         $this->assertSame(8, $steps['vitality']);
         $this->assertSame(7, $steps['social']);
         config(['filesystems.disks.s3.url' => 'https://assets.example.test']);
-        $this->assertSame('https://assets.example.test/species/orc.webp', app(CharacterPresenter::class)->present($character->fresh())['portrait_url']);
+        $this->assertSame('https://assets.example.test/species/orc.webp?v=2', app(CharacterPresenter::class)->present($character->fresh())['portrait_url']);
         $character->update(['portrait_path' => 'characters/vash.webp']);
         $this->assertSame('https://assets.example.test/characters/vash.webp', app(CharacterPresenter::class)->present($character->fresh())['portrait_url']);
 
@@ -276,7 +279,7 @@ class CharacterCreationTest extends TestCase
         $this->assertStringNotContainsString('Major Action', $event->payload_json['summary']);
         $this->assertStringNotContainsString('Minor Action', $event->payload_json['summary']);
         $this->assertStringContainsString('Suffering 1.', $event->payload_json['summary']);
-        $this->assertSame(0, \App\Models\CharacterResource::query()->where('character_id', $character->id)->where('resource_key', 'major_action')->value('current_value'));
+        $this->assertSame(0, CharacterResource::query()->where('character_id', $character->id)->where('resource_key', 'major_action')->value('current_value'));
         $this->actingAs($user)->post("/characters/{$character->id}/attacks", [
             'kind' => 'unarmed',
         ])->assertSessionHasErrors('action');
@@ -303,11 +306,11 @@ class CharacterCreationTest extends TestCase
         $event = CombatEvent::query()->where('encounter_id', $encounter->id)->where('event_type', 'defeat')->first();
         $this->assertNotNull($event);
         $this->assertSame($character->name.' has been defeated.', $event->payload_json['summary']);
-        $this->assertSame(0, \App\Models\CharacterResource::query()->where('character_id', $character->id)->where('resource_key', 'major_action')->value('current_value'));
-        $this->assertSame(0, \App\Models\CharacterResource::query()->where('character_id', $character->id)->where('resource_key', 'minor_action')->value('current_value'));
+        $this->assertSame(0, CharacterResource::query()->where('character_id', $character->id)->where('resource_key', 'major_action')->value('current_value'));
+        $this->assertSame(0, CharacterResource::query()->where('character_id', $character->id)->where('resource_key', 'minor_action')->value('current_value'));
 
-        \App\Domain\Combat\ActionPool::refreshCharacter($character->fresh());
-        $this->assertSame(0, \App\Models\CharacterResource::query()->where('character_id', $character->id)->where('resource_key', 'major_action')->value('current_value'));
+        ActionPool::refreshCharacter($character->fresh());
+        $this->assertSame(0, CharacterResource::query()->where('character_id', $character->id)->where('resource_key', 'major_action')->value('current_value'));
 
         $this->actingAs($user)->post("/characters/{$character->id}/attacks", [
             'kind' => 'unarmed',
@@ -316,9 +319,9 @@ class CharacterCreationTest extends TestCase
         $this->actingAs($user)->patch("/characters/{$character->id}", [
             'resources' => ['wounds' => 1],
         ])->assertRedirect();
-        \App\Domain\Combat\ActionPool::refreshCharacter($character->fresh());
-        $this->assertSame(1, \App\Models\CharacterResource::query()->where('character_id', $character->id)->where('resource_key', 'major_action')->value('current_value'));
-        $this->assertSame(2, \App\Models\CharacterResource::query()->where('character_id', $character->id)->where('resource_key', 'minor_action')->value('current_value'));
+        ActionPool::refreshCharacter($character->fresh());
+        $this->assertSame(1, CharacterResource::query()->where('character_id', $character->id)->where('resource_key', 'major_action')->value('current_value'));
+        $this->assertSame(2, CharacterResource::query()->where('character_id', $character->id)->where('resource_key', 'minor_action')->value('current_value'));
     }
 
     public function test_a_magus_background_records_spell_order_access_without_timestamps(): void
@@ -440,7 +443,7 @@ class CharacterCreationTest extends TestCase
         $nature = Spell::query()->where('name', 'Ant Swarm')->firstOrFail();
         $circle = Spell::query()->where('name', 'Ancient Aegis')->firstOrFail();
         $psionic = Spell::query()->where('name', 'Mind Lance')->firstOrFail();
-        $sword = \App\Models\WeaponType::query()->whereHas('item', fn ($query) => $query->where('name', 'Sword'))->firstOrFail();
+        $sword = WeaponType::query()->whereHas('item', fn ($query) => $query->where('name', 'Sword'))->firstOrFail();
         $base = [
             'name' => 'Vash',
             'species_id' => Species::query()->where('name', 'Orc')->value('id'),
@@ -460,7 +463,7 @@ class CharacterCreationTest extends TestCase
         $this->assertTrue($outlander->techniques()->where('weapon_type_id', $sword->id)->exists());
         $this->assertSame(2, (int) $outlander->resources()->where('resource_key', 'sorcerous_soul')->value('base_maximum'));
         $this->assertSame(1, (int) $outlander->resources()->where('resource_key', 'focus')->value('base_maximum'));
-        $this->assertTrue(\App\Models\CharacterOrderAccess::query()->where('character_id', $outlander->id)->where('order_id', $nature->order_id)->exists());
+        $this->assertTrue(CharacterOrderAccess::query()->where('character_id', $outlander->id)->where('order_id', $nature->order_id)->exists());
 
         try {
             app(CharacterCreator::class)->create($user, $base + [

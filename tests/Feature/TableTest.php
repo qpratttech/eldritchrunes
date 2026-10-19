@@ -4,14 +4,17 @@ namespace Tests\Feature;
 
 use App\Domain\Characters\CharacterCreator;
 use App\Domain\Combat\CombatService;
+use App\Models\Background;
 use App\Models\Campaign;
 use App\Models\CharacterResource;
 use App\Models\Combatant;
-use App\Models\CreatureInstance;
 use App\Models\CreatureAction;
+use App\Models\CreatureInstance;
 use App\Models\CreatureTemplate;
 use App\Models\Encounter;
 use App\Models\Feature;
+use App\Models\HeroClass;
+use App\Models\Item;
 use App\Models\Species;
 use App\Models\User;
 use Database\Seeders\RulesetSeeder;
@@ -139,7 +142,7 @@ class TableTest extends TestCase
             'cost_silver' => 4,
             'weight' => 1,
         ])->assertRedirect();
-        $knife = \App\Models\Item::query()->where('name', 'Hedge knife')->firstOrFail();
+        $knife = Item::query()->where('name', 'Hedge knife')->firstOrFail();
         $this->actingAs($author)->get('/items')->assertOk()->assertInertia(fn (Assert $page) => $page
             ->where('rows', fn ($rows) => collect($rows)->contains(fn ($row) => $row['id'] === $knife->id))
         );
@@ -224,9 +227,9 @@ class TableTest extends TestCase
 
                 $elf = collect($rows)->firstWhere('name', 'Elf');
 
-                return $portraits['Elf'] === 'https://assets.example.test/species/elf.webp'
-                    && $portraits['Halfogre'] === 'https://assets.example.test/species/half-ogre.png'
-                    && $portraits['Halforc'] === 'https://assets.example.test/species/half-orc.webp'
+                return $portraits['Elf'] === 'https://assets.example.test/species/elf.webp?v=2'
+                    && $portraits['Halfogre'] === 'https://assets.example.test/species/half-ogre.webp?v=2'
+                    && $portraits['Halforc'] === 'https://assets.example.test/species/half-orc.webp?v=2'
                     && collect($elf['features'])->firstWhere('name', 'Nightvision')['rules'] === "Faint light reveals more to you than it does to most.\n\nIgnore Diminishment from dim light. This does not let you see in complete darkness.";
             })
         );
@@ -237,11 +240,11 @@ class TableTest extends TestCase
         $gm = User::factory()->create(['is_gm' => true]);
         $character = app(CharacterCreator::class)->create($gm, [
             'name' => 'Vash',
-            'species_id' => \App\Models\Species::query()->where('name', 'Orc')->value('id'),
+            'species_id' => Species::query()->where('name', 'Orc')->value('id'),
             'variance_primary' => ['Very Strong', 'Likable'],
             'variance_secondary' => ['Lucky'],
-            'background_id' => \App\Models\Background::query()->where('name', 'Soldier')->value('id'),
-            'class_id' => \App\Models\HeroClass::query()->where('name', 'Warrior')->value('id'),
+            'background_id' => Background::query()->where('name', 'Soldier')->value('id'),
+            'class_id' => HeroClass::query()->where('name', 'Warrior')->value('id'),
             'primary_skills' => ['melee', 'athletics'],
             'other_skills' => ['awareness', 'stealth', 'survival'],
         ]);

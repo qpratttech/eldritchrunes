@@ -237,13 +237,13 @@ export default function Index({ type, title, rows, form: options = {} }) {
             )}
             <div className="grid gap-3 md:grid-cols-2">
                 {visible.map((row) => (
-                    <article key={row.id} className={`flex gap-4 border border-line bg-panel p-4 ${type === 'talents' ? 'min-h-64' : ''}`}>
+                    <article key={row.id} className={`flex items-start gap-4 border border-line bg-panel p-4 ${type === 'talents' ? 'min-h-64' : ''}`}>
                         {type === 'species'
-                            ? <Portrait src={row.portrait_url} name={row.name} />
+                            ? <Portrait src={row.portrait_url} name={row.name} size="2xl" />
                             : art.sigil
                                 ? <img src={art.sigil} alt="" className="h-16 w-16 shrink-0 object-contain" />
                                 : <Mark letter={row.name.slice(0, 1)} />}
-                        <div className="min-w-0">
+                        <div className="min-w-0 flex-1">
                             <h2 className="font-display text-2xl">{row.name}</h2>
                             {type === 'classes' && row.detail && (
                                 <div className="mt-1">

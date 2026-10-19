@@ -135,7 +135,7 @@ class TokenMovementTest extends TestCase
             ->where('scene.tokens', function ($tokens) {
                 $rows = collect($tokens)->keyBy('label');
 
-                return $rows['P']['portrait_url'] === 'https://assets.example.test/species/orc.webp'
+                return $rows['P']['portrait_url'] === 'https://assets.example.test/species/orc.webp?v=2'
                     && $rows['P']['name'] === 'Vash'
                     && $rows['B']['portrait_url'] === 'https://assets.example.test/npcs/bear.webp'
                     && $rows['B']['name'] === 'Bear'

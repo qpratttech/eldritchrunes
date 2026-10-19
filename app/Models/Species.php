@@ -24,6 +24,11 @@ class Species extends Model
             return null;
         }
 
-        return rtrim((string) $base, '/').'/'.ltrim($this->portrait_path, '/');
+        $url = rtrim((string) $base, '/').'/'.ltrim($this->portrait_path, '/');
+        if (str_starts_with($this->portrait_path, 'species/')) {
+            $url .= '?v=2';
+        }
+
+        return $url;
     }
 }

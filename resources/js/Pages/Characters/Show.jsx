@@ -100,7 +100,9 @@ export default function Show({ sheet, classes, items = [], spells = [], techniqu
         <Shell title={sheet.name}>
             <div className="grid gap-6 xl:grid-cols-[24rem_1fr_300px]">
                 <section className="border border-line bg-panel p-4">
-                    <Portrait src={sheet.portrait_url} name={sheet.name} size="xl" />
+                    <div className="flex justify-center">
+                        <Portrait src={sheet.portrait_url} name={sheet.name} size="2xl" />
+                    </div>
                     <button type="button" className={`${quietClass} mt-3`} onClick={() => setPortraitOpen(true)}>Change portrait</button>
                     {portraitOpen && (
                         <PortraitPicker

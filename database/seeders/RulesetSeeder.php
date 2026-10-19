@@ -494,7 +494,7 @@ class RulesetSeeder extends Seeder
             'Eldretchin' => 'species/eldretchin.webp',
             'Elf' => 'species/elf.webp',
             'Gnome' => 'species/gnome.webp',
-            'Halfogre' => 'species/half-ogre.png',
+            'Halfogre' => 'species/half-ogre.webp',
             'Halforc' => 'species/half-orc.webp',
             'Halfling' => 'species/halfling.webp',
             'Human' => 'species/human.webp',

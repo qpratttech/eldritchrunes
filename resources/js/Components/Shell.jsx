@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Link, usePage } from '@inertiajs/react';
 
 export function Portrait({ src, name = '', size = 'md' }) {
-    const box = size === 'xl' ? 'h-48 w-36' : size === 'lg' ? 'h-28 w-24' : 'h-24 w-20';
+    const box = size === '2xl' ? 'h-96 w-72' : size === 'xl' ? 'h-48 w-36' : size === 'lg' ? 'h-28 w-24' : 'h-24 w-20';
     if (! src) {
         return <Mark letter={(name || ' ').slice(0, 1)} size={size} />;
     }

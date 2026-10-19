@@ -41,6 +41,6 @@ class CharacterPortraitTest extends TestCase
         ])->assertRedirect();
         $character->refresh();
         $this->assertNull($character->portrait_path);
-        $this->assertSame('https://assets.example.test/species/orc.webp', $character->portraitUrl());
+        $this->assertSame('https://assets.example.test/species/orc.webp?v=2', $character->portraitUrl());
     }
 }
